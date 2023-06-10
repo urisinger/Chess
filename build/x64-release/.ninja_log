@@ -1,0 +1,13 @@
+# ninja log v5
+23	206	7081283057062020	CMakeFiles/Paint.dir/src/opengl/Window.cpp.obj	e9f7c15eaa695663
+11	872	7081283063762031	CMakeFiles/Paint.dir/libs/glad/glad.c.obj	e47022b88e3cbf7e
+40	1238	7081283067142029	CMakeFiles/Paint.dir/src/BitMasks.cpp.obj	4f898f15ef45c40b
+34	1433	7081283069242025	CMakeFiles/Paint.dir/src/BitBoard.cpp.obj	2e015fbed8dc46ed
+18	1442	7081283069412011	CMakeFiles/Paint.dir/src/opengl/Shaders.cpp.obj	40a34a05cf403996
+6	1735	7081283072372028	CMakeFiles/Paint.dir/src/Main.cpp.obj	87b8b8ad62c90ff5
+28	2066	7081283075513784	CMakeFiles/Paint.dir/src/opengl/Buffers.cpp.obj	6c28be8d485ab3bb
+2066	2425	7081283079272082	C:/Users/משתמש/Desktop/Chess.com/bin/Win-Release/Paint.exe	b94ea65c2e3862a8
+18	1021	7081283586077692	CMakeFiles/Paint.dir/src/Main.cpp.obj	87b8b8ad62c90ff5
+1022	1270	7081283588552508	C:/Users/משתמש/Desktop/Chess.com/bin/Win-Release/Paint.exe	b94ea65c2e3862a8
+7	971	7081288916245848	CMakeFiles/Paint.dir/src/BitBoard.cpp.obj	2e015fbed8dc46ed
+972	1233	7081288918843654	C:/Users/משתמש/Desktop/Chess.com/bin/Win-Release/Paint.exe	b94ea65c2e3862a8

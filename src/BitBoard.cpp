@@ -258,7 +258,6 @@ void Board::movePiece(const Move& move) {
 
 std::vector<Move> Board::GenerateLegalMoves(Color color) const {
     std::vector<Move> legalMoves;
-
     legalMoves.reserve(256);
 
 
@@ -274,12 +273,42 @@ std::vector<Move> Board::GenerateLegalMoves(Color color) const {
         // Clear the least significant bit of the current piece
         knights &= (knights - 1);
     }
+
     {
+        constexpr std::uint64_t WHITE_KINGSIDE_EMPTY = 0x0000000000000060ULL;  // Squares f1 and g1 are empty
+        constexpr std::uint64_t BLACK_KINGSIDE_EMPTY = 0x6000000000000000ULL;  // Squares f8 and g8 are empty
+        constexpr std::uint64_t WHITE_QUEENSIDE_EMPTY = 0x000000000000000EULL;  // Squares b1, c1, and d1 are empty
+        constexpr std::uint64_t BLACK_QUEENSIDE_EMPTY = 0x0E00000000000000ULL;  // Squares b8, c8, and d8 are empty
+
         std::uint64_t kings = color == WHITE ? whiteKing : blackKing;
 
         const int square = getLSB(kings);
 
         generateNonSlidingMoves(square, legalMoves, Bitboard::kingAttack[square], KING);
+
+        // Check if castling is allowed for the current color
+        const bool canCastleKingside = (castleFlags & (color == WHITE ? WHITE_KINGSIDE_CASTLING : BLACK_KINGSIDE_CASTLING)) != 0;
+        const bool canCastleQueenside = (castleFlags & (color == WHITE ? WHITE_QUEENSIDE_CASTLING : BLACK_QUEENSIDE_CASTLING)) != 0;
+
+        // Generate kingside castle move
+        if (canCastleKingside) {
+            // Check if the squares between the king and rook are unoccupied
+            const std::uint64_t kingsideEmpty = (color == WHITE) ? WHITE_KINGSIDE_EMPTY : BLACK_KINGSIDE_EMPTY;
+            if ((kingsideEmpty & (whitePieces | blackPieces)) == 0) {
+                const std::uint32_t target = (color == WHITE) ? 6 : 62;
+                legalMoves.emplace_back(square, target, KING_CASTLE, color, KING);
+            }
+        }
+
+        // Generate queenside castle move
+        if (canCastleQueenside) {
+            // Check if the squares between the king and rook are unoccupied
+            const std::uint64_t queensideEmpty = (color == WHITE) ? WHITE_QUEENSIDE_EMPTY : BLACK_QUEENSIDE_EMPTY;
+            if ((queensideEmpty & (whitePieces | blackPieces)) == 0) {
+                const std::uint32_t target = (color == WHITE) ? 2 : 58;
+                legalMoves.emplace_back(square, target, QUEEN_CASTLE, color, KING);
+            }
+        }
     }
 
     std::uint64_t bishops = color == WHITE ? whiteBishops : blackBishops;
@@ -309,14 +338,38 @@ std::vector<Move> Board::GenerateLegalMoves(Color color) const {
     while (queens) {
         const int square = getLSB(queens);
 
-        generateNonSlidingMoves(square, legalMoves, Bitboard::queenAttack[square], QUEEN);
+        generateSlidingMoves(square, legalMoves, Bitboard::rookMasks[square], Bitboard::rookMagic[square], Bitboard::rookAttacks[square], QUEEN);
+
+        generateSlidingMoves(square, legalMoves, Bitboard::bishopMasks[square], Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square], QUEEN);
 
 
         // Clear the least significant bit of the current piece
         queens &= (queens - 1);
     }
 
-    
+    for (auto it = legalMoves.begin(); it != legalMoves.end(); ) {
+        Board movedBoard = *this;
+        movedBoard.movePiece(*it);
+
+        const std::uint64_t king = color == WHITE ? movedBoard.whiteKing : movedBoard.blackKing;
+        if ((king & movedBoard.GetAttackedPieces(color == WHITE ? BLACK : WHITE)) != 0) {
+            it = legalMoves.erase(it);  // Remove the move from the vector
+        }
+        else {
+            ++it;  // Move to the next element
+        }
+    }
+
+    if (legalMoves.empty()) {
+        const std::uint64_t king = color == WHITE ? whiteKing : blackKing;
+        if ((king & GetAttackedPieces(color == WHITE ? BLACK : WHITE )) != 0) {
+            std::cout << "you LOSE: " << (color == WHITE ? "WHITE" : "BLACK") << std::endl;
+        }
+        else {
+            std::cout << "DRAW!" << std::endl;
+        }
+    }
+
     return legalMoves;
 }
 
@@ -364,6 +417,8 @@ inline void Board::generatePawnMoves(const Color color, std::vector<Move>& legal
     std::uint64_t pawnLeftCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) >> 1) & ~(0x8080808080808080ULL)) & oppsitePieces;
     std::uint64_t pawnRightCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) << 1) & ~(0x0101010101010101ULL)) & oppsitePieces;
 
+
+    
     while (pawnLeftCaptures != 0) {
         const std::int32_t targetSquare = getLSB(pawnLeftCaptures);
         const std::int32_t sourceSquare = targetSquare - (direction * 8)+1;
@@ -455,19 +510,109 @@ inline void Board::generateNonSlidingMoves(const std::int32_t square, std::vecto
 void Board::generateSlidingMoves(std::int32_t square, std::vector<Move>& legalMoves, std::uint64_t mask,std::uint64_t magic_number, std::uint64_t attacks[4096], Piece piece) const {
     std::uint64_t occupancy = ((whitePieces | blackPieces) & mask); 
 
-    std::uint64_t occupancies[4096];
+    int index = (int)((occupancy*magic_number) >> (64 - __popcnt64(mask)));
 
-    piece == BISHOP ? Bitboard::generateBishopOccupancy(square, occupancies) : Bitboard::generateRookOccupancy(square, occupancies);
+    std::uint64_t attack = attacks[index];
 
-    occupancy = std::distance(occupancies, std::find(occupancies, occupancies + 4096, occupancy));
+    std::uint64_t capture = attack & ((whitePieces & (1ULL << square)) ? blackPieces : whitePieces);
 
-    std::uint64_t attack = attacks[occupancy];
-
+    attack &= ~(whitePieces | blackPieces);
     while (attack != 0) {
         const std::uint32_t target = getLSB(attack);
         const Color targetColor = (whitePieces & (1ULL << square)) ? WHITE : BLACK;
         legalMoves.emplace_back(square, target, QUIET_MOVE, targetColor, piece);
         attack &= ~(1ULL << target);
     }
+
+    while (capture != 0) {
+        const std::uint32_t target = getLSB(capture);
+        const Color targetColor = (whitePieces & (1ULL << square)) ? WHITE : BLACK;
+        legalMoves.emplace_back(square, target, CAPTURE, targetColor, piece);
+        capture &= ~(1ULL << target);
+    }
 }
 
+std::uint64_t Board::generateNonSlidingMovesAsBits(std::int32_t square, std::uint64_t mask, Piece piece) const {
+    const std::uint64_t pieces = (whitePieces & (1ULL << square)) ? whitePieces : blackPieces;
+    const std::uint64_t oppositePieces = (whitePieces & (1ULL << square)) ? blackPieces : whitePieces;
+
+    std::uint64_t moves = (mask & ~pieces) & oppositePieces;
+
+    return moves;
+}
+    
+
+std::uint64_t Board::generateSlidingMovesAsBits(std::int32_t square, std::uint64_t mask, std::uint64_t magic_number, const std::uint64_t attacks[4096], Piece piece) const {
+    std::uint64_t occupancy = ((whitePieces | blackPieces) & mask);
+    int index = (int)((occupancy * magic_number) >> (64 - __popcnt64(mask)));
+    std::uint64_t attack = attacks[index];
+
+    std::uint64_t moves = attack & ~(((whitePieces & (1ULL << square)) ?  whitePieces : blackPieces));
+
+    return moves;
+}
+
+
+std::uint64_t Board::GetAttackedPieces(Color color) const {
+    std::uint64_t attackedPieces = 0;
+
+    //generatePawnMoves(color, attackedPieces);  // Modify this function to update the attackedPieces bitboard instead of the legalMoves vector
+
+    std::uint64_t knights = color == WHITE ? whiteKnights : blackKnights;
+
+    while (knights) {
+        const int square = getLSB(knights);
+
+        attackedPieces |= generateNonSlidingMovesAsBits(square, Bitboard::knightAttack[square], KNIGHT);
+
+        // Clear the least significant bit of the current piece
+        knights &= (knights - 1);
+    }
+
+    std::uint64_t kings = color == WHITE ? whiteKing : blackKing;
+
+    while (kings) {
+        const int square = getLSB(kings);
+
+        attackedPieces |= generateNonSlidingMovesAsBits(square, Bitboard::kingAttack[square], KING);
+
+        // Clear the least significant bit of the current piece
+        kings &= (kings - 1);
+    }
+
+    std::uint64_t bishops = color == WHITE ? whiteBishops : blackBishops;
+
+    while (bishops) {
+        const int square = getLSB(bishops);
+
+        attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::bishopMasks[square], Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square], BISHOP);
+
+        // Clear the least significant bit of the current piece
+        bishops &= (bishops - 1);
+    }
+
+    std::uint64_t rooks = color == WHITE ? whiteRooks : blackRooks;
+
+    while (rooks) {
+        const int square = getLSB(rooks);
+
+        attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::rookMasks[square], Bitboard::rookMagic[square], Bitboard::rookAttacks[square], ROOK);
+
+        // Clear the least significant bit of the current piece
+        rooks &= (rooks - 1);
+    }
+
+    std::uint64_t queens = color == WHITE ? whiteQueens : blackQueens;
+
+    while (queens) {
+        const int square = getLSB(queens);
+
+        attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::rookMasks[square], Bitboard::rookMagic[square], Bitboard::rookAttacks[square], QUEEN);
+        attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::bishopMasks[square], Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square], QUEEN);
+
+        // Clear the least significant bit of the current piece
+        queens &= (queens - 1);
+    }
+
+    return attackedPieces;
+}

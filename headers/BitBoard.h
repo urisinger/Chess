@@ -126,6 +126,10 @@ private:
 
     bool isOccupiedByColor(std::int32_t square, Color color) const;
 
+    std::uint64_t generateSlidingMovesAsBits(std::int32_t square, std::uint64_t mask, std::uint64_t magic_number, const std::uint64_t attacks[4096], Piece piece) const;
+    std::uint64_t generateNonSlidingMovesAsBits(std::int32_t square, std::uint64_t mask, Piece piece) const;
+
+    std::uint64_t Board::GetAttackedPieces(Color color) const;
 
 
     inline void generatePawnMoves(const Color color, std::vector<Move>& legalMoves) const;

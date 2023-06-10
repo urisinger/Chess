@@ -103,7 +103,7 @@ int main()
                 if (!mousealreadyclicked) {
                     double xpos, ypos;
                     glfwGetCursorPos(main_win.GetWindowInstance(), &xpos, &ypos);
-                    char tile = floor(8 - (ypos / main_win.GetWindowHeight()) * 8) * 8 + floor((xpos / main_win.GetWindowWidth()) * 8);
+                    int tile = floor(8 - (ypos / main_win.GetWindowHeight()) * 8) * 8 + floor((xpos / main_win.GetWindowWidth()) * 8);
                     auto found = std::find_if(legal.begin(), legal.end(), [tile, lasttile](const Move& a) { return a.getTo() == tile && a.getFrom() == lasttile; });
                 
                     if (found != legal.end()) {

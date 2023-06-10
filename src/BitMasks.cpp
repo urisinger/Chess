@@ -323,7 +323,8 @@ void Bitboard::generateRookAttacks() {
 
 void Bitboard::generateRookMagicNumbers() {
     for (int square = 0; square < 64; ++square) {
-        rookMagic[square] = generateMagicNumber(square, false);    }
+        rookMagic[square] = generateMagicNumber(square, false);    
+    }
 }
 
 void print_bitboard(std::uint64_t bitboard) {
@@ -341,7 +342,7 @@ std::uint64_t Bitboard::generateMagicNumber(int square, bool is_bishop) {
     std::uint64_t occupancies[4096];
 
     // init attack tables
-    std::uint64_t* attacks;
+    std::uint64_t* attacks = is_bishop ? bishopAttacks[square] : rookAttacks[square];
 
     // init used attacks
     std::uint64_t used_attacks[4096];
@@ -362,8 +363,8 @@ std::uint64_t Bitboard::generateMagicNumber(int square, bool is_bishop) {
         generateRookOccupancy(square, occupancies);
     }
 
-
-    attacks = is_bishop ? bishopAttacks[square] : rookAttacks[square];
+    for(int i =0 ; i < (1 << relevant_bits); i++)
+        attacks[i] = is_bishop ? getBishopAttacks(square, occupancies[i]) : getRookAttacks(square, occupancies[i]);
 
 
     // test magic numbers loop
@@ -385,21 +386,23 @@ std::uint64_t Bitboard::generateMagicNumber(int square, bool is_bishop) {
         for (index = 0, fail = 0; !fail && index < occupancy_indicies; index++)
         {
             // init magic index
-            std::uint64_t magic_index = ((occupancies[index] * magic_number) >> (64 - relevant_bits));
+            int magic_index = (int)((occupancies[index] * magic_number) >> (64 - relevant_bits));
 
             // if magic index works
-            if (used_attacks[magic_index] == 0ULL)
+            if (used_attacks[magic_index] == 0ULL) {
                 // init used attacks
                 used_attacks[magic_index] = attacks[index];
-
+            }
             else if (used_attacks[magic_index] != attacks[index]) {
                 fail = 1;
             }
         }
 
         // if magic number works
-        if (!fail)
+        if (!fail) {
+            memcpy(attacks, used_attacks, sizeof(used_attacks));
             return magic_number;
+        }
     }
 
     // if magic number doesn't work

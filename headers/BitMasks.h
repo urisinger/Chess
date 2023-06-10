@@ -25,8 +25,7 @@ public:
         generateRookBitmasks();
         generateKnightBitmasks();
         generateKingBitmasks();
-        generateBishopAttacks();
-        generateRookAttacks();
+
         generateBishopMagicNumbers();
         generateRookMagicNumbers();
     }
