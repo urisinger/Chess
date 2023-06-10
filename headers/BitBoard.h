@@ -14,6 +14,8 @@ constexpr uint8_t BLACK_KINGSIDE_CASTLING = 0x4;      // 00000100
 constexpr uint8_t BLACK_QUEENSIDE_CASTLING = 0x8;     // 00001000
 
 
+
+
 enum Piece {
     EMPTY=0,
     QUEEN,
@@ -140,4 +142,3 @@ private:
 
     Piece pieceFromChar(char c) const;
 };
-

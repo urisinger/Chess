@@ -11,6 +11,20 @@
 #include <algorithm>
 #include <chrono>
 
+int counter = 0;
+void gooevermoves(int depth, Board board) {
+    if (depth == 0) return;
+
+    auto moves = board.GenerateLegalMoves(board.currentPlayer);
+    if (moves.empty()) return;
+    for (auto move : moves) {
+        Board newboard = board;
+        newboard.movePiece(move);
+        gooevermoves(depth - 1, newboard);
+        counter++;
+    }
+}
+
 int main()
 {
     {
@@ -97,7 +111,11 @@ int main()
         std::vector<Move> legal;
         int lasttile = -1;
 
-
+        auto start = std::chrono::high_resolution_clock::now();
+        counter = 0;
+        gooevermoves(6, Board);
+        std::cout << counter << std::endl;
+        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << std::endl;
 
         while (!main_win.WindowShouldClose()) {
             if (glfwGetMouseButton(main_win.GetWindowInstance(), GLFW_MOUSE_BUTTON_LEFT) ) {
