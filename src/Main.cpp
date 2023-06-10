@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <chrono>
 
 int main()
 {
@@ -139,8 +140,10 @@ int main()
 
                         int highlights[64];
                         std::fill(highlights, highlights + 64, 0);
-
+                        
+                        auto start = std::chrono::high_resolution_clock::now();
                         legal = Board.GenerateLegalMoves(Board.currentPlayer);
+                        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << std::endl;
                         for (auto move : legal) {
                             if (move.getFrom() == tile)
                                 highlights[move.getTo()] = 1;

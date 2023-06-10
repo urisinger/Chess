@@ -30,27 +30,32 @@ Board::Board(const std::string& fen) :
     if (!std::getline(iss, token, ' '))
         return;  // FEN is invalid or incomplete
 
-    int squareIndex = 63;
+    int rank = 7;
+    int file = 0;
+
     for (char c : token) {
         if (c == '/') {
             // Skip to the next rank
-            continue;
+            rank--;
+            file = 0;
         }
         else if (std::isdigit(c)) {
             // Skip empty squares
-            squareIndex -= c - '0';
+            file += c - '0';
         }
         else {
-            // Set the piece in the Board
+            // Set the piece in the board
             Color color = std::islower(c) ? BLACK : WHITE;
             Piece piece = pieceFromChar(std::tolower(c));
-            setSquare(squareIndex, color, piece);
-            squareIndex--;
+            setSquare(rank * 8 + file, color, piece);
+            file++;
         }
 
-        if (squareIndex < 0)
+        if (rank < 0)
             break;  // Board is fully initialized
     }
+
+
 
     // Parse the side to move field
     if (!std::getline(iss, token, ' '))
@@ -553,10 +558,30 @@ std::uint64_t Board::generateSlidingMovesAsBits(std::int32_t square, std::uint64
 }
 
 
+std::uint64_t Board::generatePawnMovesAsBits(const Color color) const {
+    const std::uint64_t pawns = (color == WHITE) ? whitePawns : blackPawns;
+    const std::uint64_t oppsitePieces = (color == WHITE) ? blackPieces : whitePieces;
+
+    // Determine the direction based on the pawn color
+    const std::int32_t direction = (color == WHITE) ? 1 : -1;
+
+    // Generate pawn captures
+    std::uint64_t pawnLeftCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) >> 1) & ~(0x8080808080808080ULL)) & oppsitePieces;
+    std::uint64_t pawnRightCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) << 1) & ~(0x0101010101010101ULL)) & oppsitePieces;
+
+
+    // Combine left and right captures
+    std::uint64_t captures = pawnLeftCaptures | pawnRightCaptures;
+
+    return captures;
+}
+
+
+
 std::uint64_t Board::GetAttackedPieces(Color color) const {
     std::uint64_t attackedPieces = 0;
 
-    //generatePawnMoves(color, attackedPieces);  // Modify this function to update the attackedPieces bitboard instead of the legalMoves vector
+    attackedPieces |= generatePawnMovesAsBits(color);  // Modify this function to update the attackedPieces bitboard instead of the legalMoves vector
 
     std::uint64_t knights = color == WHITE ? whiteKnights : blackKnights;
 
