@@ -88,7 +88,7 @@ public:
 
     void movePiece(const Move& move);
 
-    std::vector<Move> Board::GenerateLegalMoves(Color color) const;
+    std::vector<Move> GenerateLegalMoves(Color color) const;
 
     Color currentPlayer;
 
@@ -122,9 +122,9 @@ private:
 
     std::uint64_t getColorPieces(Color color) const;
 
-    std::uint64_t& Board::getWhitePiece(Piece piece);
+    std::uint64_t& getWhitePiece(Piece piece);
 
-    std::uint64_t& Board::getBlackPiece(Piece piece);
+    std::uint64_t& getBlackPiece(Piece piece);
 
     bool isOccupiedByColor(std::int32_t square, Color color) const;
 
@@ -132,7 +132,7 @@ private:
     std::uint64_t generateNonSlidingMovesAsBits(std::int32_t square, std::uint64_t mask, Piece piece) const;
     std::uint64_t generatePawnMovesAsBits(const Color color) const;
 
-    std::uint64_t Board::GetAttackedPieces(Color color) const;
+    std::uint64_t GetAttackedPieces(Color color) const;
 
 
     inline void generatePawnMoves(const Color color, std::vector<Move>& legalMoves) const;

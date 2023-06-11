@@ -1,10 +1,13 @@
 #include "BitMasks.h"
-#include <random>
+#include <immintrin.h>
+#include <cstring>
+#include <popcntintrin.h>
+#include <stdlib.h>
 
 /*
 Help functions
 */
-static unsigned long x = 123456789, y = 362436069, z = 521288629;
+static unsigned long x = 487321, y = 36246069, z = 52128629;
 
 unsigned long xorshf96(void) {          //period 2^96-1
     unsigned long t;
@@ -32,18 +35,15 @@ int getLSB(std::uint64_t value) {
         return -1;  // No bits are set
     }
 
-    return (int)_tzcnt_u64(value);
+    return (int)__builtin_ia32_tzcnt_u64(value);
 }
 
+int countBits(std::uint64_t value){
+    return (int)__builtin_popcountll(value);
+}
 /*
 bitmask generators
 */
-
-void Bitboard::generateQueenBitmasks() {
-    for (int square = 0; square < 64; ++square) {
-        queenAttack[square] = bishopMasks[square] | rookMasks[square];
-    }
-}
 
 void Bitboard::generateKnightBitmasks() {
     constexpr std::int32_t knightOffsets[][2] = {
@@ -153,12 +153,10 @@ void Bitboard::generateRookBitmasks() {
 
 
 void Bitboard::generateBishopOccupancy(int square, std::uint64_t returns[]) {
-    int rank = square / 8;
-    int file = square % 8;
 
-    std::uint64_t occupancy = 0;
+    std::uint64_t occupancy;
     std::uint64_t mask = bishopMasks[square];
-    int bits = __popcnt64(mask);
+    int bits = countBits(mask);
 
     // Generate occupancy masks for each possible occupancy set
     for (int i = 0; i < (1 << bits); ++i) {
@@ -223,7 +221,7 @@ std::uint64_t Bitboard::getBishopAttacks(int square, std::uint64_t occupancy) {
 void Bitboard::generateBishopAttacks() {
     for (int square = 0; square < 64; ++square) {
         std::uint64_t mask = bishopMasks[square];
-        int numOccupancies = 1 << __popcnt64(mask);
+        int numOccupancies = 1 << countBits(mask);
         std::uint64_t occupancy[4096];
 
         generateBishopOccupancy(square, occupancy);
@@ -243,12 +241,10 @@ void Bitboard::generateBishopMagicNumbers() {
 
 
 void Bitboard::generateRookOccupancy(int square, std::uint64_t returns[]) {
-    int rank = square / 8;
-    int file = square % 8;
 
     std::uint64_t occupancy = 0;
     std::uint64_t mask = rookMasks[square];
-    int bits = __popcnt64(mask);
+    int bits = countBits(mask);
 
     // Generate occupancy masks for each possible occupancy set
     for (int i = (1 << bits)-1; i >= 0 ; --i) {
@@ -309,7 +305,7 @@ std::uint64_t Bitboard::getRookAttacks(int square, std::uint64_t occupancy) {
 void Bitboard::generateRookAttacks() {
     for (int square = 0; square < 64; ++square) {
         std::uint64_t mask = rookMasks[square];
-        int numOccupancies = 1 << __popcnt64(mask);
+        int numOccupancies = 1 << countBits(mask);
         std::uint64_t* attacks = rookAttacks[square];
         std::uint64_t occupancy[4096];
 
@@ -350,12 +346,12 @@ std::uint64_t Bitboard::generateMagicNumber(int square, bool is_bishop) {
     // init attack mask for a current piece
     std::uint64_t attack_mask = is_bishop ? bishopMasks[square] : rookMasks[square];
 
-    int relevant_bits = __popcnt64(attack_mask);
+    int relevant_bits = countBits(attack_mask);
 
     // init occupancy indicies
     int occupancy_indicies = 1 << relevant_bits;
 
-
+    memset(occupancies,0ULL,sizeof(occupancies));
     if (is_bishop) {
         generateBishopOccupancy(square, occupancies);
     }
@@ -363,21 +359,17 @@ std::uint64_t Bitboard::generateMagicNumber(int square, bool is_bishop) {
         generateRookOccupancy(square, occupancies);
     }
 
-    for(int i =0 ; i < (1 << relevant_bits); i++)
-        attacks[i] = is_bishop ? getBishopAttacks(square, occupancies[i]) : getRookAttacks(square, occupancies[i]);
-
-
     // test magic numbers loop
     for (int random_count = 0; random_count < 100000000; random_count++)
     {
         // generate magic number candidate
-        std::uint64_t magic_number = random_uint64() & random_uint64() & random_uint64();
+        std::uint64_t magic_number = random_uint64() & random_uint64() & random_uint64() & random_uint64();
 
         // skip inappropriate magic numbers
-        if (__popcnt64((attack_mask * magic_number) & 0xFF00000000000000) < 6) continue;
+        if (countBits((attack_mask * magic_number) & 0xFF00000000000000) < 6) continue;
 
         // init used attacks
-        memset(used_attacks, 0ULL, sizeof(used_attacks));
+        memset(used_attacks,0ULL,sizeof(used_attacks));
 
         // init index & fail flag
         int index, fail;
@@ -398,9 +390,25 @@ std::uint64_t Bitboard::generateMagicNumber(int square, bool is_bishop) {
             }
         }
 
+        for (index = 0, fail = 0; !fail && index < occupancy_indicies; index++)
+        {
+            // init magic index
+            int magic_index = (int)((occupancies[index] * magic_number) >> (64 - relevant_bits));
+
+            // if magic index works
+            if (used_attacks[magic_index] == 0ULL) {
+                // init used attacks
+                used_attacks[magic_index] = attacks[index];
+            }
+            else if (used_attacks[magic_index] != attacks[index]) {
+                fail = 1;
+            }
+        }
+
+
         // if magic number works
         if (!fail) {
-            memcpy(attacks, used_attacks, sizeof(used_attacks));
+            memcpy(attacks,used_attacks,is_bishop ? 512 : 4096);
             return magic_number;
         }
     }

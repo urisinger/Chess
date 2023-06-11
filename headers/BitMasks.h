@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdint>
 
+int countBits(std::uint64_t);
 int getLSB(std::uint64_t value);
 void print_bitboard(std::uint64_t bitboard);
 
@@ -25,7 +26,8 @@ public:
         generateRookBitmasks();
         generateKnightBitmasks();
         generateKingBitmasks();
-
+        generateBishopAttacks();
+        generateRookAttacks();
         generateBishopMagicNumbers();
         generateRookMagicNumbers();
     }

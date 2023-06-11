@@ -12,16 +12,18 @@
 #include <chrono>
 
 int counter = 0;
-void gooevermoves(int depth, Board board) {
-    if (depth == 0) return;
+void BestMove(int depth, Board& board) {
+    if (depth == 0) {(counter++);return;}
+
 
     auto moves = board.GenerateLegalMoves(board.currentPlayer);
-    if (moves.empty()) return;
+    if (moves.empty()) {(counter++);return;}
+
     for (auto move : moves) {
         Board newboard = board;
         newboard.movePiece(move);
-        gooevermoves(depth - 1, newboard);
-        counter++;
+
+        BestMove(depth - 1, newboard);
     }
 }
 
@@ -51,7 +53,7 @@ int main()
 
 
 
-        Window main_win(1000,1000,"meoww",WindowMode::WINDOWED);
+        Window main_win(1000,1000,"CHESS GAME OK?",WindowMode::WINDOWED);
 
         main_win.MakeWindowContextCurrent();
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -113,7 +115,7 @@ int main()
 
         auto start = std::chrono::high_resolution_clock::now();
         counter = 0;
-        gooevermoves(6, Board);
+        BestMove(3, Board);
         std::cout << counter << std::endl;
         std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << std::endl;
 
@@ -122,7 +124,7 @@ int main()
                 if (!mousealreadyclicked) {
                     double xpos, ypos;
                     glfwGetCursorPos(main_win.GetWindowInstance(), &xpos, &ypos);
-                    int tile = floor(8 - (ypos / main_win.GetWindowHeight()) * 8) * 8 + floor((xpos / main_win.GetWindowWidth()) * 8);
+                    int tile = (int)(8 - (ypos / main_win.GetWindowHeight()) * 8) * 8 + (int)((xpos / main_win.GetWindowWidth()) * 8);
                     auto found = std::find_if(legal.begin(), legal.end(), [tile, lasttile](const Move& a) { return a.getTo() == tile && a.getFrom() == lasttile; });
                 
                     if (found != legal.end()) {
