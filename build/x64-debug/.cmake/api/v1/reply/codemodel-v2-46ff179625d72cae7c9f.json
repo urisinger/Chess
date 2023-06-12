@@ -6,7 +6,7 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Release-d0094a50bb2071803777.json",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.8"
@@ -19,7 +19,7 @@
 					]
 				}
 			],
-			"name" : "Release",
+			"name" : "Debug",
 			"projects" : 
 			[
 				{
@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "Paint::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Paint-Release-d861897e50086c617225.json",
+					"jsonFile" : "target-Paint-Debug-3f0fb2f1531297b13cf3.json",
 					"name" : "Paint",
 					"projectIndex" : 0
 				}
@@ -49,7 +49,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-release",
+		"build" : "C:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-debug",
 		"source" : "C:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com"
 	},
 	"version" : 

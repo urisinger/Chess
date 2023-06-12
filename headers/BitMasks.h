@@ -26,17 +26,16 @@ public:
         generateRookBitmasks();
         generateKnightBitmasks();
         generateKingBitmasks();
-        generateBishopAttacks();
-        generateRookAttacks();
+
         generateBishopMagicNumbers();
         generateRookMagicNumbers();
+        generateBishopAttacks();
+        generateRookAttacks();
     }
 
     static void generateBishopBitmasks();
 
     static void generateKingBitmasks();
-
-    static void generateRookOccupancy(int square, std::uint64_t returns[4096]);
 
     static void generateRookBitmasks();
 
@@ -44,7 +43,6 @@ public:
 
     static void generateRookAttacks();
 
-    static void generateBishopOccupancy(int square, std::uint64_t returns[512]);
 
     static void generateQueenBitmasks();
 

@@ -17,7 +17,7 @@ constexpr uint8_t BLACK_QUEENSIDE_CASTLING = 0x8;     // 00001000
 
 
 enum Piece {
-    EMPTY=0,
+    EMPTY = 0,
     QUEEN,
     KING,
     ROOK,
@@ -40,7 +40,8 @@ enum MoveFlag {
     KNIGHT_PROMOTE_CAPTURE,
     BISHOP_PROMOTE_CAPTURE,
     ROOK_PROMOTE_CAPTURE,
-    QUEEN_PROMOTE_CAPTURE
+    QUEEN_PROMOTE_CAPTURE,
+    CHECK
 };
 
 enum Color {
@@ -49,6 +50,9 @@ enum Color {
 };
 
 struct Move {
+    Move() : m_Move(0) {
+    }
+
     Move(unsigned int from, unsigned int to, unsigned int flags, Color color, Piece piece) {
         m_Move = ((static_cast<unsigned int>(piece) & 0x7) << 20) | ((static_cast<unsigned int>(color) & 0x1) << 16) |
             ((flags & 0xf) << 12) | ((from & 0x3f) << 6) | (to & 0x3f);
@@ -59,6 +63,8 @@ struct Move {
     inline unsigned int getTo() const { return m_Move & 0x3f; }
     inline unsigned int getFrom() const { return (m_Move >> 6) & 0x3f; }
     inline MoveFlag getFlags() const { return static_cast<MoveFlag>((m_Move >> 12) & 0x0f); }
+    inline void setFlags(MoveFlag flags) { m_Move &= ~0x0f000; m_Move |= (static_cast<unsigned int>(flags) & 0x0f) << 12; }
+
 
     inline void setTo(unsigned int to) { m_Move &= ~0x3f; m_Move |= to & 0x3f; }
     inline void setFrom(unsigned int from) { m_Move &= ~0xfc0; m_Move |= (from & 0x3f) << 6; }
@@ -68,6 +74,14 @@ struct Move {
     inline Color getColor() const { return static_cast<Color>((m_Move >> 16) & 0x1); }
     inline Piece getPiece() const { return static_cast<Piece>((m_Move >> 20) & 0x7); }
 
+    std::string to_str() {
+        char fromFile = 'a' + (getFrom() % 8);
+        char toFile = 'a' + (getTo() % 8);
+        std::stringstream ss;
+        ss << fromFile << getFrom() / 8 + 1 << toFile << getTo() / 8 + 1;
+        return ss.str();
+    }
+
     inline bool operator==(Move a) const { return (m_Move & 0xffff) == (a.m_Move & 0xffff); }
     inline bool operator!=(Move a) const { return (m_Move & 0xffff) != (a.m_Move & 0xffff); }
 
@@ -75,11 +89,32 @@ private:
     unsigned int m_Move;
 };
 
+struct LegalMoves {
+    int count;
+    Move moves[256];
+
+    LegalMoves() : count(0) {}
+
+    void emplace_back(unsigned int from, unsigned int to, unsigned int flags, Color color, Piece piece) {
+        moves[count] = Move(from, to, flags, color, piece);
+        count++;
+    }
+
+    void push_back(Move& move) {
+        moves[count] = move;
+        count++;
+    }
+
+    void clear() {
+        memset(moves, 0, sizeof(moves));
+    }
+};
+
 class Board {
 public:
     Board(const std::string& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
-    void getBoard(int board[64]) ;
+    void getBoard(int board[64]);
 
     bool isSquareOccupied(std::uint32_t square) const;
     Piece getPiece(std::uint32_t square) const;
@@ -88,7 +123,12 @@ public:
 
     void movePiece(const Move& move);
 
-    std::vector<Move> GenerateLegalMoves(Color color) const;
+    int eval() const;
+
+    LegalMoves GenerateLegalMoves(Color color) const;
+
+    bool isKingAttacked(Color color) const;
+
 
     Color currentPlayer;
 
@@ -135,9 +175,9 @@ private:
     std::uint64_t GetAttackedPieces(Color color) const;
 
 
-    inline void generatePawnMoves(const Color color, std::vector<Move>& legalMoves) const;
-    inline void generateNonSlidingMoves(std::int32_t square, std::vector<Move>& legalMoves, std::uint64_t mask, Piece piece) const;
-    void generateSlidingMoves(std::int32_t square, std::vector<Move>& legalMoves, std::uint64_t mask, std::uint64_t magic_number, std::uint64_t attacks[4096], Piece piece) const;
+    inline void generatePawnMoves(const Color color, LegalMoves& legalMoves) const;
+    inline void generateNonSlidingMoves(std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, Piece piece) const;
+    void generateSlidingMoves(std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, std::uint64_t magic_number, std::uint64_t attacks[4096], Piece piece) const;
 
 
     Piece pieceFromChar(char c) const;

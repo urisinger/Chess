@@ -1,5 +1,5 @@
 #include "BitBoard.h"
-
+#include <algorithm>
 
 
 Board::Board(const std::string& fen) :
@@ -98,7 +98,7 @@ Board::Board(const std::string& fen) :
 }
 
 
-void Board::getBoard(int board[64]){
+void Board::getBoard(int board[64]) {
     std::fill(board, board + 64, 0);
 
 
@@ -138,7 +138,7 @@ bool Board::isSquareOccupied(std::uint32_t square) const {
     return (blackPieces & mask) || (whitePieces & mask);
 }
 
-Piece Board::getPiece(std::uint32_t square) const{
+Piece Board::getPiece(std::uint32_t square) const {
     const std::uint64_t mask = 1ULL << square;
 
     if ((whitePawns | blackPawns) & mask) {
@@ -165,7 +165,7 @@ Piece Board::getPiece(std::uint32_t square) const{
 }
 
 
-std::uint64_t& Board::getWhitePiece(Piece piece){
+std::uint64_t& Board::getWhitePiece(Piece piece) {
     switch (piece) {
     case PAWN: return whitePawns;
     case KNIGHT: return whiteKnights;
@@ -177,7 +177,7 @@ std::uint64_t& Board::getWhitePiece(Piece piece){
     }
 }
 
-std::uint64_t& Board::getBlackPiece(Piece piece){
+std::uint64_t& Board::getBlackPiece(Piece piece) {
     switch (piece) {
     case PAWN: return blackPawns;
     case KNIGHT: return blackKnights;
@@ -190,8 +190,8 @@ std::uint64_t& Board::getBlackPiece(Piece piece){
 }
 
 void inline Board::setSquare(std::uint32_t square, Color color, Piece piece) {
-    ((color == WHITE) ? getWhitePiece(piece) : getBlackPiece(piece) )|= 1ULL << square;
-    ((color == WHITE) ? whitePieces: blackPieces )|= 1ULL << square;
+    ((color == WHITE) ? getWhitePiece(piece) : getBlackPiece(piece)) |= 1ULL << square;
+    ((color == WHITE) ? whitePieces : blackPieces) |= 1ULL << square;
 }
 
 bool Board::isOccupiedByColor(std::int32_t square, Color color) const {
@@ -230,40 +230,39 @@ void Board::movePiece(const Move& move) {
 
     if (flags == KING_CASTLE) {
         if (color == WHITE) {
-                // Move the rook from H1 to F1
-                const unsigned int rookFrom = 7;
-                const unsigned int rookTo = 5;
-                const Piece rook = getPiece(rookFrom);
-                castleFlags &= ~(WHITE_KINGSIDE_CASTLING | WHITE_QUEENSIDE_CASTLING);
-                setSquare(rookTo, color, rook);
-                clearSquare(rookFrom);
-        } else if (color == BLACK) {
-                // Move the rook from H8 to F8
-                const unsigned int rookFrom = 63;
-                const unsigned int rookTo = 61;
-                const Piece rook = getPiece(rookFrom);
-                castleFlags &= ~(BLACK_KINGSIDE_CASTLING | BLACK_QUEENSIDE_CASTLING);
-                setSquare(rookTo, color, rook);
-                clearSquare(rookFrom);
+            // Move the rook from H1 to F1
+            const unsigned int rookFrom = 7;
+            const unsigned int rookTo = 5;
+            castleFlags &= ~(WHITE_KINGSIDE_CASTLING | WHITE_QUEENSIDE_CASTLING);
+            setSquare(rookTo, color, ROOK);
+            clearSquare(rookFrom);
         }
-    } else if (flags == QUEEN_CASTLE) {
+        else if (color == BLACK) {
+            // Move the rook from H8 to F8
+            const unsigned int rookFrom = 63;
+            const unsigned int rookTo = 61;
+            castleFlags &= ~(BLACK_KINGSIDE_CASTLING | BLACK_QUEENSIDE_CASTLING);
+            setSquare(rookTo, color, ROOK);
+            clearSquare(rookFrom);
+        }
+    }
+    else if (flags == QUEEN_CASTLE) {
         if (color == WHITE) {
-                // Move the rook from A1 to D1
-                const unsigned int rookFrom = 0;
-                const unsigned int rookTo = 3;
-                castleFlags &= ~(WHITE_KINGSIDE_CASTLING | WHITE_QUEENSIDE_CASTLING);
-                const Piece rook = getPiece(rookFrom);
-                setSquare(rookTo, color, rook);
-                clearSquare(rookFrom);
-        } else if (color == BLACK) {
-                // Move the rook from A8 to D8
-                const unsigned int rookFrom = 56;
-                const unsigned int rookTo = 59;
+            // Move the rook from A1 to D1
+            const unsigned int rookFrom = 0;
+            const unsigned int rookTo = 3;
+            castleFlags &= ~(WHITE_KINGSIDE_CASTLING | WHITE_QUEENSIDE_CASTLING);
+            setSquare(rookTo, color, ROOK);
+            clearSquare(rookFrom);
+        }
+        else if (color == BLACK) {
+            // Move the rook from A8 to D8
+            const unsigned int rookFrom = 56;
+            const unsigned int rookTo = 59;
             castleFlags &= ~(BLACK_KINGSIDE_CASTLING | BLACK_QUEENSIDE_CASTLING);
 
-            const Piece rook = getPiece(rookFrom);
-                setSquare(rookTo, color, rook);
-                clearSquare(rookFrom);
+            setSquare(rookTo, color, ROOK);
+            clearSquare(rookFrom);
         }
     }
 
@@ -272,7 +271,8 @@ void Board::movePiece(const Move& move) {
         if (color == WHITE) {
             castleFlags &= ~WHITE_KINGSIDE_CASTLING;
             castleFlags &= ~WHITE_QUEENSIDE_CASTLING;
-        } else {
+        }
+        else {
             castleFlags &= ~BLACK_KINGSIDE_CASTLING;
             castleFlags &= ~BLACK_KINGSIDE_CASTLING;
         }
@@ -285,7 +285,8 @@ void Board::movePiece(const Move& move) {
                 castleFlags &= ~WHITE_QUEENSIDE_CASTLING;
             else if (from == 7)
                 castleFlags &= ~WHITE_KINGSIDE_CASTLING;
-        } else {
+        }
+        else {
             if (from == 56)
                 castleFlags &= ~BLACK_QUEENSIDE_CASTLING;
             else if (from == 63)
@@ -298,14 +299,14 @@ void Board::movePiece(const Move& move) {
         const unsigned int captureSquare = to;
         const Piece capturedPiece = getPiece(captureSquare);
         if (capturedPiece == ROOK) {
-                if (captureSquare == 0)
-                    castleFlags &= ~WHITE_QUEENSIDE_CASTLING;
-                else if (captureSquare == 7)
-                    castleFlags &= ~WHITE_QUEENSIDE_CASTLING;
-                else if (captureSquare == 56)
-                    castleFlags &= ~BLACK_QUEENSIDE_CASTLING;
-                else if (captureSquare == 63)
-                    castleFlags &= ~BLACK_KINGSIDE_CASTLING;
+            if (captureSquare == 0)
+                castleFlags &= ~WHITE_QUEENSIDE_CASTLING;
+            else if (captureSquare == 7)
+                castleFlags &= ~WHITE_QUEENSIDE_CASTLING;
+            else if (captureSquare == 56)
+                castleFlags &= ~BLACK_QUEENSIDE_CASTLING;
+            else if (captureSquare == 63)
+                castleFlags &= ~BLACK_KINGSIDE_CASTLING;
         }
     }
 
@@ -342,16 +343,16 @@ void Board::movePiece(const Move& move) {
     currentPlayer = (currentPlayer == WHITE) ? BLACK : WHITE;
 }
 
-std::vector<Move> Board::GenerateLegalMoves(Color color) const {
-    std::vector<Move> legalMoves;
-    legalMoves.reserve(256);
+
+LegalMoves Board::GenerateLegalMoves(Color color) const {
+    LegalMoves legalMoves;
 
 
     generatePawnMoves(color, legalMoves);
 
     std::uint64_t knights = color == WHITE ? whiteKnights : blackKnights;
 
-    while(knights){
+    while (knights) {
         const int square = getLSB(knights);
 
         generateNonSlidingMoves(square, legalMoves, Bitboard::knightAttack[square], KNIGHT);
@@ -402,7 +403,7 @@ std::vector<Move> Board::GenerateLegalMoves(Color color) const {
     while (bishops) {
         const int square = getLSB(bishops);
 
-        generateSlidingMoves(square, legalMoves, Bitboard::bishopMasks[square],Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square], BISHOP);
+        generateSlidingMoves(square, legalMoves, Bitboard::bishopMasks[square], Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square], BISHOP);
 
         // Clear the least significant bit of the current piece
         bishops &= (bishops - 1);
@@ -433,25 +434,40 @@ std::vector<Move> Board::GenerateLegalMoves(Color color) const {
         queens &= (queens - 1);
     }
 
-    for (auto it = legalMoves.begin(); it != legalMoves.end(); ) {
+    LegalMoves sortedMoves;
+
+    for (int i = 0; i < legalMoves.count; i++) {
+        Move move = legalMoves.moves[i];
         Board movedBoard = *this;
-        movedBoard.movePiece(*it);
+        movedBoard.movePiece(move);
 
         const std::uint64_t king = color == WHITE ? movedBoard.whiteKing : movedBoard.blackKing;
-        if ((king & movedBoard.GetAttackedPieces(color == WHITE ? BLACK : WHITE)) != 0) {
-            it = legalMoves.erase(it);  // Remove the move from the vector
-        }
-        else {
-            ++it;  // Move to the next element
+        const std::uint64_t opponentKing = color == WHITE ? movedBoard.blackKing : movedBoard.whiteKing;
+
+        if ((king & movedBoard.GetAttackedPieces(color == WHITE ? BLACK : WHITE)) == 0) {
+            // Move doesn't result in own king being in check
+
+            if ((opponentKing & movedBoard.GetAttackedPieces(color == WHITE ? WHITE : BLACK)) != 0) {
+                // Move results in opponent's king being in check
+                move.setFlags(CHECK);
+            }
+
+            sortedMoves.push_back(move);
         }
     }
 
+    // Sort the moves based on the CHECK flag
+    std::sort(sortedMoves.moves, sortedMoves.moves + sortedMoves.count, [](const Move& a, const Move& b) {
+        return (a.getFlags()) > (b.getFlags());
+        });
 
 
-    return legalMoves;
+
+
+    return sortedMoves;
 }
 
-inline void Board::generatePawnMoves(const Color color, std::vector<Move>& legalMoves) const{
+inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) const {
     const std::uint64_t colorPieces = (color == WHITE) ? whitePieces : blackPieces;
     const std::uint64_t oppsitePieces = (color == WHITE) ? blackPieces : whitePieces;
 
@@ -496,10 +512,10 @@ inline void Board::generatePawnMoves(const Color color, std::vector<Move>& legal
     std::uint64_t pawnRightCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) << 1) & ~(0x0101010101010101ULL)) & oppsitePieces;
 
 
-    
+
     while (pawnLeftCaptures != 0) {
         const std::int32_t targetSquare = getLSB(pawnLeftCaptures);
-        const std::int32_t sourceSquare = targetSquare - (direction * 8)+1;
+        const std::int32_t sourceSquare = targetSquare - (direction * 8) + 1;
 
         // Check if the capture is a pawn promotion
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
@@ -518,7 +534,7 @@ inline void Board::generatePawnMoves(const Color color, std::vector<Move>& legal
 
     while (pawnRightCaptures != 0) {
         const std::int32_t targetSquare = getLSB(pawnRightCaptures);
-        const std::int32_t sourceSquare = targetSquare - (direction * 8)-1;
+        const std::int32_t sourceSquare = targetSquare - (direction * 8) - 1;
 
         // Check if the capture is a pawn promotion
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
@@ -563,7 +579,7 @@ inline void Board::generatePawnMoves(const Color color, std::vector<Move>& legal
 }
 
 
-inline void Board::generateNonSlidingMoves(const std::int32_t square, std::vector<Move>& legalMoves, std::uint64_t mask, Piece piece) const {
+inline void Board::generateNonSlidingMoves(const std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, Piece piece) const {
     const std::uint64_t pieces = (whitePieces & (1ULL << square)) ? whitePieces : blackPieces;
     const std::uint64_t oppsitePieces = (whitePieces & (1ULL << square)) ? blackPieces : whitePieces;
 
@@ -585,10 +601,10 @@ inline void Board::generateNonSlidingMoves(const std::int32_t square, std::vecto
     }
 }
 
-void Board::generateSlidingMoves(std::int32_t square, std::vector<Move>& legalMoves, std::uint64_t mask,std::uint64_t magic_number, std::uint64_t attacks[4096], Piece piece) const {
+void Board::generateSlidingMoves(std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, std::uint64_t magic_number, std::uint64_t attacks[4096], Piece piece) const {
     std::uint64_t occupancy = ((whitePieces | blackPieces) & mask);
 
-    int index = (int)((occupancy*magic_number) >> (64 - countBits(mask)));
+    std::uint64_t index = (occupancy * magic_number) >> (64 - countBits(mask));
 
     std::uint64_t attack = attacks[index];
 
@@ -618,14 +634,14 @@ std::uint64_t Board::generateNonSlidingMovesAsBits(std::int32_t square, std::uin
 
     return moves;
 }
-    
+
 
 std::uint64_t Board::generateSlidingMovesAsBits(std::int32_t square, std::uint64_t mask, std::uint64_t magic_number, const std::uint64_t attacks[4096], Piece piece) const {
     std::uint64_t occupancy = ((whitePieces | blackPieces) & mask);
     int index = (int)((occupancy * magic_number) >> (64 - countBits(mask)));
     std::uint64_t attack = attacks[index];
 
-    std::uint64_t moves = attack & ~(((whitePieces & (1ULL << square)) ?  whitePieces : blackPieces));
+    std::uint64_t moves = attack & ~(((whitePieces & (1ULL << square)) ? whitePieces : blackPieces));
 
     return moves;
 }
@@ -653,7 +669,7 @@ std::uint64_t Board::GetAttackedPieces(Color color) const {
     std::uint64_t attackedPieces = 0;
 
     attackedPieces |= generatePawnMovesAsBits(
-            color);  // Modify this function to update the attackedPieces bitboard instead of the legalMoves vector
+        color);  // Modify this function to update the attackedPieces bitboard instead of the legalMoves vector
 
     std::uint64_t knights = color == WHITE ? whiteKnights : blackKnights;
 
@@ -683,8 +699,8 @@ std::uint64_t Board::GetAttackedPieces(Color color) const {
         const int square = getLSB(bishops);
 
         attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::bishopMasks[square],
-                                                     Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square],
-                                                     BISHOP);
+            Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square],
+            BISHOP);
 
         // Clear the least significant bit of the current piece
         bishops &= (bishops - 1);
@@ -696,7 +712,7 @@ std::uint64_t Board::GetAttackedPieces(Color color) const {
         const int square = getLSB(rooks);
 
         attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::rookMasks[square], Bitboard::rookMagic[square],
-                                                     Bitboard::rookAttacks[square], ROOK);
+            Bitboard::rookAttacks[square], ROOK);
 
         // Clear the least significant bit of the current piece
         rooks &= (rooks - 1);
@@ -708,14 +724,47 @@ std::uint64_t Board::GetAttackedPieces(Color color) const {
         const int square = getLSB(queens);
 
         attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::rookMasks[square], Bitboard::rookMagic[square],
-                                                     Bitboard::rookAttacks[square], QUEEN);
+            Bitboard::rookAttacks[square], QUEEN);
         attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::bishopMasks[square],
-                                                     Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square],
-                                                     QUEEN);
+            Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square],
+            QUEEN);
 
         // Clear the least significant bit of the current piece
         queens &= (queens - 1);
     }
 
     return attackedPieces;
+}
+
+bool Board::isKingAttacked(Color color) const {
+    return ((color == WHITE ? whiteKing : blackKing) & GetAttackedPieces(color == WHITE ? BLACK : WHITE)) != 0;
+}
+
+
+int Board::eval() const {
+    const int pawnWeight = 100;
+    const int knightWeight = 300;
+    const int bishopWeight = 300;
+    const int rookWeight = 500;
+    const int queenWeight = 900;
+
+    int whiteScore = 0;
+    int blackScore = 0;
+
+    // Evaluate white pieces
+    whiteScore += countBits(whitePawns) * pawnWeight;
+    whiteScore += countBits(whiteKnights) * knightWeight;
+    whiteScore += countBits(whiteBishops) * bishopWeight;
+    whiteScore += countBits(whiteRooks) * rookWeight;
+    whiteScore += countBits(whiteQueens) * queenWeight;
+
+    // Evaluate black pieces
+    blackScore += countBits(blackPawns) * pawnWeight;
+    blackScore += countBits(blackKnights) * knightWeight;
+    blackScore += countBits(blackBishops) * bishopWeight;
+    blackScore += countBits(blackRooks) * rookWeight;
+    blackScore += countBits(blackQueens) * queenWeight;
+
+    // Return the difference between white and black scores
+    return whiteScore - blackScore;
 }
