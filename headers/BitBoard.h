@@ -106,7 +106,7 @@ struct LegalMoves {
     }
 
     void clear() {
-        memset(moves, 0, sizeof(moves));
+        std::fill((unsigned  int*)moves, (unsigned  int*)(moves+256),0);
     }
 };
 

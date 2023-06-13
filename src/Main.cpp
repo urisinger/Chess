@@ -16,24 +16,6 @@ struct ScoredMove {
     Move move;
 };
 
-int countLegalMoves(Board& board, int moveDepth) {
-    if (moveDepth == 0) {
-        return 1;
-    }
-
-    int countt = 0;
-    auto moves = board.GenerateLegalMoves(board.currentPlayer);
-
-    for (int i = 0; i < moves.count; i++) {
-        Board newBoard = board;
-        newBoard.movePiece(moves.moves[i]);
-
-        countt += countLegalMoves(newBoard, moveDepth - 1);
-    }
-
-    return countt;
-}
-
 int count = 0;
 int Minimax(int depth, Board& board, int alpha, int beta, bool maximizingPlayer) {
     if (depth == 0) {
@@ -43,6 +25,11 @@ int Minimax(int depth, Board& board, int alpha, int beta, bool maximizingPlayer)
     }
 
     auto moves = board.GenerateLegalMoves(board.currentPlayer);
+    std::sort(moves.moves, moves.moves + moves.count, [](const Move& a, const Move& b) {
+
+        return (a.getFlags()) > (b.getFlags());
+    });
+
     if (moves.count == 0) {
         // Handle the case where no legal moves are available
         count++;
@@ -54,6 +41,7 @@ int Minimax(int depth, Board& board, int alpha, int beta, bool maximizingPlayer)
         for (int i = 0; i < moves.count; i++) {
             Board newboard = board;
             newboard.movePiece(moves.moves[i]);
+
 
             int currentScore = Minimax(depth - 1, newboard, alpha, beta, false);
 
@@ -169,7 +157,7 @@ int main()
         IndexBuffer IBO(sqaure_indcies, 6);
 
         Texture Tex("../Textures/ChessPiecesArray.png");
-        Board board;
+        Board board("Q6n/2N2p1K/2pp1p2/8/4kP2/3pB1n1/3Pp2N/7b w -- 0 1");
         Shader Backround("../Shaders/Simple.vert", "../Shaders/Backround.frag");
         Shader Pieces("../Shaders/Simple.vert", "../Shaders/Pieces.frag");
 
@@ -210,8 +198,8 @@ int main()
         int lasttile = -1;
         auto start = std::chrono::high_resolution_clock::now();
         count = 0;
-        int countt = countLegalMoves(board,4);
-        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " <<countt << std::endl;
+        Move betsmove = BestMove(7,board);
+        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << betsmove.to_str() << ", " << count << std::endl;
 
         while (!main_win.WindowShouldClose()) {
             if (glfwGetMouseButton(main_win.GetWindowInstance(), GLFW_MOUSE_BUTTON_LEFT)) {

@@ -44,7 +44,7 @@ int getLSB(std::uint64_t value) {
 }
 
 int countBits(std::uint64_t value){
-    return (int)_mm_popcnt_u64(value);
+    return (int)__builtin_popcountll(value);
 }
 /*
 bitmask generators

@@ -456,11 +456,6 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
         }
     }
 
-    // Sort the moves based on the CHECK flag
-    std::sort(sortedMoves.moves, sortedMoves.moves + sortedMoves.count, [](const Move& a, const Move& b) {
-        return (a.getFlags()) > (b.getFlags());
-        });
-
 
 
 
