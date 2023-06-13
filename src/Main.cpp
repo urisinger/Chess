@@ -8,107 +8,12 @@
 #include "BitBoard.h"
 
 #include <iostream>
-#include <algorithm>
+
 #include <chrono>
 
-struct ScoredMove {
-    int score;
-    Move move;
-};
 
-int count = 0;
-int Minimax(int depth, Board& board, int alpha, int beta, bool maximizingPlayer) {
-    if (depth == 0) {
-        // Evaluate the current board position and return the evaluation score
-        count++;
-        return (maximizingPlayer ? 1 : -1) * (board.currentPlayer == WHITE ? 1 : -1) * board.eval();
-    }
+#include "ChessEngine.h"
 
-    auto moves = board.GenerateLegalMoves(board.currentPlayer);
-    std::sort(moves.moves, moves.moves + moves.count, [](const Move& a, const Move& b) {
-
-        return (a.getFlags()) > (b.getFlags());
-    });
-
-    if (moves.count == 0) {
-        // Handle the case where no legal moves are available
-        count++;
-        return board.isKingAttacked(board.currentPlayer) ? (maximizingPlayer ? std::numeric_limits<int>::min()+1 : std::numeric_limits<int>::max()-1) : 0;
-    }
-
-    if (maximizingPlayer) {
-        int maxScore = std::numeric_limits<int>::min();
-        for (int i = 0; i < moves.count; i++) {
-            Board newboard = board;
-            newboard.movePiece(moves.moves[i]);
-
-
-            int currentScore = Minimax(depth - 1, newboard, alpha, beta, false);
-
-            maxScore = std::max(maxScore, currentScore);
-            alpha = std::max(alpha, maxScore);
-
-            if (alpha >= beta) {
-                // Beta cutoff
-                break;
-            }
-        }
-        return maxScore;
-    }
-    else {
-        int minScore = std::numeric_limits<int>::max();
-        for (int i = 0; i < moves.count; i++) {
-            Board newboard = board;
-            newboard.movePiece(moves.moves[i]);
-
-            int currentScore = Minimax(depth - 1, newboard, alpha, beta, true);
-
-            minScore = std::min(minScore, currentScore);
-            beta = std::min(beta, minScore);
-
-            if (beta <= alpha) {
-                // Alpha cutoff
-                break;
-            }
-        }
-        return minScore;
-    }
-}
-
-Move BestMove(int depth, Board& board) {
-    auto moves = board.GenerateLegalMoves(board.currentPlayer);
-    if (moves.count == 0) {
-        // Handle the case where no legal moves are available
-        return Move(); // Return an empty move
-    }
-
-    int alpha = std::numeric_limits<int>::min();
-    int beta = std::numeric_limits<int>::max();
-    int maxScore = std::numeric_limits<int>::min();
-    Move bestMove;
-
-    for (int i = 0; i < moves.count; i++) {
-        Board newboard = board;
-        newboard.movePiece(moves.moves[i]);
-
-        int currentScore = Minimax(depth - 1, newboard, alpha, beta, false);
-
-        if (currentScore > maxScore) {
-            maxScore = currentScore;
-            bestMove = moves.moves[i];
-        }
-
-        alpha = std::max(alpha, maxScore);
-
-        if (alpha >= beta) {
-            // Beta cutoff
-            break;
-        }
-    }
-
-    std::cout << maxScore << "\n";
-    return bestMove;
-}
 
 
 int main()
@@ -197,9 +102,16 @@ int main()
         LegalMoves legal;
         int lasttile = -1;
         auto start = std::chrono::high_resolution_clock::now();
-        count = 0;
-        Move betsmove = BestMove(7,board);
-        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << betsmove.to_str() << ", " << count << std::endl;
+        int depth = 7;
+        Move* betsmove = ChessEngine::BestMove(depth,board);
+        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << std::endl;
+        for (int i = depth - 1; i >= 0; i--) {
+
+            std::cout << betsmove[i].to_str() << ": ";
+        }
+        std::cout << std::endl;
+
+        delete[] betsmove;
 
         while (!main_win.WindowShouldClose()) {
             if (glfwGetMouseButton(main_win.GetWindowInstance(), GLFW_MOUSE_BUTTON_LEFT)) {
@@ -229,11 +141,14 @@ int main()
                         glfwSwapBuffers(main_win.GetWindowInstance());
 
                         auto start = std::chrono::high_resolution_clock::now();
-                        count = 0;
-                        Move move = BestMove(8, board);
-                        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << move.to_str() << ": " << count << std::endl;
+                        Move* move = ChessEngine::BestMove(depth, board);
+                        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": "  << std::endl;
+                        for (int i = depth-1; i >= 0; i--) {
+                            std::cout << move[i].to_str() << ": ";
+                        }
+                        std::cout << std::endl;
 
-
+                        delete[] move;
 
                         legal.clear();
                     }
