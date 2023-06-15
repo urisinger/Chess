@@ -127,6 +127,7 @@ public:
     int eval() const;
 
     LegalMoves GenerateLegalMoves(Color color) const;
+    LegalMoves GenerateCaptureMoves(Color color) const;
 
     bool isKingAttacked(Color color) const;
 
@@ -178,7 +179,12 @@ private:
 
     inline void generatePawnMoves(const Color color, LegalMoves& legalMoves) const;
     inline void generateNonSlidingMoves(std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, Piece piece) const;
-    void generateSlidingMoves(std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, std::uint64_t magic_number, std::uint64_t attacks[4096], Piece piece) const;
+    inline void generateSlidingMoves(std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, std::uint64_t magic_number, std::uint64_t attacks[4096], Piece piece) const;
+
+    inline void generatePawnAttacks(const Color color, LegalMoves& legalMoves) const;
+    inline void generateNonSlidingAttacks(const std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, Piece piece) const;
+    inline void generateSlidingAttacks(std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, std::uint64_t magic_number, std::uint64_t attacks[4096], Piece piece) const;
+
 
 
     Piece pieceFromChar(char c) const;

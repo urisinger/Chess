@@ -12,8 +12,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/Win-Debug)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/Win-Release)
 endif(UNIX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -mbmi")
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /Ox ")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Ox ")
 
+  # Enable link-time optimization (LTO)
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+endif()
 
 add_executable (Paint "src/Main.cpp"  "libs/glad/glad.c" "src/opengl/Shaders.cpp" "src/opengl/Window.cpp" "src/opengl/Shaders.cpp" "src/opengl/Buffers.cpp" "src/BitBoard.cpp" "src/BitMasks.cpp" "src/ChessEngine.cpp")
 

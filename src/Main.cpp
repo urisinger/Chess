@@ -62,7 +62,8 @@ int main()
         IndexBuffer IBO(sqaure_indcies, 6);
 
         Texture Tex("../Textures/ChessPiecesArray.png");
-        Board board("Q6n/2N2p1K/2pp1p2/8/4kP2/3pB1n1/3Pp2N/7b w -- 0 1");
+        Board board;
+        ChessEngine engine(&board);
         Shader Backround("../Shaders/Simple.vert", "../Shaders/Backround.frag");
         Shader Pieces("../Shaders/Simple.vert", "../Shaders/Pieces.frag");
 
@@ -102,16 +103,11 @@ int main()
         LegalMoves legal;
         int lasttile = -1;
         auto start = std::chrono::high_resolution_clock::now();
-        int depth = 7;
-        Move* betsmove = ChessEngine::BestMove(depth,board);
+        engine.maxDepth = 6;
+        Move betsmove = engine.BestMove();
         std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << std::endl;
-        for (int i = depth - 1; i >= 0; i--) {
-
-            std::cout << betsmove[i].to_str() << ": ";
-        }
+        std::cout << betsmove.to_str();
         std::cout << std::endl;
-
-        delete[] betsmove;
 
         while (!main_win.WindowShouldClose()) {
             if (glfwGetMouseButton(main_win.GetWindowInstance(), GLFW_MOUSE_BUTTON_LEFT)) {
@@ -141,14 +137,16 @@ int main()
                         glfwSwapBuffers(main_win.GetWindowInstance());
 
                         auto start = std::chrono::high_resolution_clock::now();
-                        Move* move = ChessEngine::BestMove(depth, board);
-                        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": "  << std::endl;
-                        for (int i = depth-1; i >= 0; i--) {
-                            std::cout << move[i].to_str() << ": ";
+                        Move move = engine.BestMove();
+                        std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << std::endl;
+                        if (*((unsigned int*)&move)) {
+                            std::cout << move.to_str();
+                        }
+                        else {
+                            std::cout << "haha! you mate!";
                         }
                         std::cout << std::endl;
 
-                        delete[] move;
 
                         legal.clear();
                     }
