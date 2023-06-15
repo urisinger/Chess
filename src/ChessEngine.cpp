@@ -4,7 +4,31 @@
 #define MIN_SCORE -100000
 #define MAX_SCORE 100000
 
+constexpr static int translator[6] =
+{
+    4,
+    5,
+    3,
+    1,
+    2,
+    0
+};
 
+constexpr static int mvv_lva[12][12] = {
+    105, 205, 305, 405, 505, 605,  105, 205, 305, 405, 505, 605,
+    104, 204, 304, 404, 504, 604,  104, 204, 304, 404, 504, 604,
+    103, 203, 303, 403, 503, 603,  103, 203, 303, 403, 503, 603,
+    102, 202, 302, 402, 502, 602,  102, 202, 302, 402, 502, 602,
+    101, 201, 301, 401, 501, 601,  101, 201, 301, 401, 501, 601,
+    100, 200, 300, 400, 500, 600,  100, 200, 300, 400, 500, 600,
+
+    105, 205, 305, 405, 505, 605,  105, 205, 305, 405, 505, 605,
+    104, 204, 304, 404, 504, 604,  104, 204, 304, 404, 504, 604,
+    103, 203, 303, 403, 503, 603,  103, 203, 303, 403, 503, 603,
+    102, 202, 302, 402, 502, 602,  102, 202, 302, 402, 502, 602,
+    101, 201, 301, 401, 501, 601,  101, 201, 301, 401, 501, 601,
+    100, 200, 300, 400, 500, 600,  100, 200, 300, 400, 500, 600
+};
 
 struct ScoredMove {
     int score;
@@ -15,18 +39,36 @@ int compareMoves(const void* a, const void* b) {
     const Move* moveA = static_cast<const Move*>(a);
     const Move* moveB = static_cast<const Move*>(b);
 
+    // Compare based on move flags
     if (moveA->getFlags() < moveB->getFlags()) {
         return 1;
     }
     else if (moveA->getFlags() > moveB->getFlags()) {
         return -1;
     }
+    else if (moveA->getCapturedPiece() != EMPTY && moveB->getCapturedPiece() != EMPTY) {
+        // Compare capture moves
+        int firstone = (translator[moveA->getPiece() - 1]) + (5-translator[moveA->getCapturedPiece() - 1] + 1) * 100;
+        int secondone = (translator[moveB->getPiece() - 1]) + (5-translator[moveB->getCapturedPiece() - 1] + 1) * 100;
+
+        if (firstone > secondone) {
+            return 1;
+        }
+        else if (firstone < secondone) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    }
     else {
+        // For non-capture moves, no comparison needed
         return 0;
     }
 }
 
-int ChessEngine::quiescence(const Board& board, int alpha, int beta, bool maximizingPlayer) const {
+
+int ChessEngine::quiescence(const Board& board, int alpha, int beta, bool maximizingPlayer) {
     int standPat = (maximizingPlayer*2-1)*(board.currentPlayer*2-1)*board.eval(); // Evaluate the current position without considering captures or promotions
 
     if (maximizingPlayer) {
@@ -44,7 +86,10 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta, bool maximi
 
     auto captures = board.GenerateCaptureMoves(board.currentPlayer); // Generate all capture moves
 
+    qsort(captures.moves, captures.count, sizeof(Move), compareMoves);
+
     for (int i = 0; i < captures.count; i++) {
+        count++;    
         Board newboard = board;
         newboard.movePiece(captures.moves[i]);
 
@@ -76,6 +121,8 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta, bool maximi
 
 
 int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta, bool maximizingPlayer) {
+    count++;
+
     if (depth == 0) {
         // Evaluate the current board position and return the evaluation score
         return quiescence(board, alpha, beta,maximizingPlayer);
@@ -87,6 +134,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta, boo
 
     if (moves.count == 0) {
         // Handle the case where no legal moves are available
+        count++;
         return board.isKingAttacked(board.currentPlayer) ? (maximizingPlayer ? MIN_SCORE - depth : MAX_SCORE + depth) : 0;
     }
 
@@ -158,8 +206,10 @@ Move ChessEngine::BestMove() {
     int alpha = MIN_SCORE;
     int beta = MAX_SCORE;
 
+    std::cout << "Nxp" << mvv_lva[(WHITE + 1) * translator[KNIGHT - 1]][(!WHITE + 1) * translator[QUEEN - 1]] << std::endl;
+    count = 0;
     int currentScore = Minimax(maxDepth, *curBoard, alpha, beta,true);
 
-    std::cout << currentScore << std::endl;
+    std::cout << "nodes searched: " << count << "score: " << currentScore << std::endl;
     return bestMove;
 }

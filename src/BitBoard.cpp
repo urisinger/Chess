@@ -527,10 +527,10 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
         const std::uint64_t king = color == WHITE ? movedBoard.whiteKing : movedBoard.blackKing;
         const std::uint64_t opponentKing = color == WHITE ? movedBoard.blackKing : movedBoard.whiteKing;
 
-        if ((king & movedBoard.GetAttackedPieces(color == WHITE ? BLACK : WHITE)) == 0) {
+        if ((!movedBoard.isKingAttacked(color == WHITE ? WHITE : BLACK))) {
             // Move doesn't result in own king being in check
 
-            if ((opponentKing & movedBoard.GetAttackedPieces(color == WHITE ? WHITE : BLACK)) != 0) {
+            if ((movedBoard.isKingAttacked(color == WHITE ? BLACK : WHITE))) {
                 // Move results in opponent's king being in check
                 move.setFlags(CHECK);
             }
@@ -589,8 +589,6 @@ inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) 
     std::uint64_t pawnLeftCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) >> 1) & ~(0x8080808080808080ULL)) & oppsitePieces;
     std::uint64_t pawnRightCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) << 1) & ~(0x0101010101010101ULL)) & oppsitePieces;
 
-
-
     while (pawnLeftCaptures != 0) {
         const std::int32_t targetSquare = getLSB(pawnLeftCaptures);
         const std::int32_t sourceSquare = targetSquare - (direction * 8) + 1;
@@ -604,7 +602,8 @@ inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) 
             legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN);
         }
         else {
-            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN);
+            const Piece capturedPiece = getPiece(targetSquare);
+            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, capturedPiece);
         }
 
         pawnLeftCaptures &= pawnLeftCaptures - 1; // Clear the LSB to move to the next capture
@@ -623,13 +622,12 @@ inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) 
             legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN);
         }
         else {
-            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN);
+            const Piece capturedPiece = getPiece(targetSquare);
+            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, capturedPiece);
         }
 
         pawnRightCaptures &= pawnRightCaptures - 1; // Clear the LSB to move to the next capture
     }
-
-
 
     // Check en passant
     if (enPassantSquare != -1) {
@@ -653,7 +651,6 @@ inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) 
             }
         }
     }
-
 }
 
 
@@ -667,7 +664,8 @@ inline void Board::generateNonSlidingMoves(const std::int32_t square, LegalMoves
     while (captureMoves != 0) {
         const std::uint32_t target = getLSB(captureMoves);
         const Color targetColor = (whitePieces & (1ULL << square)) ? WHITE : BLACK;
-        legalMoves.emplace_back(square, target, CAPTURE, targetColor, piece);
+        const Piece capturedPiece = getPiece(target);
+        legalMoves.emplace_back(square, target, CAPTURE, targetColor, piece, capturedPiece);
         captureMoves &= ~(1ULL << target);
     }
 
@@ -700,7 +698,8 @@ inline void Board::generateSlidingMoves(std::int32_t square, LegalMoves& legalMo
     while (capture != 0) {
         const std::uint32_t target = getLSB(capture);
         const Color targetColor = (whitePieces & (1ULL << square)) ? WHITE : BLACK;
-        legalMoves.emplace_back(square, target, CAPTURE, targetColor, piece);
+        const Piece capturedPiece = getPiece(target);
+        legalMoves.emplace_back(square, target, CAPTURE, targetColor, piece, capturedPiece);
         capture &= ~(1ULL << target);
     }
 }
@@ -768,10 +767,10 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
         const std::uint64_t king = color == WHITE ? movedBoard.whiteKing : movedBoard.blackKing;
         const std::uint64_t opponentKing = color == WHITE ? movedBoard.blackKing : movedBoard.whiteKing;
 
-        if ((king & movedBoard.GetAttackedPieces(color == WHITE ? BLACK : WHITE)) == 0) {
+        if ((!movedBoard.isKingAttacked(color == WHITE ? BLACK : WHITE))) {
             // Move doesn't result in own king being in check
 
-                if ((opponentKing & movedBoard.GetAttackedPieces(color == WHITE ? WHITE : BLACK)) != 0) {
+                if ((movedBoard.isKingAttacked(color == WHITE ? WHITE : BLACK))) {
                     // Move results in opponent's king being in check
                     move.setFlags(CHECK);
                 }
@@ -795,10 +794,10 @@ inline void Board::generateNonSlidingAttacks(const std::int32_t square, LegalMov
     while (captureMoves != 0) {
         const std::uint32_t target = getLSB(captureMoves);
         const Color targetColor = (whitePieces & (1ULL << square)) ? WHITE : BLACK;
-        legalMoves.emplace_back(square, target, CAPTURE, targetColor, piece);
+        const Piece capturedPiece = getPiece(target);
+        legalMoves.emplace_back(square, target, CAPTURE, targetColor, piece, capturedPiece);
         captureMoves &= ~(1ULL << target);
     }
-
 }
 
 inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves) const {
@@ -814,8 +813,6 @@ inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves
     std::uint64_t pawnLeftCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) >> 1) & ~(0x8080808080808080ULL)) & oppsitePieces;
     std::uint64_t pawnRightCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) << 1) & ~(0x0101010101010101ULL)) & oppsitePieces;
 
-
-
     while (pawnLeftCaptures != 0) {
         const std::int32_t targetSquare = getLSB(pawnLeftCaptures);
         const std::int32_t sourceSquare = targetSquare - (direction * 8) + 1;
@@ -823,13 +820,13 @@ inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves
         // Check if the capture is a pawn promotion
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
         if ((targetSquare / 8) == promotionRank) {
-            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT);
-            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP);
-            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK);
-            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN);
+            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN, getPiece(targetSquare));
         }
         else {
-            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN);
+            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, getPiece(targetSquare));
         }
 
         pawnLeftCaptures &= pawnLeftCaptures - 1; // Clear the LSB to move to the next capture
@@ -842,19 +839,17 @@ inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves
         // Check if the capture is a pawn promotion
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
         if ((targetSquare / 8) == promotionRank) {
-            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT);
-            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP);
-            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK);
-            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN);
+            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN, getPiece(targetSquare));
         }
         else {
-            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN);
+            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, getPiece(targetSquare));
         }
 
         pawnRightCaptures &= pawnRightCaptures - 1; // Clear the LSB to move to the next capture
     }
-
-
 
     // Check en passant
     if (enPassantSquare != -1) {
@@ -867,18 +862,17 @@ inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves
         if (enPassantFile > 0 && leftCaptureSquare >= 0 && leftCaptureSquare < 64) {
             const std::uint64_t enPassantLeftCaptureMask = 1ULL << leftCaptureSquare;
             if (pawns & enPassantLeftCaptureMask) {
-                legalMoves.emplace_back(leftCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN);
+                legalMoves.emplace_back(leftCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN, getPiece(enPassantSquare));
             }
         }
 
         if (enPassantFile < 7 && rightCaptureSquare >= 0 && rightCaptureSquare < 64) {
             const std::uint64_t enPassantRightCaptureMask = 1ULL << rightCaptureSquare;
             if (pawns & enPassantRightCaptureMask) {
-                legalMoves.emplace_back(rightCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN);
+                legalMoves.emplace_back(rightCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN, getPiece(enPassantSquare));
             }
         }
     }
-
 }
 
 
@@ -894,7 +888,8 @@ inline void Board::generateSlidingAttacks(std::int32_t square, LegalMoves& legal
     while (capture != 0) {
         const std::uint32_t target = getLSB(capture);
         const Color targetColor = (whitePieces & (1ULL << square)) ? WHITE : BLACK;
-        legalMoves.emplace_back(square, target, CAPTURE, targetColor, piece);
+        const Piece capturedPiece = getPiece(target);
+        legalMoves.emplace_back(square, target, CAPTURE, targetColor, piece, capturedPiece);
         capture &= ~(1ULL << target);
     }
 }
@@ -1010,7 +1005,40 @@ std::uint64_t Board::GetAttackedPieces(Color color) const {
 }
 
 bool Board::isKingAttacked(Color color) const {
-    return ((color == WHITE ? whiteKing : blackKing) & GetAttackedPieces(color == WHITE ? BLACK : WHITE)) != 0;
+    int square = getLSB(color == WHITE ? whiteKing : blackKing);
+
+    std::uint64_t knights = color == WHITE ? blackKnights : whiteKnights;
+
+    if (knights & Bitboard::knightAttack[square]) {
+        return true;
+    }
+
+    std::uint64_t kings = color == WHITE ? blackKing : whiteKing;
+
+    if (kings & Bitboard::kingAttack[square]) {
+        return true;
+    }
+
+    std::uint64_t queens = color == WHITE ? blackQueens : whiteQueens;
+
+    std::uint64_t bishops = color == WHITE ? blackBishops : whiteBishops;
+
+    if ((bishops | queens) & generateSlidingMovesAsBits(square, Bitboard::bishopMasks[square],
+        Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square],
+        BISHOP)) {
+        return true;
+    }
+
+    std::uint64_t rooks = color == WHITE ? blackBishops : whiteBishops;
+
+    if ((rooks | queens) & generateSlidingMovesAsBits(square, Bitboard::rookMasks[square],
+        Bitboard::rookMagic[square], Bitboard::rookAttacks[square],
+        ROOK)) {
+        return true;
+    }
+
+
+    return false;
 }
 
 

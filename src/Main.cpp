@@ -103,7 +103,7 @@ int main()
         LegalMoves legal;
         int lasttile = -1;
         auto start = std::chrono::high_resolution_clock::now();
-        engine.maxDepth = 6;
+        engine.maxDepth = 7;
         Move betsmove = engine.BestMove();
         std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << std::endl;
         std::cout << betsmove.to_str();

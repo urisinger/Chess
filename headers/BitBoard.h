@@ -54,8 +54,8 @@ struct Move {
     Move() : m_Move(0) {
     }
 
-    Move(unsigned int from, unsigned int to, unsigned int flags, Color color, Piece piece) {
-        m_Move = ((static_cast<unsigned int>(piece) & 0x7) << 20) | ((static_cast<unsigned int>(color) & 0x1) << 16) |
+    Move(unsigned int from, unsigned int to, unsigned int flags, Color color, Piece piece, Piece captured ) {
+        m_Move = (((static_cast<unsigned int>(captured) & 0x7) << 24) | (static_cast<unsigned int>(piece) & 0x7) << 20) | ((static_cast<unsigned int>(color) & 0x1) << 16) |
             ((flags & 0xf) << 12) | ((from & 0x3f) << 6) | (to & 0x3f);
     }
 
@@ -69,6 +69,8 @@ struct Move {
 
     inline void setTo(unsigned int to) { m_Move &= ~0x3f; m_Move |= to & 0x3f; }
     inline void setFrom(unsigned int from) { m_Move &= ~0xfc0; m_Move |= (from & 0x3f) << 6; }
+
+    inline Piece getCapturedPiece() const { return static_cast<Piece>((m_Move >> 23) & 0x7); }
 
     inline unsigned int getButterflyIndex() const { return m_Move & 0x0fff; }
 
@@ -96,8 +98,8 @@ struct LegalMoves {
 
     LegalMoves() : count(0) {}
 
-    void emplace_back(unsigned int from, unsigned int to, unsigned int flags, Color color, Piece piece) {
-        moves[count] = Move(from, to, flags, color, piece);
+    void emplace_back(unsigned int from, unsigned int to, unsigned int flags, Color color, Piece piece, Piece captured = EMPTY) {
+        moves[count] = Move(from, to, flags, color, piece,captured);
         count++;
     }
 

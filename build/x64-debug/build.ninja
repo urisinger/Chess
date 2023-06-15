@@ -50,7 +50,7 @@ cmake_ninja_workdir = C$:\Users\משתמש\Desktop\Chess.com\build\x64-debug\
 build cmake_object_order_depends_target_Paint: phony || CMakeFiles\Paint.dir
 
 build CMakeFiles\Paint.dir\src\Main.cpp.obj: CXX_COMPILER__Paint_unscanned_Debug C$:\Users\משתמש\Desktop\Chess.com\src\Main.cpp || cmake_object_order_depends_target_Paint
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc -m64 -mbmi /MDd /Zi /Ob0 /Od /RTC1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
   OBJECT_DIR = CMakeFiles\Paint.dir
   OBJECT_FILE_DIR = CMakeFiles\Paint.dir\src
@@ -66,7 +66,7 @@ build CMakeFiles\Paint.dir\libs\glad\glad.c.obj: C_COMPILER__Paint_unscanned_Deb
   TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\Win-Debug\Paint.pdb
 
 build CMakeFiles\Paint.dir\src\opengl\Shaders.cpp.obj: CXX_COMPILER__Paint_unscanned_Debug C$:\Users\משתמש\Desktop\Chess.com\src\opengl\Shaders.cpp || cmake_object_order_depends_target_Paint
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc -m64 -mbmi /MDd /Zi /Ob0 /Od /RTC1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
   OBJECT_DIR = CMakeFiles\Paint.dir
   OBJECT_FILE_DIR = CMakeFiles\Paint.dir\src\opengl
@@ -74,7 +74,7 @@ build CMakeFiles\Paint.dir\src\opengl\Shaders.cpp.obj: CXX_COMPILER__Paint_unsca
   TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\Win-Debug\Paint.pdb
 
 build CMakeFiles\Paint.dir\src\opengl\Window.cpp.obj: CXX_COMPILER__Paint_unscanned_Debug C$:\Users\משתמש\Desktop\Chess.com\src\opengl\Window.cpp || cmake_object_order_depends_target_Paint
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc -m64 -mbmi /MDd /Zi /Ob0 /Od /RTC1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
   OBJECT_DIR = CMakeFiles\Paint.dir
   OBJECT_FILE_DIR = CMakeFiles\Paint.dir\src\opengl
@@ -82,7 +82,7 @@ build CMakeFiles\Paint.dir\src\opengl\Window.cpp.obj: CXX_COMPILER__Paint_unscan
   TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\Win-Debug\Paint.pdb
 
 build CMakeFiles\Paint.dir\src\opengl\Buffers.cpp.obj: CXX_COMPILER__Paint_unscanned_Debug C$:\Users\משתמש\Desktop\Chess.com\src\opengl\Buffers.cpp || cmake_object_order_depends_target_Paint
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc -m64 -mbmi /MDd /Zi /Ob0 /Od /RTC1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
   OBJECT_DIR = CMakeFiles\Paint.dir
   OBJECT_FILE_DIR = CMakeFiles\Paint.dir\src\opengl
@@ -90,7 +90,7 @@ build CMakeFiles\Paint.dir\src\opengl\Buffers.cpp.obj: CXX_COMPILER__Paint_unsca
   TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\Win-Debug\Paint.pdb
 
 build CMakeFiles\Paint.dir\src\BitBoard.cpp.obj: CXX_COMPILER__Paint_unscanned_Debug C$:\Users\משתמש\Desktop\Chess.com\src\BitBoard.cpp || cmake_object_order_depends_target_Paint
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc -m64 -mbmi /MDd /Zi /Ob0 /Od /RTC1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
   OBJECT_DIR = CMakeFiles\Paint.dir
   OBJECT_FILE_DIR = CMakeFiles\Paint.dir\src
@@ -98,7 +98,7 @@ build CMakeFiles\Paint.dir\src\BitBoard.cpp.obj: CXX_COMPILER__Paint_unscanned_D
   TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\Win-Debug\Paint.pdb
 
 build CMakeFiles\Paint.dir\src\BitMasks.cpp.obj: CXX_COMPILER__Paint_unscanned_Debug C$:\Users\משתמש\Desktop\Chess.com\src\BitMasks.cpp || cmake_object_order_depends_target_Paint
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc -m64 -mbmi /MDd /Zi /Ob0 /Od /RTC1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
   OBJECT_DIR = CMakeFiles\Paint.dir
   OBJECT_FILE_DIR = CMakeFiles\Paint.dir\src
@@ -106,7 +106,7 @@ build CMakeFiles\Paint.dir\src\BitMasks.cpp.obj: CXX_COMPILER__Paint_unscanned_D
   TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\Win-Debug\Paint.pdb
 
 build CMakeFiles\Paint.dir\src\ChessEngine.cpp.obj: CXX_COMPILER__Paint_unscanned_Debug C$:\Users\משתמש\Desktop\Chess.com\src\ChessEngine.cpp || cmake_object_order_depends_target_Paint
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc -m64 -mbmi /MDd /Zi /Ob0 /Od /RTC1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
   OBJECT_DIR = CMakeFiles\Paint.dir
   OBJECT_FILE_DIR = CMakeFiles\Paint.dir\src
@@ -122,7 +122,7 @@ build CMakeFiles\Paint.dir\src\ChessEngine.cpp.obj: CXX_COMPILER__Paint_unscanne
 # Link the executable C:\Users\משתמש\Desktop\Chess.com\bin\Win-Debug\Paint.exe
 
 build C$:\Users\משתמש\Desktop\Chess.com\bin\Win-Debug\Paint.exe: CXX_EXECUTABLE_LINKER__Paint_Debug CMakeFiles\Paint.dir\src\Main.cpp.obj CMakeFiles\Paint.dir\libs\glad\glad.c.obj CMakeFiles\Paint.dir\src\opengl\Shaders.cpp.obj CMakeFiles\Paint.dir\src\opengl\Window.cpp.obj CMakeFiles\Paint.dir\src\opengl\Buffers.cpp.obj CMakeFiles\Paint.dir\src\BitBoard.cpp.obj CMakeFiles\Paint.dir\src\BitMasks.cpp.obj CMakeFiles\Paint.dir\src\ChessEngine.cpp.obj
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc -m64 -mbmi /MDd /Zi /Ob0 /Od /RTC1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = ../../libs/glfw/glfw3.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = CMakeFiles\Paint.dir
