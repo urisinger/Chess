@@ -57,7 +57,7 @@ namespace ChessEngine {
 
                 int currentScore = Minimax(depth - 1, newboard, alpha, beta, true, bestMoves);
 
-                if (minScore >= currentScore) {
+                if (minScore >=` currentScore) {
                     bestMoves[depth-1] = moves.moves[i];
                 }
 
