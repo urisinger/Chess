@@ -62,7 +62,7 @@ int main()
         IndexBuffer IBO(sqaure_indcies, 6);
 
         Texture Tex("../Textures/ChessPiecesArray.png");
-        Board board;
+        Board board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1 ");
         ChessEngine engine(&board);
         Shader Backround("../Shaders/Simple.vert", "../Shaders/Backround.frag");
         Shader Pieces("../Shaders/Simple.vert", "../Shaders/Pieces.frag");
@@ -103,13 +103,42 @@ int main()
         LegalMoves legal;
         int lasttile = -1;
         auto start = std::chrono::high_resolution_clock::now();
-        engine.maxDepth = 7;
-        Move betsmove = engine.BestMove();
+        engine.maxDepth = 8;
+        Move bestmove = engine.BestMove();
         std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << std::endl;
-        std::cout << betsmove.to_str();
+        std::cout << bestmove.to_str();
         std::cout << std::endl;
 
         while (!main_win.WindowShouldClose()) {
+            if (glfwGetKey(main_win.GetWindowInstance(), GLFW_KEY_SPACE) == GLFW_PRESS) {
+                board.movePiece(bestmove);
+                Backround.Bind();
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+                Pieces.Bind();
+                board.getBoard(intboard);
+                glUniform1iv(Pieces.Location("Board"), 64, (GLint*)intboard);
+
+
+                int highlights[64];
+                std::fill(highlights, highlights + 64, 0);
+
+                glUniform1iv(Pieces.Location("Highlight"), 64, (GLint*)&highlights[0]);
+
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+                glfwSwapBuffers(main_win.GetWindowInstance());
+
+                auto start = std::chrono::high_resolution_clock::now();
+                bestmove = engine.BestMove();
+                std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << std::endl;
+                if (*((unsigned int*)&bestmove)) {
+                    std::cout << bestmove.to_str();
+                }
+                else {
+                    std::cout << "haha! you mate!";
+                }
+                std::cout << std::endl;
+            }
             if (glfwGetMouseButton(main_win.GetWindowInstance(), GLFW_MOUSE_BUTTON_LEFT)) {
                 if (!mousealreadyclicked) {
                     double xpos, ypos;
@@ -137,16 +166,15 @@ int main()
                         glfwSwapBuffers(main_win.GetWindowInstance());
 
                         auto start = std::chrono::high_resolution_clock::now();
-                        Move move = engine.BestMove();
+                        bestmove = engine.BestMove();
                         std::cout << (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() << ": " << std::endl;
-                        if (*((unsigned int*)&move)) {
-                            std::cout << move.to_str();
+                        if (*((unsigned int*)&bestmove)) {
+                            std::cout << bestmove.to_str();
                         }
                         else {
                             std::cout << "haha! you mate!";
                         }
                         std::cout << std::endl;
-
 
                         legal.clear();
                     }

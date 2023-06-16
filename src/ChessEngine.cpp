@@ -4,6 +4,7 @@
 #define MIN_SCORE -100000
 #define MAX_SCORE 100000
 
+//this is needed becuase the value of the piece enum is used for rendering too
 constexpr static int translator[6] =
 {
     4,
@@ -14,26 +15,7 @@ constexpr static int translator[6] =
     0
 };
 
-constexpr static int mvv_lva[12][12] = {
-    105, 205, 305, 405, 505, 605,  105, 205, 305, 405, 505, 605,
-    104, 204, 304, 404, 504, 604,  104, 204, 304, 404, 504, 604,
-    103, 203, 303, 403, 503, 603,  103, 203, 303, 403, 503, 603,
-    102, 202, 302, 402, 502, 602,  102, 202, 302, 402, 502, 602,
-    101, 201, 301, 401, 501, 601,  101, 201, 301, 401, 501, 601,
-    100, 200, 300, 400, 500, 600,  100, 200, 300, 400, 500, 600,
 
-    105, 205, 305, 405, 505, 605,  105, 205, 305, 405, 505, 605,
-    104, 204, 304, 404, 504, 604,  104, 204, 304, 404, 504, 604,
-    103, 203, 303, 403, 503, 603,  103, 203, 303, 403, 503, 603,
-    102, 202, 302, 402, 502, 602,  102, 202, 302, 402, 502, 602,
-    101, 201, 301, 401, 501, 601,  101, 201, 301, 401, 501, 601,
-    100, 200, 300, 400, 500, 600,  100, 200, 300, 400, 500, 600
-};
-
-struct ScoredMove {
-    int score;
-    Move move;
-};
 
 int compareMoves(const void* a, const void* b) {
     const Move* moveA = static_cast<const Move*>(a);
@@ -48,8 +30,9 @@ int compareMoves(const void* a, const void* b) {
     }
     else if (moveA->getCapturedPiece() != EMPTY && moveB->getCapturedPiece() != EMPTY) {
         // Compare capture moves
-        int firstone = (translator[moveA->getPiece() - 1]) + (5-translator[moveA->getCapturedPiece() - 1] + 1) * 100;
-        int secondone = (translator[moveB->getPiece() - 1]) + (5-translator[moveB->getCapturedPiece() - 1] + 1) * 100;
+        //translator is just a shortcut i use cuz  i use the vaalue of the piece enum for rendering too, just treat it as the pieces ordered by value
+        int firstone = (translator[moveA->getPiece() - 1]) + (5 - translator[moveA->getCapturedPiece() - 1] + 1) * 100;
+        int secondone = (translator[moveB->getPiece() - 1]) + (5 - translator[moveB->getCapturedPiece() - 1] + 1) * 100;
 
         if (firstone > secondone) {
             return 1;
@@ -68,9 +51,12 @@ int compareMoves(const void* a, const void* b) {
 }
 
 
-int ChessEngine::quiescence(const Board& board, int alpha, int beta, bool maximizingPlayer) {
+int ChessEngine::quiescence(const Board& board, int alpha, int beta, bool maximizingPlayer,int depth) {
     int standPat = (maximizingPlayer*2-1)*(board.currentPlayer*2-1)*board.eval(); // Evaluate the current position without considering captures or promotions
 
+    if (depth == 0) {
+        return standPat;
+    }
     if (maximizingPlayer) {
         if (standPat >= beta) {
             return beta; // Return beta if the standPat score is already greater than or equal to beta for the maximizing player
@@ -89,11 +75,11 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta, bool maximi
     qsort(captures.moves, captures.count, sizeof(Move), compareMoves);
 
     for (int i = 0; i < captures.count; i++) {
-        count++;    
+        count++;
         Board newboard = board;
         newboard.movePiece(captures.moves[i]);
 
-        int score = quiescence(newboard, alpha, beta, !maximizingPlayer); // Recursively evaluate the capture move with the opposite maximizingPlayer flag
+        int score = quiescence(newboard, alpha, beta, !maximizingPlayer, depth-1); // Recursively evaluate the capture move with the opposite maximizingPlayer flag
 
         if (maximizingPlayer) {
             if (score >= beta)
@@ -125,7 +111,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta, boo
 
     if (depth == 0) {
         // Evaluate the current board position and return the evaluation score
-        return quiescence(board, alpha, beta,maximizingPlayer);
+        return quiescence(board, alpha, beta,maximizingPlayer,100);
     }
 
     auto moves = board.GenerateLegalMoves(board.currentPlayer);
@@ -206,10 +192,9 @@ Move ChessEngine::BestMove() {
     int alpha = MIN_SCORE;
     int beta = MAX_SCORE;
 
-    std::cout << "Nxp" << mvv_lva[(WHITE + 1) * translator[KNIGHT - 1]][(!WHITE + 1) * translator[QUEEN - 1]] << std::endl;
     count = 0;
     int currentScore = Minimax(maxDepth, *curBoard, alpha, beta,true);
 
-    std::cout << "nodes searched: " << count << "score: " << currentScore << std::endl;
+    std::cout << "nodes searched: " << count << " score: " << currentScore << std::endl;
     return bestMove;
 }

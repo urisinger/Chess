@@ -1,22 +1,6 @@
 #include "BitBoard.h"
 #include <algorithm>
 
-
-int material_score[12] = {
-    100,      // white pawn score
-    300,      // white knight scrore
-    350,      // white bishop score
-    500,      // white rook score
-   1000,      // white queen score
-  10000,      // white king score
-   -100,      // black pawn score
-   -300,      // black knight scrore
-   -350,      // black bishop score
-   -500,      // black rook score
-  -1000,      // black queen score
- -10000,      // black king score
-};
-
 // pawn positional score
 const int pawn_score[64] = 
 {
@@ -81,7 +65,7 @@ const int king_score[64] =
      0,   5,  10,  20,  20,  10,   5,   0,
      0,   0,   5,  10,  10,   5,   0,   0,
      0,   5,   0,  -5,  -5,   5,   5,   0,
-     0,   10,  0,   -15, 0,   5,  0,   0
+     0,   0,  5,   0, -15,   5,  10,   0
 };
 
 
@@ -770,12 +754,21 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
         if ((!movedBoard.isKingAttacked(color == WHITE ? BLACK : WHITE))) {
             // Move doesn't result in own king being in check
 
-                if ((movedBoard.isKingAttacked(color == WHITE ? WHITE : BLACK))) {
-                    // Move results in opponent's king being in check
-                    move.setFlags(CHECK);
+            if ((movedBoard.isKingAttacked(color == WHITE ? WHITE : BLACK))) {
+                // Move results in opponent's king being in check
+                move.setFlags(CHECK);
+            }
+
+            if (move.getFlags() == QUEEN_CASTLE || move.getFlags() == KING_CASTLE) {
+                if (!isKingAttacked(color == WHITE ? WHITE : BLACK)) {
+                    sortedMoves.push_back(move);
                 }
 
-            sortedMoves.push_back(move);
+            }
+            else {
+
+                sortedMoves.push_back(move);
+            }
         }
     }
 
@@ -1007,7 +1000,28 @@ std::uint64_t Board::GetAttackedPieces(Color color) const {
 bool Board::isKingAttacked(Color color) const {
     int square = getLSB(color == WHITE ? whiteKing : blackKing);
 
+    std::uint64_t pawns = color == WHITE ? blackPawns : whitePawns;
+
     std::uint64_t knights = color == WHITE ? blackKnights : whiteKnights;
+    
+    if (color == WHITE) {
+        if (square % 8 != 7 && (pawns & (1ULL << (square + 9)))) {
+            return true;
+        }
+
+        if (square % 8 != 0 && (pawns & (1ULL << (square + 7)))) {
+            return true;
+        }
+    }
+    else {
+        if (square % 8 != 7 && (pawns & (1ULL << (square - 9)))) {
+            return true;
+        }
+
+        if (square % 8 != 0 && (pawns & (1ULL << (square - 7)))) {
+            return true;
+        }
+    }
 
     if (knights & Bitboard::knightAttack[square]) {
         return true;
@@ -1029,7 +1043,7 @@ bool Board::isKingAttacked(Color color) const {
         return true;
     }
 
-    std::uint64_t rooks = color == WHITE ? blackBishops : whiteBishops;
+    std::uint64_t rooks = color == WHITE ? blackRooks : whiteRooks;
 
     if ((rooks | queens) & generateSlidingMovesAsBits(square, Bitboard::rookMasks[square],
         Bitboard::rookMagic[square], Bitboard::rookAttacks[square],

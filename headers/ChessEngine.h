@@ -7,9 +7,9 @@ class ChessEngine {
 public:
 	ChessEngine(Board* board) { curBoard = board; count = 0; }
 
-	int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta, bool maximizingPlayer);
+	int Minimax(int depth, const Board& board, int alpha, int beta, bool maximizingPlayer);
 	Move BestMove();
-	int ChessEngine::quiescence(const Board& board, int alpha, int beta, bool maximizingPlayer);
+	int quiescence(const Board& board, int alpha, int beta, bool maximizingPlayer, int depth);
 	void setBoard(Board* board) { curBoard = board; }
 
 	int maxDepth;
@@ -18,5 +18,9 @@ private:
 	Move bestMove;
 
 	Board* curBoard;
+
+	int killer_moves[2][100];
+
+	int history_moves[12][64];
 
 };
