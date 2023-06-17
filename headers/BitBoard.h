@@ -4,6 +4,8 @@
 #include <sstream>
 #include <cctype>
 #include <vector>
+#include <chrono>
+
 
 #include "BitMasks.h"
 
@@ -34,6 +36,7 @@ enum MoveFlag {
     QUEEN_CASTLE,
     CAPTURE,
     EN_PASSANT_CAPTURE,
+    CHECK,
     KNIGHT_PROMOTE,
     BISHOP_PROMOTE,
     ROOK_PROMOTE,
@@ -41,8 +44,7 @@ enum MoveFlag {
     KNIGHT_PROMOTE_CAPTURE,
     BISHOP_PROMOTE_CAPTURE,
     ROOK_PROMOTE_CAPTURE,
-    QUEEN_PROMOTE_CAPTURE,
-    CHECK
+    QUEEN_PROMOTE_CAPTURE
 };
 
 enum Color {
@@ -55,7 +57,7 @@ struct Move {
     }
 
     Move(unsigned int from, unsigned int to, unsigned int flags, Color color, Piece piece, Piece captured ) {
-        m_Move = (((static_cast<unsigned int>(captured) & 0x7) << 24) | (static_cast<unsigned int>(piece) & 0x7) << 20) | ((static_cast<unsigned int>(color) & 0x1) << 16) |
+        m_Move = (((static_cast<unsigned int>(captured) & 0x7) << 23) | (static_cast<unsigned int>(piece) & 0x7) << 20) | ((static_cast<unsigned int>(color) & 0x1) << 16) |
             ((flags & 0xf) << 12) | ((from & 0x3f) << 6) | (to & 0x3f);
     }
 
@@ -131,6 +133,7 @@ public:
     LegalMoves GenerateLegalMoves(Color color) const;
     LegalMoves GenerateCaptureMoves(Color color) const;
 
+    bool isSqaureAttacked(Color color, int square) const;
     bool isKingAttacked(Color color) const;
 
 

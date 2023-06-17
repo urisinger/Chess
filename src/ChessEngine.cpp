@@ -1,117 +1,152 @@
 #include "ChessEngine.h"
 #include <algorithm>
 
-#define MIN_SCORE -100000
-#define MAX_SCORE 100000
+
+Move ChessEngine::killer_moves[2][max_ply];
+
+int ChessEngine::history_moves[12][64] = { 0 };
+
+int ChessEngine::pv_length[max_ply] = { 0 };
+Move ChessEngine::pv_table[max_ply][max_ply];
+
+int ChessEngine::count;
+
+
+int ChessEngine::ply;
+
+Board* ChessEngine::curBoard;
+
+
+
+    
 
 //this is needed becuase the value of the piece enum is used for rendering too
 constexpr static int translator[6] =
 {
-    4,
     5,
-    3,
-    1,
+    6,
+    4,
     2,
-    0
+    3,
+    1
 };
 
 
+int score_move(const Move& move) {
+    if (ChessEngine::pv_table[0][ChessEngine::ply] == move) {
+        return 100000;
+    }
+
+    if (move.getCapturedPiece() != EMPTY) {
+        // Compare capture moves
+        //translator is just a shortcut i use cuz  i use the vaalue of the piece enum for rendering too, just treat it as the pieces ordered by value
+        return (6 - translator[move.getPiece() - 1]) + (translator[move.getCapturedPiece() - 1]) * 100 + 10000;
+    }
+    else {
+
+
+
+        if (ChessEngine::killer_moves[0][ChessEngine::ply] == move) {
+            return 9000;
+        }
+        if (ChessEngine::killer_moves[1][ChessEngine::ply] == move) {
+            return 8000;
+        }            
+        
+        return ChessEngine::history_moves[(move.getPiece() - 1) * (move.getColor() + 1)][move.getTo()];
+
+    }
+
+
+}
 
 int compareMoves(const void* a, const void* b) {
     const Move* moveA = static_cast<const Move*>(a);
     const Move* moveB = static_cast<const Move*>(b);
 
+    const int scoreA = score_move(*moveA);
+    const int scoreB = score_move(*moveB);
+
+
+
     // Compare based on move flags
-    if (moveA->getFlags() < moveB->getFlags()) {
-        return 1;
-    }
-    else if (moveA->getFlags() > moveB->getFlags()) {
+    if (scoreA > scoreB) {
         return -1;
     }
-    else if (moveA->getCapturedPiece() != EMPTY && moveB->getCapturedPiece() != EMPTY) {
-        // Compare capture moves
-        //translator is just a shortcut i use cuz  i use the vaalue of the piece enum for rendering too, just treat it as the pieces ordered by value
-        int firstone = (translator[moveA->getPiece() - 1]) + (5 - translator[moveA->getCapturedPiece() - 1] + 1) * 100;
-        int secondone = (translator[moveB->getPiece() - 1]) + (5 - translator[moveB->getCapturedPiece() - 1] + 1) * 100;
-
-        if (firstone > secondone) {
-            return 1;
-        }
-        else if (firstone < secondone) {
-            return -1;
-        }
-        else {
-            return 0;
-        }
+    else if (scoreB > scoreA) {
+        return 1;
     }
-    else {
-        // For non-capture moves, no comparison needed
-        return 0;
-    }
+    return 0;
 }
 
 
-int ChessEngine::quiescence(const Board& board, int alpha, int beta, bool maximizingPlayer,int depth) {
-    int standPat = (maximizingPlayer*2-1)*(board.currentPlayer*2-1)*board.eval(); // Evaluate the current position without considering captures or promotions
+int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
+    count++;
+    int standPat = board.currentPlayer == WHITE ? board.eval() : -board.eval(); // Evaluate the current position without considering captures or promotions
 
-    if (depth == 0) {
+    if (ply >= max_ply) {
         return standPat;
     }
-    if (maximizingPlayer) {
-        if (standPat >= beta) {
-            return beta; // Return beta if the standPat score is already greater than or equal to beta for the maximizing player
-        }
-        alpha = std::max(alpha, standPat); // Update alpha with the maximum value between alpha and standPat for the maximizing player
+
+    if (standPat >= beta) {
+        return beta; // Return beta if the standPat score is already greater than or equal to beta for the maximizing player
     }
-    else {
-        if (standPat <= alpha) {
-            return alpha; // Return alpha if the standPat score is already less than or equal to alpha for the minimizing player
-        }
-        beta = std::min(beta, standPat); // Update beta with the minimum value between beta and standPat for the minimizing player
-    }
+
+    alpha = std::max(alpha, standPat); // Update alpha with the maximum value between alpha and standPat for the maximizing player
 
     auto captures = board.GenerateCaptureMoves(board.currentPlayer); // Generate all capture moves
 
     qsort(captures.moves, captures.count, sizeof(Move), compareMoves);
 
     for (int i = 0; i < captures.count; i++) {
-        count++;
         Board newboard = board;
         newboard.movePiece(captures.moves[i]);
+        ply++;
+        int score = -quiescence(newboard, -beta, -alpha); // Recursively evaluate the capture move with the opposite maximizingPlayer flag
+        ply--;
 
-        int score = quiescence(newboard, alpha, beta, !maximizingPlayer, depth-1); // Recursively evaluate the capture move with the opposite maximizingPlayer flag
+        alpha = std::max(alpha, score); // Update alpha with the maximum value between alpha and score
 
-        if (maximizingPlayer) {
-            if (score >= beta)
-                return beta;
-            if (score > alpha)
-                alpha = score;
-        }
-        else {
-            if (score <= alpha)
-                return alpha;
-            if (score < beta)
-                beta = score;
+        if (score >= beta) {
+            return beta; // Perform a cutoff if alpha is greater than or equal to beta
         }
     }
 
-    if (maximizingPlayer) {
-        return alpha;
-    }
-    else {
-        return beta;
-    }
+    return alpha;
 }
 
 
+const int ChessEngine::reductionLimits = 3;
+const int ChessEngine::fullDepthMoves = 4;
 
+#define R 2
 
-int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta, bool maximizingPlayer) {
+int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
+    pv_length[ply] = ply;
     count++;
 
+    int movesSearched = 0;
+
+
+    bool in_check = board.isKingAttacked(board.currentPlayer);
+
+    depth += in_check;
     if (depth == 0) {
         // Evaluate the current board position and return the evaluation score
-        return quiescence(board, alpha, beta,maximizingPlayer,100);
+        return quiescence(board,alpha,beta);
+    }
+
+    if (depth >= R + 1 && !in_check && ply) {
+        Board nullBoard = board;
+
+        nullBoard.currentPlayer = nullBoard.currentPlayer == WHITE ? BLACK : WHITE;
+
+        ply += R + 1;
+        int score = -Minimax(depth - 1 - R, nullBoard, -beta, -beta + 1);
+        ply -= R + 1;
+
+        if (score >= beta)
+            return beta;
     }
 
     auto moves = board.GenerateLegalMoves(board.currentPlayer);
@@ -120,66 +155,74 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta, boo
 
     if (moves.count == 0) {
         // Handle the case where no legal moves are available
-        count++;
-        return board.isKingAttacked(board.currentPlayer) ? (maximizingPlayer ? MIN_SCORE - depth : MAX_SCORE + depth) : 0;
+        return board.isKingAttacked(board.currentPlayer) ? MIN_SCORE + ply : 0;
     }
 
-    if (maximizingPlayer) {
-        int maxScore = std::numeric_limits<int>::min();
-        for (int i = 0; i < moves.count; i++) {
-            Board newboard = board;
-            newboard.movePiece(moves.moves[i]);
 
+    for (int i = 0; i < moves.count; i++) {
+        Board newboard = board;
+        newboard.movePiece(moves.moves[i]);
+        int score;
 
-            int currentScore = Minimax(depth - 1, newboard, alpha, beta, false);
-
-            if (maxScore < currentScore) {
-                if (maxDepth - depth == 0) {
-                    bestMove = moves.moves[i];
-                    std::cout << currentScore << ": " << bestMove.to_str() << std::endl;
-                }
-                maxScore = currentScore;
+        if (movesSearched == 0) {
+            ply++;
+            score = -Minimax(depth - 1, newboard, -beta, -alpha);
+            ply--;
+        }
+        else {
+            if (movesSearched >= fullDepthMoves && depth >= reductionLimits && !in_check && moves.moves[i].getFlags() < 4) {
+                ply += 2;
+                score = -Minimax(depth - 2, newboard, -alpha - 1, -alpha);
+                ply -= 2;
             }
+            else
+                score = alpha + 1;
 
-            alpha = std::max(alpha, maxScore);
+            if (score > alpha) {
+                ply++;
+                score = -Minimax(depth - 1, newboard, -alpha - 1, -alpha);
+                ply--;
 
-            if (alpha >= beta) {
-                // Beta cutoff
-                break;
+                if (score > alpha && score < beta) {
+                    ply++;
+                    score = -Minimax(depth - 1, newboard, -beta, -alpha);
+                    ply--;
+                }
             }
         }
-        return maxScore;
-    }
-    else {
-        int minScore = std::numeric_limits<int>::max();
-        for (int i = 0; i < moves.count; i++) {
-            Board newboard = board;
-            newboard.movePiece(moves.moves[i]);
 
-            int currentScore = Minimax(depth - 1, newboard, alpha, beta, true);
+        movesSearched++;
 
-            if (minScore >= currentScore) {
-                if (maxDepth - depth == 0) {
-                    bestMove = moves.moves[i];
-                    std::cout << currentScore << ": " << bestMove.to_str() << std::endl;
-                }
-                minScore = currentScore;
+        if (score > alpha) {
+
+            if (moves.moves[i].getCapturedPiece() == EMPTY) {
+                history_moves[(moves.moves[i].getPiece() - 1) * (moves.moves[i].getColor() + 1)][moves.moves[i].getTo()] += depth;
+            }
+            pv_table[ply][ply] = moves.moves[i];
+
+            for (int next_ply = ply + 1; next_ply < pv_length[ply + 1]; next_ply++) {
+                pv_table[ply][next_ply] = pv_table[ply + 1][next_ply];
             }
 
-            beta = std::min(beta, minScore);
+            pv_length[ply] = pv_length[ply + 1];
 
-            if (beta <= alpha) {
-                // Alpha cutoff
-                break;
-            }
+            alpha = score;
         }
-        return minScore;
+
+        if (score >= beta) {
+            killer_moves[1][ply] = killer_moves[0][ply];
+            killer_moves[0][ply] = moves.moves[i];
+            return beta;
+        }
+
     }
     return alpha;
 }
 
 
-Move ChessEngine::BestMove() {
+#define valWINDOW 50
+
+Move ChessEngine::BestMove(double maxTime) {
     auto moves = curBoard->GenerateLegalMoves(curBoard->currentPlayer);
     if (moves.count == 0) {
         // Handle the case where no legal moves are available
@@ -187,14 +230,39 @@ Move ChessEngine::BestMove() {
         return empty; // Return an empty move
     }
 
+    memset(killer_moves, 0, sizeof(killer_moves));
+    memset(history_moves, 0, sizeof(history_moves));
+    count = 0;
+    ply = 0;
 
-
+    int currentScore = 0;
     int alpha = MIN_SCORE;
     int beta = MAX_SCORE;
+    std::chrono::steady_clock::time_point start = std::chrono::high_resolution_clock::now();
 
-    count = 0;
-    int currentScore = Minimax(maxDepth, *curBoard, alpha, beta,true);
+    for (int i = 1;currentScore < 9000 && currentScore > -9000 && (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() < maxTime/4; i++) {
 
-    std::cout << "nodes searched: " << count << " score: " << currentScore << std::endl;
-    return bestMove;
+        currentScore = Minimax(i, *curBoard, alpha, beta);
+
+        std::cout << "depth: " << i << ", ";    
+
+        std::cout << "nodes searched: " << count << " ";
+        for (int i = 0; i < pv_length[0]; i++) {
+            std::cout << pv_table[0][i].to_str() << " ";
+        }
+        std::cout << " score: " << currentScore << " time: "<< (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count();
+        std::cout << std::endl;
+
+        if (currentScore <= alpha || currentScore >= beta) {
+            alpha = MIN_SCORE;
+            beta = MAX_SCORE;
+            continue;
+        }
+
+        alpha = currentScore - valWINDOW;
+        beta = currentScore + valWINDOW;
+    }
+
+    std::cout << std::endl;
+    return pv_table[0][0];
 }

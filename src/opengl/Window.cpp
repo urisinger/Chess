@@ -1,5 +1,5 @@
 #include "Window.h"
-
+#include <iostream>
 
 Window::Window(const unsigned int& windowWidth, const unsigned int& windowHeight, const char* windowTitle, WindowMode windowMode)
 {
@@ -34,8 +34,18 @@ void Window::InitWindow(const WindowProps& windowProperties)
     if (m_Window == nullptr) {
         return;
     }
+
+    init_glad();
 }
 
+void Window::init_glad() {
+    MakeWindowContextCurrent();
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << "hi";
+        glfwTerminate();
+    }
+
+}
 Window::~Window()
 {
     glfwDestroyWindow(m_Window);

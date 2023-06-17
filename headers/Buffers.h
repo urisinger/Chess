@@ -1,9 +1,9 @@
 #pragma once
-#include <GLAD/glad.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <GLAD/glad.h>
 
 
 template <typename T>
@@ -55,6 +55,10 @@ private:
 	unsigned int m_BufferId;
 public:
 	IndexBuffer(const GLuint* data, GLsizei count);
+    IndexBuffer() {
+        glCreateBuffers(1, &m_BufferId);
+    }
+
 	~IndexBuffer();
 
 	void AddData(const GLuint* data, GLsizei count);

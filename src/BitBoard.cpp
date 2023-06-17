@@ -501,6 +501,8 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
         queens &= (queens - 1);
     }
 
+
+
     LegalMoves sortedMoves;
 
     for (int i = 0; i < legalMoves.count; i++) {
@@ -514,12 +516,16 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
         if ((!movedBoard.isKingAttacked(color == WHITE ? WHITE : BLACK))) {
             // Move doesn't result in own king being in check
 
-            if ((movedBoard.isKingAttacked(color == WHITE ? BLACK : WHITE))) {
-                // Move results in opponent's king being in check
-                move.setFlags(CHECK);
-            }
+            if (move.getFlags() == QUEEN_CASTLE || move.getFlags() == KING_CASTLE) {
+                if (!isKingAttacked(color == WHITE ? WHITE : BLACK)) {
+                    sortedMoves.push_back(move);
+                }
 
-            sortedMoves.push_back(move);
+            }
+            else {
+
+                sortedMoves.push_back(move);
+            }
         }
     }
 
@@ -692,8 +698,6 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
     LegalMoves legalMoves;
 
 
-    generatePawnAttacks(color, legalMoves);
-
     std::uint64_t knights = color == WHITE ? whiteKnights : blackKnights;
 
     while (knights) {
@@ -741,6 +745,8 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
         queens &= (queens - 1);
     }
 
+    generatePawnAttacks(color, legalMoves);
+
     LegalMoves sortedMoves;
 
     for (int i = 0; i < legalMoves.count; i++) {
@@ -754,10 +760,6 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
         if ((!movedBoard.isKingAttacked(color == WHITE ? BLACK : WHITE))) {
             // Move doesn't result in own king being in check
 
-            if ((movedBoard.isKingAttacked(color == WHITE ? WHITE : BLACK))) {
-                // Move results in opponent's king being in check
-                move.setFlags(CHECK);
-            }
 
             if (move.getFlags() == QUEEN_CASTLE || move.getFlags() == KING_CASTLE) {
                 if (!isKingAttacked(color == WHITE ? WHITE : BLACK)) {
@@ -811,15 +813,16 @@ inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves
         const std::int32_t sourceSquare = targetSquare - (direction * 8) + 1;
 
         // Check if the capture is a pawn promotion
+        Piece targetpiece = getPiece(targetSquare);
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
         if ((targetSquare / 8) == promotionRank) {
-            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT, getPiece(targetSquare));
-            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP, getPiece(targetSquare));
-            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK, getPiece(targetSquare));
-            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN, targetpiece);
         }
         else {
-            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, targetpiece);
         }
 
         pawnLeftCaptures &= pawnLeftCaptures - 1; // Clear the LSB to move to the next capture
@@ -829,16 +832,19 @@ inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves
         const std::int32_t targetSquare = getLSB(pawnRightCaptures);
         const std::int32_t sourceSquare = targetSquare - (direction * 8) - 1;
 
+        Piece targetpiece = getPiece(targetSquare);
+
         // Check if the capture is a pawn promotion
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
+
         if ((targetSquare / 8) == promotionRank) {
-            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT, getPiece(targetSquare));
-            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP, getPiece(targetSquare));
-            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK, getPiece(targetSquare));
-            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN, targetpiece);
         }
         else {
-            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, getPiece(targetSquare));
+            legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, targetpiece);
         }
 
         pawnRightCaptures &= pawnRightCaptures - 1; // Clear the LSB to move to the next capture
@@ -908,102 +914,12 @@ std::uint64_t Board::generateSlidingMovesAsBits(std::int32_t square, std::uint64
 }
 
 
-std::uint64_t Board::generatePawnMovesAsBits(const Color color) const {
-    const std::uint64_t pawns = (color == WHITE) ? whitePawns : blackPawns;
-    const std::uint64_t oppsitePieces = (color == WHITE) ? blackPieces : whitePieces;
 
-
-    // Generate pawn captures
-    const std::uint64_t pawnLeftCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) >> 1) & ~(0x8080808080808080ULL)) & oppsitePieces;
-    const std::uint64_t pawnRightCaptures = ((((color == WHITE) ? (pawns << 8) : (pawns >> 8)) << 1) & ~(0x0101010101010101ULL)) & oppsitePieces;
-
-
-    // Combine left and right captures
-    const std::uint64_t captures = pawnLeftCaptures | pawnRightCaptures;
-
-    return captures;
-}
-
-
-
-std::uint64_t Board::GetAttackedPieces(Color color) const {
-    std::uint64_t attackedPieces = 0;
-
-    attackedPieces |= generatePawnMovesAsBits(
-        color);  // Modify this function to update the attackedPieces bitboard instead of the legalMoves vector
-
-    std::uint64_t knights = color == WHITE ? whiteKnights : blackKnights;
-
-    while (knights) {
-        const int square = getLSB(knights);
-
-        attackedPieces |= generateNonSlidingMovesAsBits(square, Bitboard::knightAttack[square], KNIGHT);
-
-        // Clear the least significant bit of the current piece
-        knights &= (knights - 1);
-    }
-
-    std::uint64_t kings = color == WHITE ? whiteKing : blackKing;
-
-    while (kings) {
-        const int square = getLSB(kings);
-
-        attackedPieces |= generateNonSlidingMovesAsBits(square, Bitboard::kingAttack[square], KING);
-
-        // Clear the least significant bit of the current piece
-        kings &= (kings - 1);
-    }
-
-    std::uint64_t bishops = color == WHITE ? whiteBishops : blackBishops;
-
-    while (bishops) {
-        const int square = getLSB(bishops);
-
-        attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::bishopMasks[square],
-            Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square],
-            BISHOP);
-
-        // Clear the least significant bit of the current piece
-        bishops &= (bishops - 1);
-    }
-
-    std::uint64_t rooks = color == WHITE ? whiteRooks : blackRooks;
-
-    while (rooks) {
-        const int square = getLSB(rooks);
-
-        attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::rookMasks[square], Bitboard::rookMagic[square],
-            Bitboard::rookAttacks[square], ROOK);
-
-        // Clear the least significant bit of the current piece
-        rooks &= (rooks - 1);
-    }
-
-    std::uint64_t queens = color == WHITE ? whiteQueens : blackQueens;
-
-    while (queens) {
-        const int square = getLSB(queens);
-
-        attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::rookMasks[square], Bitboard::rookMagic[square],
-            Bitboard::rookAttacks[square], QUEEN);
-        attackedPieces |= generateSlidingMovesAsBits(square, Bitboard::bishopMasks[square],
-            Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square],
-            QUEEN);
-
-        // Clear the least significant bit of the current piece
-        queens &= (queens - 1);
-    }
-
-    return attackedPieces;
-}
-
-bool Board::isKingAttacked(Color color) const {
-    int square = getLSB(color == WHITE ? whiteKing : blackKing);
-
+bool Board::isSqaureAttacked(Color color, int square) const{
     std::uint64_t pawns = color == WHITE ? blackPawns : whitePawns;
 
     std::uint64_t knights = color == WHITE ? blackKnights : whiteKnights;
-    
+
     if (color == WHITE) {
         if (square % 8 != 7 && (pawns & (1ULL << (square + 9)))) {
             return true;
@@ -1014,11 +930,11 @@ bool Board::isKingAttacked(Color color) const {
         }
     }
     else {
-        if (square % 8 != 7 && (pawns & (1ULL << (square - 9)))) {
+        if (square % 8 != 0 && (pawns & (1ULL << (square - 9)))) {
             return true;
         }
 
-        if (square % 8 != 0 && (pawns & (1ULL << (square - 7)))) {
+        if (square % 8 != 7 && (pawns & (1ULL << (square - 7)))) {
             return true;
         }
     }
@@ -1056,6 +972,13 @@ bool Board::isKingAttacked(Color color) const {
 }
 
 
+
+bool Board::isKingAttacked(Color color) const {
+    int square = getLSB(color == WHITE ? whiteKing : blackKing);
+
+
+    return isSqaureAttacked(color,square);
+}
 
 
 int Board::eval() const {

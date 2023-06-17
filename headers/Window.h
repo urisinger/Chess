@@ -1,4 +1,5 @@
 #pragma once
+#include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 
 
@@ -50,6 +51,7 @@ private:
 
 public:
     Window(const unsigned int& windowWidth, const unsigned int& windowHeight, const char* windowTitle, WindowMode windowMode);
+    void init_glad();
     Window();
     ~Window();
 
