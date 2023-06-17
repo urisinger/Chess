@@ -11,6 +11,8 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
+    Bitboard::initBitmasks();
+
     ChessApp app(1000, 1000);
 
     app.Run();

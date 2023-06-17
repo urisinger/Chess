@@ -37,14 +37,7 @@ enum MoveFlag {
     CAPTURE,
     EN_PASSANT_CAPTURE,
     CHECK,
-    KNIGHT_PROMOTE,
-    BISHOP_PROMOTE,
-    ROOK_PROMOTE,
-    QUEEN_PROMOTE,
-    KNIGHT_PROMOTE_CAPTURE,
-    BISHOP_PROMOTE_CAPTURE,
-    ROOK_PROMOTE_CAPTURE,
-    QUEEN_PROMOTE_CAPTURE
+    PROMOTE
 };
 
 enum Color {
@@ -79,7 +72,7 @@ struct Move {
     inline Color getColor() const { return static_cast<Color>((m_Move >> 16) & 0x1); }
     inline Piece getPiece() const { return static_cast<Piece>((m_Move >> 20) & 0x7); }
 
-    std::string to_str() {
+    std::string to_str() const{
         char fromFile = 'a' + (getFrom() % 8);
         char toFile = 'a' + (getTo() % 8);
         std::stringstream ss;
@@ -130,14 +123,23 @@ public:
 
     int eval() const;
 
+    void PrintBoard() const;
+
+
     LegalMoves GenerateLegalMoves(Color color) const;
     LegalMoves GenerateCaptureMoves(Color color) const;
 
     bool isSqaureAttacked(Color color, int square) const;
     bool isKingAttacked(Color color) const;
 
+    std::uint64_t generateHashKey();
 
     Color currentPlayer;
+
+    std::uint64_t hashKey;
+
+    std::int8_t enPassantSquare;
+
 
 private:
     std::uint64_t whitePawns;
@@ -162,7 +164,6 @@ private:
     std::uint8_t halfMoveClock;
     std::uint16_t fullMoveNumber;
 
-    std::uint8_t enPassantSquare;
 
 
 

@@ -377,6 +377,24 @@ std::uint64_t Bitboard::generateMagicNumber(int square, bool is_bishop) {
 }
 
 
+void Bitboard::generateHashKeys() {
+    for (int i = 0; i < 12; i++) {
+        for (int j = 0; j < 64; j++) {
+            pieceKeys[i][j] = random_uint64();
+        }
+
+    }
+
+    for (int i = 0; i < 64; i++) {
+        enPeasentKeys[i] = random_uint64();
+    }
+
+    for (int i = 0; i < 16; i++) {
+        CastleKeys[i] = random_uint64();
+    }
+
+    SideKey = random_uint64();
+}
 
 
 // Initialize static member variables 
@@ -516,6 +534,12 @@ std::uint64_t Bitboard::rookMagic[64] =
     0x12001008414402ULL,
     0x2006104900a0804ULL,
     0x1004081002402ULL } ;
+
+std::uint64_t Bitboard::pieceKeys[12][64] = { 0 };
+std::uint64_t Bitboard::enPeasentKeys[64] = { 0 };
+std::uint64_t Bitboard::CastleKeys[16] = { 0 };
+
+std::uint64_t Bitboard::SideKey = { 0 };
 
 std::uint64_t Bitboard::bishopAttacks[64][512];
 std::uint64_t Bitboard::rookAttacks[64][4096];

@@ -86,7 +86,7 @@ Board::Board(const std::string& fen) :
     blackPieces(0),
     halfMoveClock(0),
     fullMoveNumber(0),
-    enPassantSquare(0),
+    enPassantSquare(-1),
     currentPlayer(WHITE),
     castleFlags(0)
 {
@@ -162,6 +162,11 @@ Board::Board(const std::string& fen) :
         return;  // FEN is invalid or incomplete
 
     fullMoveNumber = std::stoi(token);
+
+    hashKey = generateHashKey();
+
+
+
 }
 
 
@@ -295,6 +300,23 @@ void Board::movePiece(const Move& move) {
     setSquare(to, color, piece);
     clearSquare(from);
 
+    if (move.getCapturedPiece() != EMPTY) {
+        hashKey ^= Bitboard::pieceKeys[6 * color + move.getCapturedPiece() - 1][to];
+    }
+
+    hashKey ^= Bitboard::pieceKeys[6 * !color + piece - 1][to];
+
+    if (flags == PROMOTE) {
+        hashKey ^= Bitboard::pieceKeys[6 * !color + PAWN - 1][from];
+    }
+    else {
+        hashKey ^= Bitboard::pieceKeys[6 * !color + piece - 1][from];
+    }
+
+
+
+    hashKey ^= Bitboard::CastleKeys[castleFlags];
+
     if (flags == KING_CASTLE) {
         if (color == WHITE) {
             // Move the rook from H1 to F1
@@ -303,6 +325,11 @@ void Board::movePiece(const Move& move) {
             castleFlags &= ~(WHITE_KINGSIDE_CASTLING | WHITE_QUEENSIDE_CASTLING);
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
+
+            hashKey ^= Bitboard::pieceKeys[ROOK - 1][rookFrom];
+
+            hashKey ^= Bitboard::pieceKeys[ROOK - 1][rookTo];
+
         }
         else if (color == BLACK) {
             // Move the rook from H8 to F8
@@ -311,6 +338,9 @@ void Board::movePiece(const Move& move) {
             castleFlags &= ~(BLACK_KINGSIDE_CASTLING | BLACK_QUEENSIDE_CASTLING);
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
+            hashKey ^= Bitboard::pieceKeys[6  + ROOK - 1][rookFrom];
+
+            hashKey ^= Bitboard::pieceKeys[6 + ROOK - 1][rookTo];
         }
     }
     else if (flags == QUEEN_CASTLE) {
@@ -321,6 +351,9 @@ void Board::movePiece(const Move& move) {
             castleFlags &= ~(WHITE_KINGSIDE_CASTLING | WHITE_QUEENSIDE_CASTLING);
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
+            hashKey ^= Bitboard::pieceKeys[ROOK - 1][rookFrom];
+
+            hashKey ^= Bitboard::pieceKeys[ROOK - 1][rookTo];
         }
         else if (color == BLACK) {
             // Move the rook from A8 to D8
@@ -330,6 +363,9 @@ void Board::movePiece(const Move& move) {
 
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
+            hashKey ^= Bitboard::pieceKeys[6 + ROOK - 1][rookFrom];
+
+            hashKey ^= Bitboard::pieceKeys[6 + ROOK - 1][rookTo];
         }
     }
 
@@ -380,7 +416,10 @@ void Board::movePiece(const Move& move) {
     // Handle en passant capture
     if (flags == EN_PASSANT_CAPTURE) {
         const int capturedPawnSquare = to + (color == WHITE ? -8 : 8);
+
         clearSquare(capturedPawnSquare);
+
+        hashKey ^= Bitboard::pieceKeys[6 * currentPlayer + PAWN - 1][capturedPawnSquare];
     }
 
     // Update the halfMoveClock
@@ -396,18 +435,81 @@ void Board::movePiece(const Move& move) {
         fullMoveNumber++;
     }
 
+    if (enPassantSquare != -1) {
+        hashKey ^= Bitboard::enPeasentKeys[enPassantSquare];
+    }
+
     // Update en passant square
     if (piece == PAWN && (((to > from) ? (to - from) : (from - to)) == 16)) {
         const std::int32_t pawnDirection = (color == WHITE) ? 1 : -1;
         enPassantSquare = to - (pawnDirection * 8);
+        hashKey ^= Bitboard::enPeasentKeys[enPassantSquare];
     }
     else {
         enPassantSquare = -1; // -1 indicates no en passant square
     }
 
 
+    hashKey ^= Bitboard::CastleKeys[castleFlags];
+
     // Update current player
     currentPlayer = (currentPlayer == WHITE) ? BLACK : WHITE;
+
+    hashKey ^= Bitboard::SideKey;
+
+}
+
+void Board::PrintBoard() const {
+    const std::string pieceSymbols = ".PNBRQKpnbrqk";  // Symbolic representation of pieces
+
+    for (int rank = 7; rank >= 0; --rank) {
+        for (int file = 0; file < 8; ++file) {
+            int square = rank * 8 + file;
+            std::uint64_t mask = 1ULL << square;  // Bit shift to create a mask for the current square
+
+            // Check if there is a piece on the current square
+            if (whitePawns & mask) {
+                std::cout << "P";  // White pawn
+            }
+            else if (whiteKnights & mask) {
+                std::cout << "N";  // White knight
+            }
+            else if (whiteBishops & mask) {
+                std::cout << "B";  // White bishop
+            }
+            else if (whiteRooks & mask) {
+                std::cout << "R";  // White rook
+            }
+            else if (whiteQueens & mask) {
+                std::cout << "Q";  // White queen
+            }
+            else if (whiteKing & mask) {
+                std::cout << "K";  // White king
+            }
+            else if (blackPawns & mask) {
+                std::cout << "p";  // Black pawn
+            }
+            else if (blackKnights & mask) {
+                std::cout << "n";  // Black knight
+            }
+            else if (blackBishops & mask) {
+                std::cout << "b";  // Black bishop
+            }
+            else if (blackRooks & mask) {
+                std::cout << "r";  // Black rook
+            }
+            else if (blackQueens & mask) {
+                std::cout << "q";  // Black queen
+            }
+            else if (blackKing & mask) {
+                std::cout << "k";  // Black king
+            }
+            else {
+                std::cout << ".";  // Empty square
+            }
+        }
+        std::cout << std::endl;
+    }
 }
 
 
@@ -562,10 +664,10 @@ inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) 
         // Check if the capture is a pawn promotion
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
         if ((targetSquare / 8) == promotionRank) {
-            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT);
-            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP);
-            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK);
-            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, KNIGHT);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, BISHOP);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, ROOK);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, QUEEN);
         }
         else {
             // Add pawn move to legalMoves
@@ -585,14 +687,14 @@ inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) 
 
         // Check if the capture is a pawn promotion
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
+        const Piece capturedPiece = getPiece(targetSquare);
         if ((targetSquare / 8) == promotionRank) {
-            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT);
-            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP);
-            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK);
-            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, KNIGHT, capturedPiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, BISHOP, capturedPiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, ROOK, capturedPiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, QUEEN, capturedPiece);
         }
         else {
-            const Piece capturedPiece = getPiece(targetSquare);
             legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, capturedPiece);
         }
 
@@ -605,14 +707,15 @@ inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) 
 
         // Check if the capture is a pawn promotion
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
+        const Piece capturedPiece = getPiece(targetSquare);
+
         if ((targetSquare / 8) == promotionRank) {
-            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT);
-            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP);
-            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK);
-            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, KNIGHT, capturedPiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, BISHOP, capturedPiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, ROOK, capturedPiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, QUEEN, capturedPiece);
         }
         else {
-            const Piece capturedPiece = getPiece(targetSquare);
             legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, capturedPiece);
         }
 
@@ -697,6 +800,8 @@ inline void Board::generateSlidingMoves(std::int32_t square, LegalMoves& legalMo
 LegalMoves Board::GenerateCaptureMoves(Color color) const{
     LegalMoves legalMoves;
 
+    generatePawnAttacks(color, legalMoves);
+
 
     std::uint64_t knights = color == WHITE ? whiteKnights : blackKnights;
 
@@ -745,7 +850,6 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
         queens &= (queens - 1);
     }
 
-    generatePawnAttacks(color, legalMoves);
 
     LegalMoves sortedMoves;
 
@@ -816,10 +920,10 @@ inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves
         Piece targetpiece = getPiece(targetSquare);
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
         if ((targetSquare / 8) == promotionRank) {
-            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT, targetpiece);
-            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP, targetpiece);
-            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK, targetpiece);
-            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, KNIGHT, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, BISHOP, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, ROOK, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, QUEEN, targetpiece);
         }
         else {
             legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, targetpiece);
@@ -838,10 +942,10 @@ inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves
         const std::int32_t promotionRank = (color == WHITE) ? 7 : 0;
 
         if ((targetSquare / 8) == promotionRank) {
-            legalMoves.emplace_back(sourceSquare, targetSquare, KNIGHT_PROMOTE_CAPTURE, color, KNIGHT, targetpiece);
-            legalMoves.emplace_back(sourceSquare, targetSquare, BISHOP_PROMOTE_CAPTURE, color, BISHOP, targetpiece);
-            legalMoves.emplace_back(sourceSquare, targetSquare, ROOK_PROMOTE_CAPTURE, color, ROOK, targetpiece);
-            legalMoves.emplace_back(sourceSquare, targetSquare, QUEEN_PROMOTE_CAPTURE, color, QUEEN, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, KNIGHT, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, BISHOP, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, ROOK, targetpiece);
+            legalMoves.emplace_back(sourceSquare, targetSquare, PROMOTE, color, QUEEN, targetpiece);
         }
         else {
             legalMoves.emplace_back(sourceSquare, targetSquare, CAPTURE, color, PAWN, targetpiece);
@@ -1074,4 +1178,37 @@ int Board::eval() const {
         result -= king_score[square];
     }
     return result;
+}
+
+
+
+std::uint64_t Board::generateHashKey() {
+    std::uint64_t key = 0ULL;
+
+    std::uint64_t pieces = whitePieces;
+
+    while (pieces) {
+        int square = getLSB(pieces);
+        Piece piece = getPiece(square);
+        key ^= Bitboard::pieceKeys[piece-1][square];
+        pieces &= pieces - 1;    
+    }
+
+    pieces = blackPieces;
+    while (pieces) {
+        int square = getLSB(pieces);
+        Piece piece = getPiece(square);
+        key ^= Bitboard::pieceKeys[6+piece - 1][square];
+        pieces &= pieces - 1;
+    }
+
+    if (enPassantSquare != -1) {
+        key ^= Bitboard::enPeasentKeys[enPassantSquare];
+    }
+
+    key ^= Bitboard::CastleKeys[castleFlags];
+
+    key ^= !currentPlayer * Bitboard::SideKey;
+
+    return key;
 }

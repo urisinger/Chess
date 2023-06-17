@@ -18,7 +18,7 @@ ChessApp::ChessApp(int xSize, int ySize) :
     _window(1000, 1000, "CHESS GAME OK?", WindowMode::WINDOWED),
 	_backroundShader("../Shaders/Simple.vert", "../Shaders/Backround.frag"),
 	_piecesShader("../Shaders/Simple.vert", "../Shaders/Pieces.frag"),
-    _pieces("../Textures/ChessPiecesArray.png"),
+    _pieces("../Textures/ChessPiecesArray.png"),    
     _engine(&_board)
 {
 
@@ -32,8 +32,6 @@ ChessApp::ChessApp(int xSize, int ySize) :
     _sqauareVAO.AddAttribute<float>(2, 0, GL_FALSE, 0, _sqauareVBO, 0);
 
     _sqaureIBO.AddData(sqaure_indcies, 6);
-
-    Bitboard::initBitmasks();
 
     _backroundShader.Bind();
 

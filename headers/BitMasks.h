@@ -20,6 +20,13 @@ public:
     static std::uint64_t bishopAttacks[64][512];
     static std::uint64_t rookAttacks[64][4096];
 
+    static std::uint64_t pieceKeys[12][64];
+    static std::uint64_t enPeasentKeys[64];
+    static std::uint64_t CastleKeys[16];
+
+    static std::uint64_t SideKey;
+
+
 
     static void initBitmasks() {
         generateBishopBitmasks();
@@ -27,11 +34,13 @@ public:
         generateKnightBitmasks();
         generateKingBitmasks();
 
-        generateBishopMagicNumbers();
-        generateRookMagicNumbers();
         generateBishopAttacks();
         generateRookAttacks();
+
+        generateHashKeys(); 
     }
+
+    static void generateHashKeys();
 
     static void generateBishopBitmasks();
 

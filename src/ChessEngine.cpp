@@ -14,7 +14,8 @@ int ChessEngine::count;
 
 int ChessEngine::ply;
 
-Board* ChessEngine::curBoard;
+
+HashTable ChessEngine::Trasposition(HASH_SIZE);
 
 
 
@@ -82,7 +83,9 @@ int compareMoves(const void* a, const void* b) {
 
 int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
     count++;
+
     int standPat = board.currentPlayer == WHITE ? board.eval() : -board.eval(); // Evaluate the current position without considering captures or promotions
+
 
     if (ply >= max_ply) {
         return standPat;
@@ -125,21 +128,36 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
     pv_length[ply] = ply;
     count++;
 
+    int score;
+
+    HashFlags hashFlag = HASH_ALPHA;
     int movesSearched = 0;
 
+    if ((score = Trasposition.ReadHash(board.hashKey, alpha, beta, depth)) != NO_HASH_ENTRY)
+    {
+        return score;
+    }
 
     bool in_check = board.isKingAttacked(board.currentPlayer);
 
     depth += in_check;
     if (depth == 0) {
         // Evaluate the current board position and return the evaluation score
-        return quiescence(board,alpha,beta);
+        score = quiescence(board, alpha, beta);
+        return score;
     }
 
     if (depth >= R + 1 && !in_check && ply) {
         Board nullBoard = board;
 
         nullBoard.currentPlayer = nullBoard.currentPlayer == WHITE ? BLACK : WHITE;
+
+        if (nullBoard.enPassantSquare != -1) {
+            nullBoard.hashKey ^= Bitboard::enPeasentKeys[nullBoard.enPassantSquare];
+        }
+        nullBoard.enPassantSquare = -1;
+
+        nullBoard.hashKey ^= Bitboard::SideKey;
 
         ply += R + 1;
         int score = -Minimax(depth - 1 - R, nullBoard, -beta, -beta + 1);
@@ -162,7 +180,6 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
     for (int i = 0; i < moves.count; i++) {
         Board newboard = board;
         newboard.movePiece(moves.moves[i]);
-        int score;
 
         if (movesSearched == 0) {
             ply++;
@@ -194,6 +211,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
         movesSearched++;
 
         if (score > alpha) {
+            hashFlag = HASH_EXSACT;
 
             if (moves.moves[i].getCapturedPiece() == EMPTY) {
                 history_moves[(moves.moves[i].getPiece() - 1) * (moves.moves[i].getColor() + 1)][moves.moves[i].getTo()] += depth;
@@ -210,12 +228,15 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
         }
 
         if (score >= beta) {
+            Trasposition.WriteHash(board.hashKey, score, depth, HASH_BETA);
             killer_moves[1][ply] = killer_moves[0][ply];
             killer_moves[0][ply] = moves.moves[i];
             return beta;
         }
 
     }
+    Trasposition.WriteHash(board.hashKey, score, depth, hashFlag);
+
     return alpha;
 }
 
@@ -229,18 +250,15 @@ Move ChessEngine::BestMove(double maxTime) {
         Move empty;
         return empty; // Return an empty move
     }
+    clearTables();
 
-    memset(killer_moves, 0, sizeof(killer_moves));
-    memset(history_moves, 0, sizeof(history_moves));
-    count = 0;
-    ply = 0;
 
     int currentScore = 0;
     int alpha = MIN_SCORE;
     int beta = MAX_SCORE;
     std::chrono::steady_clock::time_point start = std::chrono::high_resolution_clock::now();
 
-    for (int i = 1;currentScore < 9000 && currentScore > -9000 && (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() < maxTime/4; i++) {
+    for (int i = 1;currentScore < 9000 && currentScore > -9000 && (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() < maxTime/2; i++) {
 
         currentScore = Minimax(i, *curBoard, alpha, beta);
 
@@ -265,4 +283,43 @@ Move ChessEngine::BestMove(double maxTime) {
 
     std::cout << std::endl;
     return pv_table[0][0];
+}
+
+
+int ChessEngine::Perft(int depth, const Board& board) {
+    if (depth == 0) {
+        return 1; // Leaf node, return 1
+    }
+
+    int nodes = 0;
+
+    auto moves = board.GenerateLegalMoves(board.currentPlayer);
+
+    for (int i = 0; i < moves.count; i++) {
+        Board newboard = board;
+        newboard.movePiece(moves.moves[i]);
+
+        // Recursively count the number of nodes at the next depth
+        nodes += Perft(depth - 1, newboard);
+    }
+
+    return nodes;
+}
+
+void ChessEngine::RunPerftTest(int depth) {
+    int nodes = Perft(depth, *curBoard);
+
+    std::cout << "Perft Test Results:\n";
+    std::cout << "Depth: " << depth << "\n";
+    std::cout << "Nodes: " << nodes << "\n";
+}
+
+
+
+void ChessEngine::clearTables() {
+    memset(killer_moves, 0, sizeof(killer_moves));
+    memset(history_moves, 0, sizeof(history_moves));
+    memset(Trasposition.hashTable, 0, sizeof(THash)*Trasposition.size);
+    count = 0;
+    ply = 0;
 }
