@@ -98,7 +98,7 @@ struct LegalMoves {
         count++;
     }
 
-    void push_back(Move& move) {
+    void push_back(Move move) {
         moves[count] = move;
         count++;
     }

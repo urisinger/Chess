@@ -15,6 +15,7 @@ int ChessEngine::count;
 int ChessEngine::ply;
 
 
+
 HashTable ChessEngine::Trasposition(HASH_SIZE);
 
 bool ChessEngine::stop;
@@ -22,6 +23,9 @@ bool ChessEngine::stop;
 std::chrono::steady_clock::time_point ChessEngine::startTime;
 
 double ChessEngine::maxTime;
+
+int ChessEngine::offset;
+
 
 
 
@@ -37,10 +41,10 @@ constexpr static int translator[6] =
 };
 
 
-int score_move(const Move& move) {
-    if (ChessEngine::pv_table[0][ChessEngine::ply] == move) {
-        return 100000;
-    }
+
+
+int score_move(Move move) {
+
 
     if (move.getCapturedPiece() != EMPTY) {
         // Compare capture moves
@@ -50,10 +54,10 @@ int score_move(const Move& move) {
     else {
 
 
-
         if (ChessEngine::killer_moves[0][ChessEngine::ply] == move) {
             return 9000;
         }
+
         if (ChessEngine::killer_moves[1][ChessEngine::ply] == move) {
             return 8000;
         }
@@ -65,23 +69,58 @@ int score_move(const Move& move) {
 
 }
 
-int compareMoves(const void* a, const void* b) {
-    const Move* moveA = static_cast<const Move*>(a);
-    const Move* moveB = static_cast<const Move*>(b);
-
-    const int scoreA = score_move(*moveA);
-    const int scoreB = score_move(*moveB);
 
 
 
-    // Compare based on move flags
-    if (scoreA > scoreB) {
-        return -1;
+int compareMoves(Move moveA, Move moveB, Move bestMove) {
+    if (moveA == bestMove) {
+        return -1;  // moveA is the best move, so it should come first
     }
-    else if (scoreB > scoreA) {
+    else if (moveB == bestMove) {
+        return 1;  // moveB is the best move, so it should come first
+    }
+    else if (score_move(moveA) < score_move(moveB)) {
         return 1;
     }
-    return 0;
+    else if (score_move(moveA) > score_move(moveB)) {
+        return -1;
+    }
+    else {
+        return 0;
+    }
+}
+void swapMoves(Move& moveA, Move& moveB) {
+    Move temp = moveA;
+    moveA = moveB;
+    moveB = temp;
+}
+
+int partitionMoves(Move* moves, int low, int high, Move bestMove) {
+    Move pivot = moves[high];
+    int i = low - 1;
+
+    for (int j = low; j <= high - 1; j++) {
+        if (compareMoves(moves[j], pivot, bestMove) < 0) {
+            i++;
+            swapMoves(moves[i], moves[j]);
+        }
+    }
+
+    swapMoves(moves[i + 1], moves[high]);
+    return i + 1;
+}
+void quicksortMoves(Move* moves, int low, int high, Move bestMove) {
+    if (low < high) {
+        int pivotIndex = partitionMoves(moves, low, high, bestMove);
+        quicksortMoves(moves, low, pivotIndex - 1, bestMove);
+        quicksortMoves(moves, pivotIndex + 1, high, bestMove);
+    }
+}
+
+
+
+void sortMoves(LegalMoves& legalMoves, Move bestMove) {
+    quicksortMoves(legalMoves.moves, 0, legalMoves.count - 1,bestMove);
 }
 
 
@@ -102,11 +141,13 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
         return STOPPED;
     }
 
+
+
     alpha = std::max(alpha, standPat); // Update alpha with the maximum value between alpha and standPat for the maximizing player
 
     auto captures = board.GenerateCaptureMoves(board.currentPlayer); // Generate all capture moves
 
-    qsort(captures.moves, captures.count, sizeof(Move), compareMoves);
+    sortMoves(captures, Move());
 
     for (int i = 0; i < captures.count; i++) {
         Board newboard = board;
@@ -128,13 +169,18 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
         if (stop) {
             return STOPPED;
         }
+
         ply++;
         int score = -quiescence(newboard, -beta, -alpha); // Recursively evaluate the capture move with the opposite maximizingPlayer flag
         ply--;
 
+     //   *bestMoveP = bestMove;
+
         movesSearched++;
 
-        alpha = std::max(alpha, score); // Update alpha with the maximum value between alpha and score
+        if (score > alpha) {
+            alpha = score;
+        }
 
         if (score >= beta) {
             if (stop) {
@@ -173,9 +219,11 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
     HashFlags hashFlag = HASH_ALPHA;
     int movesSearched = 0;
 
+    Move bestMove;
+    
     int pv_node = (beta - alpha > 1);
 
-    score = Trasposition.ReadHash(board.hashKey, alpha, beta, depth);
+    score = Trasposition.ReadHash(board.hashKey, alpha, beta, &bestMove , ply + offset);
     if (score != NO_HASH_ENTRY && !pv_node)
     {
         return score;
@@ -213,9 +261,9 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
             return beta;
     }
 
-    auto moves = board.GenerateLegalMoves(board.currentPlayer);
+    LegalMoves moves = board.GenerateLegalMoves(board.currentPlayer);
 
-    qsort(moves.moves, moves.count, sizeof(Move), compareMoves);
+    sortMoves(moves,bestMove);
 
 
     for (int i = 0; i < moves.count; i++) {
@@ -234,6 +282,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
             }
 
         }
+        
 
         if (stop) {
             return STOPPED;
@@ -243,12 +292,14 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
             ply++;
             score = -Minimax(depth - 1, newboard, -beta, -alpha);
             ply--;
+           // *bestMoveP = bestMove;
         }
         else {
             if (movesSearched >= fullDepthMoves && depth >= reductionLimits && !in_check && moves.moves[i].getFlags() < 4) {
                 ply += 2;
                 score = -Minimax(depth - 2, newboard, -alpha - 1, -alpha);
                 ply -= 2;
+
             }
             else
                 score = alpha + 1;
@@ -257,6 +308,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
                 ply++;
                 score = -Minimax(depth - 1, newboard, -alpha - 1, -alpha);
                 ply--;
+
 
                 if (score > alpha && score < beta) {
                     ply++;
@@ -268,13 +320,9 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
 
 
         movesSearched++;
+        count++;
 
-        if (score >= beta) {
-            Trasposition.WriteHash(board.hashKey, score, depth, HASH_BETA);
-            killer_moves[1][ply] = killer_moves[0][ply];
-            killer_moves[0][ply] = moves.moves[i];
-            return beta;
-        }
+
 
         if (score > alpha) {
             hashFlag = HASH_EXSACT;
@@ -291,9 +339,15 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
             pv_length[ply] = pv_length[ply + 1];
 
             alpha = score;
+            bestMove = moves.moves[i];
         }
 
-
+            if (score >= beta) {
+            Trasposition.WriteHash(board.hashKey, score, ply + offset,bestMove, HASH_BETA);
+            killer_moves[1][ply] = killer_moves[0][ply];
+            killer_moves[0][ply] = moves.moves[i];
+            return beta;
+        }
 
     }
 
@@ -304,11 +358,11 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
     if (movesSearched == 0) {
         // Handle the case where no legal moves are available
         score = in_check * (!board.currentPlayer * 2 - 1) * (-MATE_VALUE + ply);
-        Trasposition.WriteHash(board.hashKey, score, depth, hashFlag);
+        Trasposition.WriteHash(board.hashKey, score, ply + offset, bestMove, hashFlag);
         return score;
     }
 
-    Trasposition.WriteHash(board.hashKey, score, depth, hashFlag);
+    Trasposition.WriteHash(board.hashKey, score, ply + offset, bestMove,hashFlag);
 
     return alpha;
 }
@@ -421,7 +475,8 @@ void ChessEngine::RunPerftTest(int depth) {
 
 
 void ChessEngine::clearTables() {
-
+    memset(history_moves, 0, sizeof(history_moves));
+    memset(killer_moves, 0, sizeof(killer_moves));
     memset(pv_length, 0, sizeof(pv_length));
     memset(pv_table, 0, sizeof(pv_table));
     count = 0;

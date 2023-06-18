@@ -74,6 +74,7 @@ void ChessApp::Run() {
         if (glfwGetKey(_window.GetWindowInstance(), GLFW_KEY_SPACE) == GLFW_PRESS) {
             if (bestmove != Move()) {
                 _board.movePiece(bestmove);
+                _engine.offset++;
             }
             std::fill(highlights, highlights + 64, 0);
 
@@ -99,6 +100,9 @@ void ChessApp::Run() {
 
                 if (found != legal.moves + legal.count) {
                     _board.movePiece(*found);
+                    _engine.offset++;
+
+
                     std::fill(highlights, highlights + 64, 0);
 
                     DrawBackround();

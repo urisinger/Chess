@@ -24,7 +24,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
   # Enable link-time optimization (LTO)
 endif()
 
-add_executable (Paint "src/Main.cpp"  "libs/glad/glad.c" "src/opengl/Shaders.cpp" "src/opengl/Window.cpp" "src/opengl/Shaders.cpp" "src/opengl/Buffers.cpp" "src/BitBoard.cpp" "src/BitMasks.cpp" "src/ChessEngine.cpp" "src/Application.cpp")
+add_executable (Paint "src/Main.cpp"  "libs/glad/glad.c" "src/opengl/Shaders.cpp" "src/opengl/Window.cpp" "src/opengl/Shaders.cpp" "src/opengl/Buffers.cpp" "src/BitBoard.cpp" "src/BitMasks.cpp" "src/ChessEngine.cpp" "src/Application.cpp" "src/UCIconnect.cpp" "headers/UCIconnect.h")
 
 target_include_directories(Paint PRIVATE "libs/include" "headers")
 

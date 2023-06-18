@@ -15,7 +15,7 @@
 
 #define NO_HASH_ENTRY 10234231
 
-#define HASH_SIZE 0x4000000
+#define HASH_SIZE 2000000
 
 enum HashFlags {
 	HASH_EXSACT,
@@ -27,9 +27,10 @@ enum HashFlags {
 
 struct THash {
 	std::uint64_t key;
-	int depth;
+	int ply;
 	HashFlags flag;
 	int score;
+	Move bestMove;
 };
 
 struct HashTable;
@@ -39,7 +40,7 @@ struct HashTable;
 //memory is super unsafe(never fixing this)
 class ChessEngine {
 public:
-	ChessEngine(Board* board) { curBoard = board; count = 0; ply = 0; }
+	ChessEngine(Board* board) { curBoard = board; count = 0; ply = 0;  }
 
 	int Minimax(int depth, const Board& board, int alpha, int beta);
 	Move BestMove(double maxTime);
@@ -50,6 +51,8 @@ public:
 	void RunPerftTest(int depth);
 
 	static int count;
+
+	static int offset;
 
 	static Move killer_moves[2][max_ply];
 
@@ -84,12 +87,12 @@ struct HashTable
 		hashTable = new THash[size];
 	}
 
-	inline int ReadHash(std::uint64_t key, int alpha, int beta, int depth) {
+	inline int ReadHash(std::uint64_t key, int alpha, int beta,Move* bestMove, int ply) {
 		THash* hashEntry = &hashTable[key % size];
 
 
 		if (hashEntry->key == key) {
-			if (hashEntry->depth >= depth) {
+			if (hashEntry->ply <= ply) {
 				int score = hashEntry->score;
 				if (score < -MATE_SCORE) {
 					score += ChessEngine::ply;
@@ -111,11 +114,14 @@ struct HashTable
 					return beta;
 				}
 			}
+			*bestMove = hashEntry->bestMove;
+
+
 		}
 		return NO_HASH_ENTRY;
 	}
 
-	inline void WriteHash(std::uint64_t key, int score, int depth, HashFlags flag) {
+	inline void WriteHash(std::uint64_t key, int score, int ply, Move bestMove, HashFlags flag) {
 		THash* hashEntry = &hashTable[key % size];
 
 		if (score < -MATE_SCORE) {
@@ -129,6 +135,7 @@ struct HashTable
 		hashEntry->key = key;
 		hashEntry->score = score;
 		hashEntry->flag = flag;
-		hashEntry->depth = depth;
+		hashEntry->ply = ply;
+		hashEntry->bestMove = bestMove;
 	}
 };
