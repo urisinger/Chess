@@ -2,7 +2,7 @@
 #include <algorithm>
 
 // pawn positional score
-const int pawn_score[64] = 
+const int pawn_score[64] =
 {
     90,  90,  90,  90,  90,  90,  90,  90,
     30,  30,  30,  40,  40,  30,  30,  30,
@@ -15,7 +15,7 @@ const int pawn_score[64] =
 };
 
 // knight positional score
-const int knight_score[64] = 
+const int knight_score[64] =
 {
     -5,   0,   0,   0,   0,   0,   0,  -5,
     -5,   0,   0,  10,  10,   0,   0,  -5,
@@ -28,7 +28,7 @@ const int knight_score[64] =
 };
 
 // bishop positional score
-const int bishop_score[64] = 
+const int bishop_score[64] =
 {
      0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,
@@ -56,7 +56,7 @@ const int rook_score[64] =
 };
 
 // king positional score
-const int king_score[64] = 
+const int king_score[64] =
 {
      0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   5,   5,   5,   5,   0,   0,
@@ -605,36 +605,11 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
 
 
 
-    LegalMoves sortedMoves;
-
-    for (int i = 0; i < legalMoves.count; i++) {
-        Move move = legalMoves.moves[i];
-        Board movedBoard = *this;
-        movedBoard.movePiece(move);
-
-        const std::uint64_t king = color == WHITE ? movedBoard.whiteKing : movedBoard.blackKing;
-        const std::uint64_t opponentKing = color == WHITE ? movedBoard.blackKing : movedBoard.whiteKing;
-
-        if ((!movedBoard.isKingAttacked(color == WHITE ? WHITE : BLACK))) {
-            // Move doesn't result in own king being in check
-
-            if (move.getFlags() == QUEEN_CASTLE || move.getFlags() == KING_CASTLE) {
-                if (!isKingAttacked(color == WHITE ? WHITE : BLACK)) {
-                    sortedMoves.push_back(move);
-                }
-
-            }
-            else {
-
-                sortedMoves.push_back(move);
-            }
-        }
-    }
 
 
 
 
-    return sortedMoves;
+    return legalMoves;
 }
 
 inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) const {
@@ -851,37 +826,7 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
     }
 
 
-    LegalMoves sortedMoves;
-
-    for (int i = 0; i < legalMoves.count; i++) {
-        Move move = legalMoves.moves[i];
-        Board movedBoard = *this;
-        movedBoard.movePiece(move);
-
-        const std::uint64_t king = color == WHITE ? movedBoard.whiteKing : movedBoard.blackKing;
-        const std::uint64_t opponentKing = color == WHITE ? movedBoard.blackKing : movedBoard.whiteKing;
-
-        if ((!movedBoard.isKingAttacked(color == WHITE ? BLACK : WHITE))) {
-            // Move doesn't result in own king being in check
-
-
-            if (move.getFlags() == QUEEN_CASTLE || move.getFlags() == KING_CASTLE) {
-                if (!isKingAttacked(color == WHITE ? WHITE : BLACK)) {
-                    sortedMoves.push_back(move);
-                }
-
-            }
-            else {
-
-                sortedMoves.push_back(move);
-            }
-        }
-    }
-
-
-
-
-    return sortedMoves;
+    return legalMoves;
 }
 
 inline void Board::generateNonSlidingAttacks(const std::int32_t square, LegalMoves& legalMoves, std::uint64_t mask, Piece piece) const {
@@ -1191,7 +1136,7 @@ std::uint64_t Board::generateHashKey() {
         int square = getLSB(pieces);
         Piece piece = getPiece(square);
         key ^= Bitboard::pieceKeys[piece-1][square];
-        pieces &= pieces - 1;    
+        pieces &= pieces - 1;
     }
 
     pieces = blackPieces;

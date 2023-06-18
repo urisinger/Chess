@@ -15,7 +15,7 @@ int main()
 
     ChessApp app(1000, 1000);
 
-    app.Run();
+    //app.Run();
     return 0;
 }
 

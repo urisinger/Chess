@@ -1,6 +1,6 @@
 #include "ChessEngine.h"
 #include <algorithm>
-
+#include <cstring>
 
 Move ChessEngine::killer_moves[2][max_ply];
 
@@ -104,6 +104,19 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
     for (int i = 0; i < captures.count; i++) {
         Board newboard = board;
         newboard.movePiece(captures.moves[i]);
+
+        if ((newboard.isKingAttacked(board.currentPlayer))) {
+            // Move doesn't result in own king being in check
+            continue;
+
+        }
+
+        if (captures.moves[i].getFlags() == QUEEN_CASTLE || captures.moves[i].getFlags() == KING_CASTLE) {
+            if (board.isKingAttacked(board.currentPlayer)) {
+                continue;                }
+
+        }
+
         ply++;
         int score = -quiescence(newboard, -beta, -alpha); // Recursively evaluate the capture move with the opposite maximizingPlayer flag
         ply--;
@@ -181,6 +194,19 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
         Board newboard = board;
         newboard.movePiece(moves.moves[i]);
 
+        if ((newboard.isKingAttacked(board.currentPlayer))) {
+            // Move doesn't result in own king being in check
+            continue;
+
+        }
+
+        if (moves.moves[i].getFlags() == QUEEN_CASTLE || moves.moves[i].getFlags() == KING_CASTLE) {
+            if (board.isKingAttacked(board.currentPlayer)) {
+                continue;
+            }
+
+        }
+
         if (movesSearched == 0) {
             ply++;
             score = -Minimax(depth - 1, newboard, -beta, -alpha);
@@ -256,9 +282,9 @@ Move ChessEngine::BestMove(double maxTime) {
     int currentScore = 0;
     int alpha = MIN_SCORE;
     int beta = MAX_SCORE;
-    std::chrono::steady_clock::time_point start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
 
-    for (int i = 1;currentScore < 9000 && currentScore > -9000 && (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() < maxTime/2; i++) {
+    for (int i = 1;currentScore < 9000 && currentScore > -9000 && (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count() < maxTime/4; i++) {
 
         currentScore = Minimax(i, *curBoard, alpha, beta);
 
@@ -286,32 +312,44 @@ Move ChessEngine::BestMove(double maxTime) {
 }
 
 
-int ChessEngine::Perft(int depth, const Board& board) {
+void ChessEngine::Perft(int depth, const Board& board) {
+    count++;
     if (depth == 0) {
-        return 1; // Leaf node, return 1
+        int test = board.eval();
+        ++test;
+        return;
     }
-
-    int nodes = 0;
 
     auto moves = board.GenerateLegalMoves(board.currentPlayer);
 
     for (int i = 0; i < moves.count; i++) {
         Board newboard = board;
         newboard.movePiece(moves.moves[i]);
+        if ((newboard.isKingAttacked(board.currentPlayer))) {
+            // Move doesn't result in own king being in check
+            continue;
 
+        }
+
+        if (moves.moves[i].getFlags() == QUEEN_CASTLE || moves.moves[i].getFlags() == KING_CASTLE) {
+            if (board.isKingAttacked(board.currentPlayer)) {
+                continue;
+            }
+        }
+        Perft(depth-1,newboard);
         // Recursively count the number of nodes at the next depth
-        nodes += Perft(depth - 1, newboard);
     }
-
-    return nodes;
 }
 
 void ChessEngine::RunPerftTest(int depth) {
-    int nodes = Perft(depth, *curBoard);
-
+    count = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+    Perft(depth,*curBoard);
+    double totaltime = (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count();
     std::cout << "Perft Test Results:\n";
-    std::cout << "Depth: " << depth << "\n";
-    std::cout << "Nodes: " << nodes << "\n";
+    std::cout << "time: " << totaltime <<std::endl;
+    std::cout << "Nodes: " << count << "\n";
+    std::cout << "NPS: " << count/totaltime << "\n";
 }
 
 

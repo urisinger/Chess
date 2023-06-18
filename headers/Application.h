@@ -10,7 +10,7 @@
 #include <iostream>
 
 #include "ChessEngine.h"
-
+#include <algorithm>
 
 class ChessApp {
 public:

@@ -73,7 +73,7 @@ public:
 	int quiescence(const Board& board, int alpha, int beta);
 	void setBoard(Board* board) { curBoard = board; }
 
-	int Perft(int depth, const Board& board);
+	void Perft(int depth, const Board& board);
 	void RunPerftTest(int depth);
 
 	static int count;
