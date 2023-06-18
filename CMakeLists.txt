@@ -13,14 +13,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin/Win-Debug)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/Win-Release)
 
-include(CheckIPOSupported)
-check_ipo_supported(RESULT supported OUTPUT error)
 
 endif(UNIX)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+
+
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast ")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast ")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /Ox ")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Ox ")
 
   # Enable link-time optimization (LTO)
 endif()
@@ -35,10 +34,3 @@ else(UNIX)
     target_link_libraries(Paint PRIVATE "../../libs/glfw/glfw3")
 endif(UNIX)
 
-
-if( supported )
-    message(STATUS "IPO / LTO enabled")
-    set_property(TARGET example PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
-else()
-    message(STATUS "IPO / LTO not supported: <${error}>")
-endif()

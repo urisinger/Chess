@@ -22,8 +22,6 @@ ChessApp::ChessApp(int xSize, int ySize) :
     _engine(&_board)
 {
 
-    _engine.RunPerftTest(6);
-
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -44,6 +42,7 @@ ChessApp::ChessApp(int xSize, int ySize) :
 
     glUniform2i(_piecesShader.Location("res"), _window.GetWindowWidth(), _window.GetWindowHeight());
     glUniform1i(_piecesShader.Location("_texture"), 0);
+
 
 }
 

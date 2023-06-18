@@ -1030,6 +1030,7 @@ bool Board::isKingAttacked(Color color) const {
 }
 
 
+
 int Board::eval() const {
     int result = 0;
 
@@ -1124,8 +1125,6 @@ int Board::eval() const {
     }
     return result;
 }
-
-
 
 std::uint64_t Board::generateHashKey() {
     std::uint64_t key = 0ULL;
