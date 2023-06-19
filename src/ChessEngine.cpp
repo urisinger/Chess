@@ -1,6 +1,15 @@
 #include "ChessEngine.h"
 #include <algorithm>
 #include <cstring>
+#include <iostream>
+#include <string>
+#include <conio.h>
+#include <iostream>
+#include <string>
+#include <chrono>
+#ifdef WIN32
+#include <Windows.h>
+#endif
 
 Move ChessEngine::killer_moves[2][max_ply];
 
@@ -14,18 +23,66 @@ int ChessEngine::count;
 
 int ChessEngine::ply;
 
-
+bool ChessEngine::quit = false;
 
 HashTable ChessEngine::Trasposition(HASH_SIZE);
 
 bool ChessEngine::stop;
 
-std::chrono::steady_clock::time_point ChessEngine::startTime;
+int ChessEngine::startTime;
 
 double ChessEngine::maxTime;
 
 int ChessEngine::offset;
 
+
+int GetTimeMs() {
+#ifdef WIN32
+    return GetTickCount();
+#else
+    struct timeval t;
+    gettimeofday(&t, NULL);
+    return t.tv_sec * 1000 + t.tv_usec / 1000;
+#endif
+}
+
+bool InputWaiting() {
+#ifdef _WIN32
+    return _kbhit();
+#else
+    // Code for non-Windows platforms
+    return std::cin.rdbuf()->in_avail() > 0;
+#endif
+}
+
+void ReadInput() {
+    if (InputWaiting()) {
+        // Set the input stream to be unbuffered to improve performance
+        std::cin.tie(nullptr);
+        std::cin.sync_with_stdio(false);
+
+        // Read input using std::getline directly from std::cin
+        std::string input;
+        std::getline(std::cin, input);
+
+        if (!input.empty()) {
+            ChessEngine::stop = true;
+            if (input == "quit") {
+                ChessEngine::quit = true;
+            }
+        }
+
+        // Restore the input stream buffering settings
+        std::cin.tie(nullptr);
+        std::cin.sync_with_stdio(true);
+    }
+}
+
+void ChessEngine::communicate() {
+    if (GetTimeMs() - startTime >= maxTime) {
+        stop = true;
+    }
+}
 
 
 
@@ -143,7 +200,7 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
 
 
 
-    alpha = std::max(alpha, standPat); // Update alpha with the maximum value between alpha and standPat for the maximizing player
+    alpha = max(alpha, standPat); // Update alpha with the maximum value between alpha and standPat for the maximizing player
 
     auto captures = board.GenerateCaptureMoves(board.currentPlayer); // Generate all capture moves
 
@@ -207,13 +264,15 @@ const int ChessEngine::fullDepthMoves = 4;
 int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
     pv_length[ply] = ply;
 
-    if (count % 2048 && (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - startTime).count() >= maxTime)) {
-        stop = true;
+    if (count % 2048) {
+        communicate();
     }
 
     if (stop) {
         return STOPPED;
     }
+
+
     int score;
 
     HashFlags hashFlag = HASH_ALPHA;
@@ -223,7 +282,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
     
     int pv_node = (beta - alpha > 1);
 
-    score = Trasposition.ReadHash(board.hashKey, alpha, beta, &bestMove , ply + offset);
+    score = Trasposition.ReadHash(board.hashKey, alpha, beta, &bestMove , depth + offset);
     if (score != NO_HASH_ENTRY && !pv_node)
     {
         return score;
@@ -343,7 +402,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
         }
 
             if (score >= beta) {
-            Trasposition.WriteHash(board.hashKey, score, ply + offset,bestMove, HASH_BETA);
+            Trasposition.WriteHash(board.hashKey, score, depth + offset,bestMove, HASH_BETA);
             killer_moves[1][ply] = killer_moves[0][ply];
             killer_moves[0][ply] = moves.moves[i];
             return beta;
@@ -358,11 +417,11 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
     if (movesSearched == 0) {
         // Handle the case where no legal moves are available
         score = in_check * (!board.currentPlayer * 2 - 1) * (-MATE_VALUE + ply);
-        Trasposition.WriteHash(board.hashKey, score, ply + offset, bestMove, hashFlag);
+        Trasposition.WriteHash(board.hashKey, score, depth + offset, bestMove, hashFlag);
         return score;
     }
 
-    Trasposition.WriteHash(board.hashKey, score, ply + offset, bestMove,hashFlag);
+    Trasposition.WriteHash(board.hashKey, score, depth + offset, bestMove,hashFlag);
 
     return alpha;
 }
@@ -370,7 +429,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
 
 #define valWINDOW 50
 
-Move ChessEngine::BestMove(double _maxTime) {
+Move ChessEngine::BestMove(int maxDdepth) {
     auto moves = curBoard->GenerateLegalMoves(curBoard->currentPlayer);
     if (moves.count == 0) {
         // Handle the case where no legal moves are available
@@ -383,15 +442,12 @@ Move ChessEngine::BestMove(double _maxTime) {
     int currentScore = 0;
     int alpha = MIN_SCORE;
     int beta = MAX_SCORE;
-    startTime = std::chrono::high_resolution_clock::now();
-
-    maxTime = _maxTime;
 
     stop = false;
 
     Move BestLine[max_ply];
     int length;
-    for (int i = 1; currentScore < MATE_SCORE && currentScore > -MATE_SCORE; i++) {
+    for (int i = 1; currentScore < MATE_SCORE && currentScore > -MATE_SCORE && i < maxDdepth; i++) {
 
         currentScore = Minimax(i, *curBoard, alpha, beta);
 
@@ -400,29 +456,30 @@ Move ChessEngine::BestMove(double _maxTime) {
             break;
         }
 
-
         memcpy(BestLine, pv_table[0], sizeof(BestLine));
         length = pv_length[0];
-        std::cout << "depth: " << i << ", ";
 
-        std::cout << "nodes searched: " << count << " ";
+
+        printf("info score cp %d depth %d nodes %d time %d ", currentScore, i, count, GetTimeMs()- startTime);
+
         for (int j = 0; j < length; j++) {
-            std::cout << BestLine[j].to_str() << " ";
+            printf("%s ", BestLine[j].to_str().c_str());
         }
-
-        printf(" score: %d time: %f \n", currentScore, (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - startTime)).count());
-
+        printf("\n");
         if (currentScore <= alpha || currentScore >= beta) {
             alpha = MIN_SCORE;
             beta = MAX_SCORE;
             continue;
         }
 
+
+
+
         alpha = currentScore - valWINDOW;
         beta = currentScore + valWINDOW;
     }
 
-    std::cout << "\n";
+    printf("\nbestmove %s\n", BestLine[0].to_str().c_str());
     return BestLine[0];
 }
 

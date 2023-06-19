@@ -112,6 +112,8 @@ class Board {
 public:
     Board(const std::string& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
+    void Board::ParseFen(const std::string& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
     void getBoard(int board[64]);
 
     bool isSquareOccupied(std::uint32_t square) const;

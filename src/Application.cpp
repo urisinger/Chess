@@ -51,6 +51,8 @@ ChessApp::~ChessApp() {
 }
 
 void ChessApp::Run() {
+    _engine.maxTime = 1000;
+
     _sqauareVAO.Bind();
     _sqaureIBO.Bind();
     std::fill(highlights, highlights + 64, 0);
@@ -60,8 +62,8 @@ void ChessApp::Run() {
     DrawBackround();
     DrawPieces();
     glfwSwapBuffers(_window.GetWindowInstance());
-
-    Move bestmove = _engine.BestMove(1.0);
+    _engine.startTime = GetTimeMs();
+    Move bestmove = _engine.BestMove(15);
 
 
     bool mousealreadyclicked = false;
@@ -81,8 +83,9 @@ void ChessApp::Run() {
             DrawBackround();
             DrawPieces();
             glfwSwapBuffers(_window.GetWindowInstance());
+            _engine.startTime = GetTimeMs();
 
-            bestmove = _engine.BestMove(1.0);
+            bestmove = _engine.BestMove(15);
             if (*((unsigned int*)&bestmove)) {
                 std::cout << bestmove.to_str();
             }
@@ -108,8 +111,9 @@ void ChessApp::Run() {
                     DrawBackround();
                     DrawPieces();
                     glfwSwapBuffers(_window.GetWindowInstance());
+                    _engine.startTime = GetTimeMs();
 
-                    bestmove = _engine.BestMove(1.0);
+                    bestmove = _engine.BestMove(15);
                     if (*((unsigned int*)&bestmove)) {
                         std::cout << bestmove.to_str();
                     }

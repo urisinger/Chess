@@ -17,6 +17,11 @@
 
 #define HASH_SIZE 2000000
 
+#define HASH_MAX 100
+
+
+int GetTimeMs();
+
 enum HashFlags {
 	HASH_EXSACT,
 	HASH_ALPHA,
@@ -43,7 +48,7 @@ public:
 	ChessEngine(Board* board) { curBoard = board; count = 0; ply = 0;  }
 
 	int Minimax(int depth, const Board& board, int alpha, int beta);
-	Move BestMove(double maxTime);
+	Move BestMove(int maxDdepth);
 	int quiescence(const Board& board, int alpha, int beta);
 	void setBoard(Board* board) { curBoard = board; }
 
@@ -63,13 +68,15 @@ public:
 
 	static HashTable Trasposition;
 
+	static bool quit;
 	static bool stop;
-	static std::chrono::steady_clock::time_point startTime;
+	static int startTime;
 
 	static double maxTime;
 	static int ply;
 private:
 
+	void communicate();
 	void clearTables();
 	static const int reductionLimits;
 	static const int fullDepthMoves;
@@ -87,12 +94,19 @@ struct HashTable
 		hashTable = new THash[size];
 	}
 
+	void Resize(size_t newSize) {
+		delete[] hashTable;
+
+		size = newSize;
+		hashTable = new THash[size];
+	}
+
 	inline int ReadHash(std::uint64_t key, int alpha, int beta,Move* bestMove, int ply) {
 		THash* hashEntry = &hashTable[key % size];
 
 
 		if (hashEntry->key == key) {
-			if (hashEntry->ply <= ply) {
+			if (hashEntry->ply >= ply) {
 				int score = hashEntry->score;
 				if (score < -MATE_SCORE) {
 					score += ChessEngine::ply;
@@ -115,8 +129,7 @@ struct HashTable
 				}
 			}
 			*bestMove = hashEntry->bestMove;
-
-
+				
 		}
 		return NO_HASH_ENTRY;
 	}

@@ -1,4 +1,6 @@
-﻿#include "Application.h"
+﻿
+#if 0
+#include "Application.h"
 
 int main()
 {
@@ -18,4 +20,20 @@ int main()
     app.Run();
     return 0;
 }
+#else
 
+#include "UCIconnect.h"
+
+int main()
+{
+
+    Bitboard::initBitmasks();
+
+    UCIconnection connection;
+
+    connection.Loop();
+    return 1;
+}
+
+
+#endif

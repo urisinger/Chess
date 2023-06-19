@@ -90,6 +90,31 @@ Board::Board(const std::string& fen) :
     currentPlayer(WHITE),
     castleFlags(0)
 {
+    ParseFen(fen);
+}
+
+
+void Board::ParseFen(const std::string& fen) {
+    whitePawns = 0,
+    whiteKnights = 0,
+    whiteBishops = 0,
+    whiteRooks = 0,
+    whiteQueens = 0,
+    whiteKing = 0,
+    blackPawns = 0,
+    blackKnights = 0,
+    blackBishops = 0,
+    blackRooks = 0,
+    blackQueens = 0,
+    blackKing = 0,
+    whitePieces = 0,
+    blackPieces = 0,
+    halfMoveClock = 0,
+    fullMoveNumber = 0,
+    enPassantSquare = -1,
+    currentPlayer = WHITE,
+    castleFlags = 0;
+
     std::istringstream iss(fen);
     std::string token;
 
@@ -166,9 +191,7 @@ Board::Board(const std::string& fen) :
     hashKey = generateHashKey();
 
 
-
 }
-
 
 void Board::getBoard(int board[64]) {
     std::fill(board, board + 64, 0);
