@@ -32,7 +32,7 @@ enum HashFlags {
 
 struct THash {
 	std::uint64_t key;
-	int ply;
+	int depth;
 	HashFlags flag;
 	int score;
 	Move bestMove;
@@ -101,12 +101,12 @@ struct HashTable
 		hashTable = new THash[size];
 	}
 
-	inline int ReadHash(std::uint64_t key, int alpha, int beta,Move* bestMove, int ply) {
+	inline int ReadHash(std::uint64_t key, int alpha, int beta,Move* bestMove, int depth) {
 		THash* hashEntry = &hashTable[key % size];
 
 
 		if (hashEntry->key == key) {
-			if (hashEntry->ply >= ply) {
+			if (hashEntry->depth >= depth) {
 				int score = hashEntry->score;
 				if (score < -MATE_SCORE) {
 					score += ChessEngine::ply;
@@ -134,7 +134,7 @@ struct HashTable
 		return NO_HASH_ENTRY;
 	}
 
-	inline void WriteHash(std::uint64_t key, int score, int ply, Move bestMove, HashFlags flag) {
+	inline void WriteHash(std::uint64_t key, int score, int depth, Move bestMove, HashFlags flag) {
 		THash* hashEntry = &hashTable[key % size];
 
 		if (score < -MATE_SCORE) {
@@ -148,7 +148,7 @@ struct HashTable
 		hashEntry->key = key;
 		hashEntry->score = score;
 		hashEntry->flag = flag;
-		hashEntry->ply = ply;
+		hashEntry->depth = depth;
 		hashEntry->bestMove = bestMove;
 	}
 };

@@ -282,7 +282,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
     
     int pv_node = (beta - alpha > 1);
 
-    score = Trasposition.ReadHash(board.hashKey, alpha, beta, &bestMove , depth + offset);
+    score = Trasposition.ReadHash(board.hashKey, alpha, beta, &bestMove , depth);
     if (score != NO_HASH_ENTRY && !pv_node)
     {
         return score;
@@ -402,7 +402,7 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
         }
 
             if (score >= beta) {
-            Trasposition.WriteHash(board.hashKey, score, depth + offset,bestMove, HASH_BETA);
+            Trasposition.WriteHash(board.hashKey, score, depth ,bestMove, HASH_BETA);
             killer_moves[1][ply] = killer_moves[0][ply];
             killer_moves[0][ply] = moves.moves[i];
             return beta;
@@ -417,11 +417,11 @@ int ChessEngine::Minimax(int depth, const Board& board, int alpha, int beta) {
     if (movesSearched == 0) {
         // Handle the case where no legal moves are available
         score = in_check * (!board.currentPlayer * 2 - 1) * (-MATE_VALUE + ply);
-        Trasposition.WriteHash(board.hashKey, score, depth + offset, bestMove, hashFlag);
+        Trasposition.WriteHash(board.hashKey, score, depth , bestMove, hashFlag);
         return score;
     }
 
-    Trasposition.WriteHash(board.hashKey, score, depth + offset, bestMove,hashFlag);
+    Trasposition.WriteHash(board.hashKey, score, depth , bestMove,hashFlag);
 
     return alpha;
 }
@@ -447,7 +447,7 @@ Move ChessEngine::BestMove(int maxDdepth) {
 
     Move BestLine[max_ply];
     int length;
-    for (int i = 1; currentScore < MATE_SCORE && currentScore > -MATE_SCORE && i < maxDdepth; i++) {
+    for (int i = 1; currentScore < MATE_SCORE && currentScore > -MATE_SCORE; i++) {
 
         currentScore = Minimax(i, *curBoard, alpha, beta);
 

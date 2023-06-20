@@ -27,7 +27,7 @@
 				}
 			],
 			"type" : "STRING",
-			"value" : "Release"
+			"value" : "Debug"
 		},
 		{
 			"name" : "CMAKE_CACHEFILE_DIR",
@@ -39,7 +39,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-release"
+			"value" : "c:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -467,7 +467,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-release/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -539,7 +539,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "C:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-release"
+			"value" : "C:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-debug"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -1075,7 +1075,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-release"
+			"value" : "C:/Users/\u05de\u05e9\u05ea\u05de\u05e9/Desktop/Chess.com/build/x64-debug"
 		},
 		{
 			"name" : "Paint_IS_TOP_LEVEL",

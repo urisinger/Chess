@@ -59,7 +59,7 @@ void UCIconnection::Loop() {
             if (MB < 4) MB = 4;
             if (MB > HASH_MAX) MB = HASH_MAX;
             printf("Set Hash to %d MB\n", MB);
-            _engine.Trasposition.Resize((1000000/sizeof(THash))* MB);
+            _engine.Trasposition.Resize((1000000 / sizeof(THash)) * MB);
         }
         if (_engine.stop) break;
     }
