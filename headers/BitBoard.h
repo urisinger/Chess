@@ -72,13 +72,38 @@ struct Move {
     inline Color getColor() const { return static_cast<Color>((m_Move >> 16) & 0x1); }
     inline Piece getPiece() const { return static_cast<Piece>((m_Move >> 20) & 0x7); }
 
-    std::string to_str() const{
+    std::string to_str() const {
         char fromFile = 'a' + (getFrom() % 8);
         char toFile = 'a' + (getTo() % 8);
         std::stringstream ss;
         ss << fromFile << getFrom() / 8 + 1 << toFile << getTo() / 8 + 1;
+
+        // Add promotion information if the move is a promotion
+        if (getFlags() == MoveFlag::PROMOTE) {
+            Piece promotedPiece = getPiece();
+
+            switch (promotedPiece) {
+            case Piece::QUEEN:
+                ss << 'q';
+                break;
+            case Piece::ROOK:
+                ss << 'r';
+                break;
+            case Piece::KNIGHT:
+                ss << 'n';
+                break;
+            case Piece::BISHOP:
+                ss << 'b';
+                break;
+            default:
+                // Invalid or unexpected piece for promotion
+                break;
+            }
+        }
+
         return ss.str();
     }
+
 
     inline bool operator==(Move a) const { return (m_Move & 0xffff) == (a.m_Move & 0xffff); }
     inline bool operator!=(Move a) const { return (m_Move & 0xffff) != (a.m_Move & 0xffff); }

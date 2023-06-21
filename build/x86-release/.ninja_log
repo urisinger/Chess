@@ -1,9 +1,0 @@
-# ninja log v5
-12	1008	7087884826448726	CMakeFiles/Paint.dir/libs/glad/glad.c.obj	e260576fcea8def8
-24	1213	7087884829049948	CMakeFiles/Paint.dir/src/opengl/Window.cpp.obj	17d3107a623fb2bb
-57	1781	7087884834462576	CMakeFiles/Paint.dir/src/ChessEngine.cpp.obj	52be798a6c831842
-6	1866	7087884835832614	CMakeFiles/Paint.dir/src/Main.cpp.obj	a480f539ccd49f9a
-17	1930	7087884836302609	CMakeFiles/Paint.dir/src/opengl/Shaders.cpp.obj	78308dbfd6c13f74
-40	1950	7087884836832633	CMakeFiles/Paint.dir/src/BitBoard.cpp.obj	e07e4e239e8b471d
-32	2263	7087884840112564	CMakeFiles/Paint.dir/src/opengl/Buffers.cpp.obj	f9335761709be9e8
-66	2396	7087884841478242	CMakeFiles/Paint.dir/src/Application.cpp.obj	4c8055eafcea6ca2

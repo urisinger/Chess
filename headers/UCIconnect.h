@@ -6,11 +6,9 @@
 
 class UCIconnection {
 public:
-	UCIconnection() : _engine(&_board) {
+	UCIconnection(){
 			
 	}
-
-	void communicate();
 
 	void Loop();
 private:

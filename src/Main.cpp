@@ -1,5 +1,5 @@
 ﻿
-#if 1
+#if 1       
 #include "Application.h"
 
 int main()
@@ -13,7 +13,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
-    Bitboard::initBitmasks();
+    Masks::initBitmasks();
 
     ChessApp app(1000, 1000);
 
@@ -27,7 +27,7 @@ int main()
 int main()
 {
 
-    Bitboard::initBitmasks();
+    Masks::initBitmasks();
 
     UCIconnection connection;
 

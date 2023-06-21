@@ -7,11 +7,11 @@
 
 #define MATE_SCORE 48000
 
-
 #define max_ply 128
 
 #define STOPPED 0
 
+#define valWINDOW 50
 
 #define NO_HASH_ENTRY 10234231
 
@@ -38,70 +38,24 @@ struct THash {
 	Move bestMove;
 };
 
-struct HashTable;
-
-
-
-//memory is super unsafe(never fixing this)
-class ChessEngine {
-public:
-	ChessEngine(Board* board) { curBoard = board; count = 0; ply = 0;  }
-
-	int Minimax(int depth, const Board& board, int alpha, int beta);
-	Move BestMove(int maxDdepth);
-	int quiescence(const Board& board, int alpha, int beta);
-	void setBoard(Board* board) { curBoard = board; }
-
-	int Perft(int depth, const Board& board);
-	void RunPerftTest(int depth);
-
-	static int count;
-
-	static int offset;
-
-	static Move killer_moves[2][max_ply];
-
-	static int pv_length[max_ply];
-	static Move pv_table[max_ply][max_ply];
-
-	static int history_moves[12][64];
-
-	static HashTable Trasposition;
-
-	static bool quit;
-	static bool stop;
-	static int startTime;
-
-	static double maxTime;
-	static int ply;
-private:
-
-	void communicate();
-	void clearTables();
-	static const int reductionLimits;
-	static const int fullDepthMoves;
-	Board* curBoard;
-};
-
-
-
 struct HashTable
 {
 	THash* hashTable;
 
-	size_t size;
-	HashTable(size_t _size) : size(_size), hashTable(0) {
+	unsigned int size;
+
+	HashTable(unsigned int _size) : size(_size), hashTable(0) {
 		hashTable = new THash[size];
 	}
 
-	void Resize(size_t newSize) {
+	void Resize(unsigned int newSize) {
 		delete[] hashTable;
 
 		size = newSize;
 		hashTable = new THash[size];
 	}
 
-	inline int ReadHash(std::uint64_t key, int alpha, int beta,Move* bestMove, int depth) {
+	inline int ReadHash(std::uint64_t key, int alpha, int beta, Move* bestMove, int depth, int ply) {
 		THash* hashEntry = &hashTable[key % size];
 
 
@@ -109,11 +63,11 @@ struct HashTable
 			if (hashEntry->depth >= depth) {
 				int score = hashEntry->score;
 				if (score < -MATE_SCORE) {
-					score += ChessEngine::ply;
+					score += ply;
 				}
 
 				if (score > MATE_SCORE) {
-					score -= ChessEngine::ply;
+					score -= ply;
 				}
 
 				if (hashEntry->flag == HASH_EXSACT) {
@@ -129,20 +83,20 @@ struct HashTable
 				}
 			}
 			*bestMove = hashEntry->bestMove;
-				
+
 		}
 		return NO_HASH_ENTRY;
 	}
 
-	inline void WriteHash(std::uint64_t key, int score, int depth, Move bestMove, HashFlags flag) {
+	inline void WriteHash(std::uint64_t key, int score, int depth, Move bestMove, HashFlags flag, int ply) {
 		THash* hashEntry = &hashTable[key % size];
 
 		if (score < -MATE_SCORE) {
-			score -= ChessEngine::ply;
+			score -= ply;
 		}
 
 		if (score > MATE_SCORE) {
-			score += ChessEngine::ply;
+			score += ply;
 		}
 
 		hashEntry->key = key;
@@ -152,3 +106,58 @@ struct HashTable
 		hashEntry->bestMove = bestMove;
 	}
 };
+
+
+
+
+//memory is super unsafe(never fixing this)
+class ChessEngine {
+public:
+	ChessEngine() : quit(false), Trasposition(HASH_SIZE), count(0), ply(0){ }
+
+	Move BestMove(int maxDdepth, const Board& board);
+
+	void RunPerftTest(int depth, const Board& board);
+
+	int count;
+
+	int offset;
+
+	Move killer_moves[2][max_ply];
+
+	int pv_length[max_ply];
+	Move pv_table[max_ply][max_ply];
+
+	int history_moves[12][64];
+
+	HashTable Trasposition;
+
+	bool quit;
+	bool stop;
+	int startTime;
+
+	double maxTime;
+	int ply;
+private:
+
+	int score_move(Move move);
+	int compareMoves(Move moveA, Move moveB, Move bestMove);
+	void swapMoves(Move& moveA, Move& moveB);
+	int partitionMoves(Move* moves, int low, int high, Move bestMove);
+	void quicksortMoves(Move* moves, int low, int high, Move bestMove);
+	void sortMoves(LegalMoves& legalMoves, Move bestMove);
+
+
+	int Perft(int depth, const Board& board);
+
+	int NegMax(int depth, const Board& board, int alpha, int beta);
+	int quiescence(const Board& board, int alpha, int beta);
+
+	void communicate();
+	void clearTables();
+	const int reductionLimits = 3;
+	const int fullDepthMoves = 4;
+};
+
+
+

@@ -50,7 +50,7 @@ int countBits(std::uint64_t value){
 bitmask generators
 */
 
-void Bitboard::generateKnightBitmasks() {
+void Masks::generateKnightBitmasks() {
     constexpr std::int32_t knightOffsets[][2] = {
         { -1, -2 }, { 1, -2 },
         { -2, -1 }, { 2, -1 },
@@ -77,7 +77,7 @@ void Bitboard::generateKnightBitmasks() {
     }
 }
 
-void Bitboard::generateKingBitmasks() {
+void Masks::generateKingBitmasks() {
     constexpr std::int8_t kingOffsets[8][2] = {
         { -1, -1 }, { -1, 0 }, { -1, 1 },
         { 0, -1 },             { 0, 1 },
@@ -103,7 +103,7 @@ void Bitboard::generateKingBitmasks() {
     }
 }
 
-void Bitboard::generateBishopBitmasks() {
+void Masks::generateBishopBitmasks() {
     for (int square = 0; square < 64; ++square) {
         std::uint64_t bitmask = 0;
         int rank = square / 8;
@@ -129,7 +129,7 @@ void Bitboard::generateBishopBitmasks() {
     }
 }
 
-void Bitboard::generateRookBitmasks() {
+void Masks::generateRookBitmasks() {
     for (int square = 0; square < 64; ++square) {
         std::uint64_t bitmask = 0;
         int rank = square / 8;
@@ -157,8 +157,8 @@ void Bitboard::generateRookBitmasks() {
 
 
 
-std::uint64_t Bitboard::getBishopAttacks(int square, std::uint64_t occupancy) {
-    // result attacks bitboard
+std::uint64_t Masks::getBishopAttacks(int square, std::uint64_t occupancy) {
+    // result attacks Masks
     std::uint64_t attacks = 0ULL;
 
     // init ranks & files
@@ -213,7 +213,7 @@ std::uint64_t setOccupancy(int square, int index, std::uint64_t mask) {
     return occupancy;
 }
 
-void Bitboard::generateBishopAttacks() {
+void Masks::generateBishopAttacks() {
     for (int square = 0; square < 64; ++square) {
         std::uint64_t mask = bishopMasks[square];
         int numbits = countBits(mask);
@@ -227,7 +227,7 @@ void Bitboard::generateBishopAttacks() {
     }
 }
 
-void Bitboard::generateBishopMagicNumbers() {
+void Masks::generateBishopMagicNumbers() {
     for (int square = 0; square < 64; ++square) {
         bishopMagic[square] = generateMagicNumber(square, true);
     }
@@ -238,8 +238,8 @@ void Bitboard::generateBishopMagicNumbers() {
 
 
 
-std::uint64_t Bitboard::getRookAttacks(int square, std::uint64_t occupancy) {
-    // Result attacks bitboard
+std::uint64_t Masks::getRookAttacks(int square, std::uint64_t occupancy) {
+    // Result attacks Masks
     std::uint64_t attacks = 0ULL;
 
     // Init ranks & files
@@ -274,7 +274,7 @@ std::uint64_t Bitboard::getRookAttacks(int square, std::uint64_t occupancy) {
     return attacks;
 }
 
-void Bitboard::generateRookAttacks() {
+void Masks::generateRookAttacks() {
 
     for (int square = 0; square < 64; ++square) {
         std::uint64_t mask = rookMasks[square];
@@ -289,15 +289,15 @@ void Bitboard::generateRookAttacks() {
     }
 }
 
-void Bitboard::generateRookMagicNumbers() {
+void Masks::generateRookMagicNumbers() {
     for (int square = 0; square < 64; ++square) {
         rookMagic[square] = generateMagicNumber(square, false);    
     }
 }
 
-void print_bitboard(std::uint64_t bitboard) {
+void print_BitBoard(std::uint64_t BitBoards) {
     for (int i = 0; i < 64; i++) {
-        std::cout << (int)((bool)((1ULL << i) & bitboard)) << " ";
+        std::cout << (int)((bool)((1ULL << i) & BitBoards)) << " ";
         if (i % 8 == 7)
             std::cout << std::endl;
     }
@@ -305,7 +305,7 @@ void print_bitboard(std::uint64_t bitboard) {
 
 
 // find appropriate magic number
-std::uint64_t Bitboard::generateMagicNumber(int square, bool is_bishop) {
+std::uint64_t Masks::generateMagicNumber(int square, bool is_bishop) {
     // init occupancies
     std::uint64_t occupancies[4096];
 
@@ -377,7 +377,7 @@ std::uint64_t Bitboard::generateMagicNumber(int square, bool is_bishop) {
 }
 
 
-void Bitboard::generateHashKeys() {
+void Masks::generateHashKeys() {
     for (int i = 0; i < 12; i++) {
         for (int j = 0; j < 64; j++) {
             pieceKeys[i][j] = random_uint64();
@@ -398,13 +398,13 @@ void Bitboard::generateHashKeys() {
 
 
 // Initialize static member variables 
-std::uint64_t Bitboard::bishopMasks[64];
-std::uint64_t Bitboard::rookMasks[64];
-std::uint64_t Bitboard::queenAttack[64];
-std::uint64_t Bitboard::knightAttack[64];
-std::uint64_t Bitboard::kingAttack[64];
+std::uint64_t Masks::bishopMasks[64];
+std::uint64_t Masks::rookMasks[64];
+std::uint64_t Masks::queenAttack[64];
+std::uint64_t Masks::knightAttack[64];
+std::uint64_t Masks::kingAttack[64];
 
-std::uint64_t Bitboard::bishopMagic[64] = 
+std::uint64_t Masks::bishopMagic[64] = 
 { 0x40040844404084ULL,
     0x2004208a004208ULL,
     0x10190041080202ULL,
@@ -469,7 +469,7 @@ std::uint64_t Bitboard::bishopMagic[64] =
     0x6000020202d0240ULL,
     0x8918844842082200ULL,
     0x4010011029020020ULL };
-std::uint64_t Bitboard::rookMagic[64] = 
+std::uint64_t Masks::rookMagic[64] = 
 { 0x8a80104000800020ULL,
     0x140002000100040ULL,
     0x2801880a0017001ULL,
@@ -535,11 +535,11 @@ std::uint64_t Bitboard::rookMagic[64] =
     0x2006104900a0804ULL,
     0x1004081002402ULL } ;
 
-std::uint64_t Bitboard::pieceKeys[12][64] = { 0 };
-std::uint64_t Bitboard::enPeasentKeys[64] = { 0 };
-std::uint64_t Bitboard::CastleKeys[16] = { 0 };
+std::uint64_t Masks::pieceKeys[12][64] = { 0 };
+std::uint64_t Masks::enPeasentKeys[64] = { 0 };
+std::uint64_t Masks::CastleKeys[16] = { 0 };
 
-std::uint64_t Bitboard::SideKey = { 0 };
+std::uint64_t Masks::SideKey = { 0 };
 
-std::uint64_t Bitboard::bishopAttacks[64][512];
-std::uint64_t Bitboard::rookAttacks[64][4096];
+std::uint64_t Masks::bishopAttacks[64][512];
+std::uint64_t Masks::rookAttacks[64][4096];

@@ -18,8 +18,7 @@ ChessApp::ChessApp(int xSize, int ySize) :
     _window(1000, 1000, "CHESS GAME OK?", WindowMode::WINDOWED),
 	_backroundShader("../Shaders/Simple.vert", "../Shaders/Backround.frag"),
 	_piecesShader("../Shaders/Simple.vert", "../Shaders/Pieces.frag"),
-    _pieces("../Textures/ChessPiecesArray.png"),    
-    _engine(&_board)
+    _pieces("../Textures/ChessPiecesArray.png")    
 {
 
     glEnable(GL_BLEND);
@@ -63,7 +62,7 @@ void ChessApp::Run() {
     DrawPieces();
     glfwSwapBuffers(_window.GetWindowInstance());
     _engine.startTime = GetTimeMs();
-    Move bestmove = _engine.BestMove(15);
+    Move bestmove = _engine.BestMove(15,_board);
 
 
     bool mousealreadyclicked = false;
@@ -85,7 +84,7 @@ void ChessApp::Run() {
             glfwSwapBuffers(_window.GetWindowInstance());
             _engine.startTime = GetTimeMs();
 
-            bestmove = _engine.BestMove(15);
+            bestmove = _engine.BestMove(15, _board);
             if (*((unsigned int*)&bestmove)) {
                 std::cout << bestmove.to_str();
             }
@@ -113,7 +112,7 @@ void ChessApp::Run() {
                     glfwSwapBuffers(_window.GetWindowInstance());
                     _engine.startTime = GetTimeMs();
 
-                    bestmove = _engine.BestMove(15);
+                    bestmove = _engine.BestMove(15, _board);
                     if (*((unsigned int*)&bestmove)) {
                         std::cout << bestmove.to_str();
                     }

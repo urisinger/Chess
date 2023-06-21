@@ -324,21 +324,21 @@ void Board::movePiece(const Move& move) {
     clearSquare(from);
 
     if (move.getCapturedPiece() != EMPTY) {
-        hashKey ^= Bitboard::pieceKeys[6 * color + move.getCapturedPiece() - 1][to];
+        hashKey ^= Masks::pieceKeys[6 * color + move.getCapturedPiece() - 1][to];
     }
 
-    hashKey ^= Bitboard::pieceKeys[6 * !color + piece - 1][to];
+    hashKey ^= Masks::pieceKeys[6 * !color + piece - 1][to];
 
     if (flags == PROMOTE) {
-        hashKey ^= Bitboard::pieceKeys[6 * !color + PAWN - 1][from];
+        hashKey ^= Masks::pieceKeys[6 * !color + PAWN - 1][from];
     }
     else {
-        hashKey ^= Bitboard::pieceKeys[6 * !color + piece - 1][from];
+        hashKey ^= Masks::pieceKeys[6 * !color + piece - 1][from];
     }
 
 
 
-    hashKey ^= Bitboard::CastleKeys[castleFlags];
+    hashKey ^= Masks::CastleKeys[castleFlags];
 
     if (flags == KING_CASTLE) {
         if (color == WHITE) {
@@ -349,9 +349,9 @@ void Board::movePiece(const Move& move) {
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
 
-            hashKey ^= Bitboard::pieceKeys[ROOK - 1][rookFrom];
+            hashKey ^= Masks::pieceKeys[ROOK - 1][rookFrom];
 
-            hashKey ^= Bitboard::pieceKeys[ROOK - 1][rookTo];
+            hashKey ^= Masks::pieceKeys[ROOK - 1][rookTo];
 
         }
         else if (color == BLACK) {
@@ -361,9 +361,9 @@ void Board::movePiece(const Move& move) {
             castleFlags &= ~(BLACK_KINGSIDE_CASTLING | BLACK_QUEENSIDE_CASTLING);
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
-            hashKey ^= Bitboard::pieceKeys[6  + ROOK - 1][rookFrom];
+            hashKey ^= Masks::pieceKeys[6  + ROOK - 1][rookFrom];
 
-            hashKey ^= Bitboard::pieceKeys[6 + ROOK - 1][rookTo];
+            hashKey ^= Masks::pieceKeys[6 + ROOK - 1][rookTo];
         }
     }
     else if (flags == QUEEN_CASTLE) {
@@ -374,9 +374,9 @@ void Board::movePiece(const Move& move) {
             castleFlags &= ~(WHITE_KINGSIDE_CASTLING | WHITE_QUEENSIDE_CASTLING);
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
-            hashKey ^= Bitboard::pieceKeys[ROOK - 1][rookFrom];
+            hashKey ^= Masks::pieceKeys[ROOK - 1][rookFrom];
 
-            hashKey ^= Bitboard::pieceKeys[ROOK - 1][rookTo];
+            hashKey ^= Masks::pieceKeys[ROOK - 1][rookTo];
         }
         else if (color == BLACK) {
             // Move the rook from A8 to D8
@@ -386,9 +386,9 @@ void Board::movePiece(const Move& move) {
 
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
-            hashKey ^= Bitboard::pieceKeys[6 + ROOK - 1][rookFrom];
+            hashKey ^= Masks::pieceKeys[6 + ROOK - 1][rookFrom];
 
-            hashKey ^= Bitboard::pieceKeys[6 + ROOK - 1][rookTo];
+            hashKey ^= Masks::pieceKeys[6 + ROOK - 1][rookTo];
         }
     }
 
@@ -442,7 +442,7 @@ void Board::movePiece(const Move& move) {
 
         clearSquare(capturedPawnSquare);
 
-        hashKey ^= Bitboard::pieceKeys[6 * currentPlayer + PAWN - 1][capturedPawnSquare];
+        hashKey ^= Masks::pieceKeys[6 * currentPlayer + PAWN - 1][capturedPawnSquare];
     }
 
     // Update the halfMoveClock
@@ -459,26 +459,26 @@ void Board::movePiece(const Move& move) {
     }
 
     if (enPassantSquare != -1) {
-        hashKey ^= Bitboard::enPeasentKeys[enPassantSquare];
+        hashKey ^= Masks::enPeasentKeys[enPassantSquare];
     }
 
     // Update en passant square
     if (piece == PAWN && (((to > from) ? (to - from) : (from - to)) == 16)) {
         const std::int32_t pawnDirection = (color == WHITE) ? 1 : -1;
         enPassantSquare = to - (pawnDirection * 8);
-        hashKey ^= Bitboard::enPeasentKeys[enPassantSquare];
+        hashKey ^= Masks::enPeasentKeys[enPassantSquare];
     }
     else {
         enPassantSquare = -1; // -1 indicates no en passant square
     }
 
 
-    hashKey ^= Bitboard::CastleKeys[castleFlags];
+    hashKey ^= Masks::CastleKeys[castleFlags];
 
     // Update current player
     currentPlayer = (currentPlayer == WHITE) ? BLACK : WHITE;
 
-    hashKey ^= Bitboard::SideKey;
+    hashKey ^= Masks::SideKey;
 
 }
 
@@ -547,7 +547,7 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
     while (knights) {
         const int square = getLSB(knights);
 
-        generateNonSlidingMoves(square, legalMoves, Bitboard::knightAttack[square], KNIGHT);
+        generateNonSlidingMoves(square, legalMoves, Masks::knightAttack[square], KNIGHT);
 
         // Clear the least significant bit of the current piece
         knights &= (knights - 1);
@@ -563,7 +563,7 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
 
         const int square = getLSB(kings);
 
-        generateNonSlidingMoves(square, legalMoves, Bitboard::kingAttack[square], KING);
+        generateNonSlidingMoves(square, legalMoves, Masks::kingAttack[square], KING);
 
         // Check if castling is allowed for the current color
         const bool canCastleKingside = (castleFlags & (color == WHITE ? WHITE_KINGSIDE_CASTLING : BLACK_KINGSIDE_CASTLING)) != 0;
@@ -595,7 +595,7 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
     while (bishops) {
         const int square = getLSB(bishops);
 
-        generateSlidingMoves(square, legalMoves, Bitboard::bishopMasks[square], Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square], BISHOP);
+        generateSlidingMoves(square, legalMoves, Masks::bishopMasks[square], Masks::bishopMagic[square], Masks::bishopAttacks[square], BISHOP);
 
         // Clear the least significant bit of the current piece
         bishops &= (bishops - 1);
@@ -606,7 +606,7 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
     while (rooks) {
         const int square = getLSB(rooks);
 
-        generateSlidingMoves(square, legalMoves, Bitboard::rookMasks[square], Bitboard::rookMagic[square], Bitboard::rookAttacks[square], ROOK);
+        generateSlidingMoves(square, legalMoves, Masks::rookMasks[square], Masks::rookMagic[square], Masks::rookAttacks[square], ROOK);
 
         // Clear the least significant bit of the current piece
         rooks &= (rooks - 1);
@@ -617,9 +617,9 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
     while (queens) {
         const int square = getLSB(queens);
 
-        generateSlidingMoves(square, legalMoves, Bitboard::rookMasks[square], Bitboard::rookMagic[square], Bitboard::rookAttacks[square], QUEEN);
+        generateSlidingMoves(square, legalMoves, Masks::rookMasks[square], Masks::rookMagic[square], Masks::rookAttacks[square], QUEEN);
 
-        generateSlidingMoves(square, legalMoves, Bitboard::bishopMasks[square], Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square], QUEEN);
+        generateSlidingMoves(square, legalMoves, Masks::bishopMasks[square], Masks::bishopMagic[square], Masks::bishopAttacks[square], QUEEN);
 
 
         // Clear the least significant bit of the current piece
@@ -806,7 +806,7 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
     while (knights) {
         const int square = getLSB(knights);
 
-        generateNonSlidingAttacks(square, legalMoves, Bitboard::knightAttack[square], KNIGHT);
+        generateNonSlidingAttacks(square, legalMoves, Masks::knightAttack[square], KNIGHT);
 
         // Clear the least significant bit of the current piece
         knights &= (knights - 1);
@@ -817,7 +817,7 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
     while (bishops) {
         const int square = getLSB(bishops);
 
-        generateSlidingAttacks(square, legalMoves, Bitboard::bishopMasks[square], Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square], BISHOP);
+        generateSlidingAttacks(square, legalMoves, Masks::bishopMasks[square], Masks::bishopMagic[square], Masks::bishopAttacks[square], BISHOP);
 
         // Clear the least significant bit of the current piece
         bishops &= (bishops - 1);
@@ -828,7 +828,7 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
     while (rooks) {
         const int square = getLSB(rooks);
 
-        generateSlidingAttacks(square, legalMoves, Bitboard::rookMasks[square], Bitboard::rookMagic[square], Bitboard::rookAttacks[square], ROOK);
+        generateSlidingAttacks(square, legalMoves, Masks::rookMasks[square], Masks::rookMagic[square], Masks::rookAttacks[square], ROOK);
 
         // Clear the least significant bit of the current piece
         rooks &= (rooks - 1);
@@ -839,9 +839,9 @@ LegalMoves Board::GenerateCaptureMoves(Color color) const{
     while (queens) {
         const int square = getLSB(queens);
 
-        generateSlidingAttacks(square, legalMoves, Bitboard::rookMasks[square], Bitboard::rookMagic[square], Bitboard::rookAttacks[square], QUEEN);
+        generateSlidingAttacks(square, legalMoves, Masks::rookMasks[square], Masks::rookMagic[square], Masks::rookAttacks[square], QUEEN);
 
-        generateSlidingAttacks(square, legalMoves, Bitboard::bishopMasks[square], Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square], QUEEN);
+        generateSlidingAttacks(square, legalMoves, Masks::bishopMasks[square], Masks::bishopMagic[square], Masks::bishopAttacks[square], QUEEN);
 
 
         // Clear the least significant bit of the current piece
@@ -1011,13 +1011,13 @@ bool Board::isSqaureAttacked(Color color, int square) const{
         }
     }
 
-    if (knights & Bitboard::knightAttack[square]) {
+    if (knights & Masks::knightAttack[square]) {
         return true;
     }
 
     std::uint64_t kings = color == WHITE ? blackKing : whiteKing;
 
-    if (kings & Bitboard::kingAttack[square]) {
+    if (kings & Masks::kingAttack[square]) {
         return true;
     }
 
@@ -1025,16 +1025,16 @@ bool Board::isSqaureAttacked(Color color, int square) const{
 
     std::uint64_t bishops = color == WHITE ? blackBishops : whiteBishops;
 
-    if ((bishops | queens) & generateSlidingMovesAsBits(square, Bitboard::bishopMasks[square],
-        Bitboard::bishopMagic[square], Bitboard::bishopAttacks[square],
+    if ((bishops | queens) & generateSlidingMovesAsBits(square, Masks::bishopMasks[square],
+        Masks::bishopMagic[square], Masks::bishopAttacks[square],
         BISHOP)) {
         return true;
     }
 
     std::uint64_t rooks = color == WHITE ? blackRooks : whiteRooks;
 
-    if ((rooks | queens) & generateSlidingMovesAsBits(square, Bitboard::rookMasks[square],
-        Bitboard::rookMagic[square], Bitboard::rookAttacks[square],
+    if ((rooks | queens) & generateSlidingMovesAsBits(square, Masks::rookMasks[square],
+        Masks::rookMagic[square], Masks::rookAttacks[square],
         ROOK)) {
         return true;
     }
@@ -1157,7 +1157,7 @@ std::uint64_t Board::generateHashKey() {
     while (pieces) {
         int square = getLSB(pieces);
         Piece piece = getPiece(square);
-        key ^= Bitboard::pieceKeys[piece-1][square];
+        key ^= Masks::pieceKeys[piece-1][square];
         pieces &= pieces - 1;
     }
 
@@ -1165,17 +1165,17 @@ std::uint64_t Board::generateHashKey() {
     while (pieces) {
         int square = getLSB(pieces);
         Piece piece = getPiece(square);
-        key ^= Bitboard::pieceKeys[6+piece - 1][square];
+        key ^= Masks::pieceKeys[6+piece - 1][square];
         pieces &= pieces - 1;
     }
 
     if (enPassantSquare != -1) {
-        key ^= Bitboard::enPeasentKeys[enPassantSquare];
+        key ^= Masks::enPeasentKeys[enPassantSquare];
     }
 
-    key ^= Bitboard::CastleKeys[castleFlags];
+    key ^= Masks::CastleKeys[castleFlags];
 
-    key ^= !currentPlayer * Bitboard::SideKey;
+    key ^= !currentPlayer * Masks::SideKey;
 
     return key;
 }

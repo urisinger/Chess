@@ -1,3 +1,0 @@
-C:/Users/משתמש/Desktop/Chess.com/build/x64-debug/CMakeFiles/Paint.dir
-C:/Users/משתמש/Desktop/Chess.com/build/x64-debug/CMakeFiles/edit_cache.dir
-C:/Users/משתמש/Desktop/Chess.com/build/x64-debug/CMakeFiles/rebuild_cache.dir

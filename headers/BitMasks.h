@@ -4,9 +4,9 @@
 
 int countBits(std::uint64_t);
 int getLSB(std::uint64_t value);
-void print_bitboard(std::uint64_t bitboard);
+void print_BitBoard(std::uint64_t BitBoards);
 
-class Bitboard {
+class Masks {
 public:
     static std::uint64_t bishopMasks[64];
     static std::uint64_t rookMasks[64];
@@ -52,8 +52,6 @@ public:
 
     static void generateRookAttacks();
 
-
-    static void generateQueenBitmasks();
 
     static void generateKnightBitmasks();
 
