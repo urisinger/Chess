@@ -62,7 +62,7 @@ void ChessApp::Run() {
     DrawPieces();
     glfwSwapBuffers(_window.GetWindowInstance());
     _engine.startTime = GetTimeMs();
-    Move bestmove = _engine.BestMove(15,_board);
+    Move bestmove = _engine.BestMove(10000,_board);
 
 
     bool mousealreadyclicked = false;
@@ -84,7 +84,7 @@ void ChessApp::Run() {
             glfwSwapBuffers(_window.GetWindowInstance());
             _engine.startTime = GetTimeMs();
 
-            bestmove = _engine.BestMove(15, _board);
+            bestmove = _engine.BestMove(10000, _board);
             if (*((unsigned int*)&bestmove)) {
                 std::cout << bestmove.to_str();
             }
@@ -112,7 +112,7 @@ void ChessApp::Run() {
                     glfwSwapBuffers(_window.GetWindowInstance());
                     _engine.startTime = GetTimeMs();
 
-                    bestmove = _engine.BestMove(15, _board);
+                    bestmove = _engine.BestMove(10000, _board);
                     if (*((unsigned int*)&bestmove)) {
                         std::cout << bestmove.to_str();
                     }

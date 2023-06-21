@@ -194,8 +194,6 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
 
 
 
-#define R 2
-
 int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
     pv_length[ply] = ply;
 
@@ -222,13 +220,14 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
     bool in_check = board.isKingAttacked(board.currentPlayer);
 
     depth += in_check;
+
     if (depth == 0) {
         // Evaluate the current board position and return the evaluation score
         score = quiescence(board, alpha, beta);
         return score;
     }
 
-    if (depth >= R + 1 && !in_check && ply) {
+    if (depth >= 2 + 1 && !in_check && ply) {
         Board nullBoard = board;
 
         nullBoard.currentPlayer = nullBoard.currentPlayer == WHITE ? BLACK : WHITE;
@@ -240,9 +239,9 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
 
         nullBoard.hashKey ^= Masks::SideKey;
 
-        ply += R + 1;
-        int score = -NegMax(depth - 1 - R, nullBoard, -beta, -beta + 1);
-        ply -= R + 1;
+        ply += 2 + 1;
+        int score = -NegMax(depth - 1 - 2, nullBoard, -beta, -beta + 1);
+        ply -= 2 + 1;
 
         if (score >= beta)
             return beta;
@@ -387,7 +386,7 @@ Move ChessEngine::BestMove(int maxDdepth, const Board& board) {
 
     Move BestLine[max_ply];
     int length;
-    for (int i = 1; currentScore < MATE_SCORE && currentScore > -MATE_SCORE; i++) {
+    for (int i = 1; currentScore < MATE_SCORE && currentScore > -MATE_SCORE ; i++) {
         ply = 0;
 
         currentScore = NegMax(i, board, alpha, beta);

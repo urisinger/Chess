@@ -189,6 +189,16 @@ Move UCIconnection::ParseMove(const std::string& moveString) {
     int from = (fromFile - 'a') + (8 * (fromRank - '1'));
     int to = (toFile - 'a') + (8 * (toRank - '1'));
 
+    if (_board.getPiece(from) == Piece::PAWN && _board.getPiece(to) == Piece::EMPTY) {
+        if (_board.currentPlayer == Color::WHITE && fromRank == '2' && toRank == '4' && std::abs(fromFile - toFile) == 0) {
+            return Move(from, to, MoveFlag::DOUBLE_PUSH, _board.currentPlayer, Piece::PAWN, Piece::EMPTY);
+        }
+        else if (_board.currentPlayer == Color::BLACK && fromRank == '7' && toRank == '5' && std::abs(fromFile - toFile) == 0) {
+            return Move(from, to, MoveFlag::DOUBLE_PUSH, _board.currentPlayer, Piece::PAWN, Piece::EMPTY);
+        }
+    }
+
+
     // Check if the move is a castling move
     if (from == 4 && to == 6 && _board.getPiece(from) == Piece::KING && _board.currentPlayer == Color::WHITE) {
         return Move(from, to, MoveFlag::KING_CASTLE, _board.currentPlayer, Piece::KING, Piece::EMPTY);

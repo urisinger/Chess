@@ -323,6 +323,7 @@ void Board::movePiece(const Move& move) {
     setSquare(to, color, piece);
     clearSquare(from);
 
+
     if (move.getCapturedPiece() != EMPTY) {
         hashKey ^= Masks::pieceKeys[6 * color + move.getCapturedPiece() - 1][to];
     }
@@ -400,7 +401,7 @@ void Board::movePiece(const Move& move) {
         }
         else {
             castleFlags &= ~BLACK_KINGSIDE_CASTLING;
-            castleFlags &= ~BLACK_KINGSIDE_CASTLING;
+            castleFlags &= ~BLACK_QUEENSIDE_CASTLING;
         }
     }
 
@@ -463,7 +464,7 @@ void Board::movePiece(const Move& move) {
     }
 
     // Update en passant square
-    if (piece == PAWN && (((to > from) ? (to - from) : (from - to)) == 16)) {
+    if (piece == PAWN && flags == DOUBLE_PUSH) {
         const std::int32_t pawnDirection = (color == WHITE) ? 1 : -1;
         enPassantSquare = to - (pawnDirection * 8);
         hashKey ^= Masks::enPeasentKeys[enPassantSquare];
@@ -625,13 +626,6 @@ LegalMoves Board::GenerateLegalMoves(Color color) const {
         // Clear the least significant bit of the current piece
         queens &= (queens - 1);
     }
-
-
-
-
-
-
-
     return legalMoves;
 }
 

@@ -6,10 +6,6 @@
 
 class UCIconnection {
 public:
-	UCIconnection(){
-			
-	}
-
 	void Loop();
 private:
 	void UCIconnection::ParseGo(char* line);
