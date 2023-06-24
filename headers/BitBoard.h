@@ -146,9 +146,10 @@ public:
     void clearSquare(std::uint32_t square);
     void setSquare(std::uint32_t square, Color color, Piece piece);
 
-    void movePiece(const Move& move);
+    void MakeNullMove();
+    void MakeMove(const Move& move);
 
-    int eval() const;
+    int SlowEval() const;
 
     void PrintBoard() const;
 
@@ -162,6 +163,8 @@ public:
     std::uint64_t generateHashKey();
 
     Color currentPlayer;
+
+    int eval;
 
     std::uint64_t hashKey;
 

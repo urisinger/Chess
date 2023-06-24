@@ -74,8 +74,7 @@ void ChessApp::Run() {
 
         if (glfwGetKey(_window.GetWindowInstance(), GLFW_KEY_SPACE) == GLFW_PRESS) {
             if (bestmove != Move()) {
-                _board.movePiece(bestmove);
-                _engine.offset++;
+                _board.MakeMove(bestmove);
             }
             std::fill(highlights, highlights + 64, 0);
 
@@ -101,9 +100,7 @@ void ChessApp::Run() {
                 auto found = std::find_if(legal.moves, legal.moves + legal.count, [tile, lasttile](const Move& a) { return a.getTo() == tile && a.getFrom() == lasttile; });
 
                 if (found != legal.moves + legal.count) {
-                    _board.movePiece(*found);
-                    _engine.offset++;
-
+                    _board.MakeMove(*found);
 
                     std::fill(highlights, highlights + 64, 0);
 

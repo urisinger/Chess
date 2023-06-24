@@ -7,6 +7,8 @@
 
 #define MATE_SCORE 48000
 
+#define max_repetition 300
+
 #define max_ply 128
 
 #define STOPPED 0
@@ -48,11 +50,18 @@ struct HashTable
 		hashTable = new THash[size];
 	}
 
+	~HashTable() {
+		delete[] hashTable;
+	}
 	void Resize(unsigned int newSize) {
 		delete[] hashTable;
 
 		size = newSize;
 		hashTable = new THash[size];
+	}
+
+	void clear() {
+		memset(hashTable, 0, size * sizeof(THash));
 	}
 
 	inline int ReadHash(std::uint64_t key, int alpha, int beta, Move* bestMove, int depth, int ply) {
@@ -83,7 +92,6 @@ struct HashTable
 				}
 			}
 			*bestMove = hashEntry->bestMove;
-
 		}
 		return NO_HASH_ENTRY;
 	}
@@ -110,26 +118,17 @@ struct HashTable
 
 
 
-//memory is super unsafe(never fixing this)
 class ChessEngine {
 public:
-	ChessEngine() : quit(false), Trasposition(HASH_SIZE), count(0), ply(0){ }
+	ChessEngine() : quit(false), Trasposition(HASH_SIZE), count(0), ply(0), repetitionIndex(0){ }
 
 	Move BestMove(int maxDdepth, const Board& board);
 
 	void RunPerftTest(int depth, const Board& board);
 
-	int count;
 
-	int offset;
-
-	Move killer_moves[2][max_ply];
-
-	int pv_length[max_ply];
-	Move pv_table[max_ply][max_ply];
-
-	int history_moves[12][64];
-
+	std::uint64_t repetitionTable[max_repetition];
+	int repetitionIndex;
 	HashTable Trasposition;
 
 	bool quit;
@@ -138,7 +137,16 @@ public:
 
 	double maxTime;
 	int ply;
+	int count;
 private:
+
+
+	Move killer_moves[2][max_ply];
+
+	int pv_length[max_ply];
+	Move pv_table[max_ply][max_ply];
+
+	int history_moves[12][64];
 
 	int score_move(Move move);
 	int compareMoves(Move moveA, Move moveB, Move bestMove);
@@ -147,6 +155,7 @@ private:
 	void quicksortMoves(Move* moves, int low, int high, Move bestMove);
 	void sortMoves(LegalMoves& legalMoves, Move bestMove);
 
+	bool IsRepetition(std::uint64_t hash);
 
 	int Perft(int depth, const Board& board);
 

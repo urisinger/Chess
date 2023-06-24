@@ -43,7 +43,14 @@ constexpr static int translator[6] =
 };
 
 
-
+bool ChessEngine::IsRepetition(std::uint64_t hash) {
+    for (int i = 0; i < repetitionIndex; i++) {
+        if (repetitionTable[i] == hash) {
+            return true;
+        }
+    }
+    return false;
+}
 
 int ChessEngine::score_move(Move move) {
 
@@ -130,12 +137,8 @@ void ChessEngine::sortMoves(LegalMoves& legalMoves, Move bestMove) {
 int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
     count++;
 
-    int standPat = board.currentPlayer == WHITE ? board.eval() : -board.eval(); // Evaluate the current position without considering captures or promotions
+    int standPat = board.eval; // Evaluate the current position without considering captures or promotions
     int movesSearched = 0;
-
-    if (ply >= max_ply) {
-        return standPat;
-    }
 
     if (standPat >= beta) {
         return beta; // Return beta if the standPat score is already greater than or equal to beta for the maximizing player
@@ -151,19 +154,31 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
 
     for (int i = 0; i < captures.count; i++) {
         Board newboard = board;
-        newboard.movePiece(captures.moves[i]);
+        newboard.MakeMove(captures.moves[i]);
 
         if ((newboard.isKingAttacked(board.currentPlayer))) {
             // Move doesn't result in own king being in check
             continue;
+        }    
 
-        }
 
         if (captures.moves[i].getFlags() == QUEEN_CASTLE || captures.moves[i].getFlags() == KING_CASTLE) {
-            if (board.isKingAttacked(board.currentPlayer)) {
-                continue;
-            }
 
+            // Get the starting and ending positions for the castle move
+            const int startPos = captures.moves[i].getFrom();
+            const int endPos = captures.moves[i].getTo();
+
+            // Check the squares between the starting and ending positions
+            const int minPos = min(startPos, endPos);
+            const int maxPos = max(startPos, endPos);
+
+            // Iterate over the squares between the starting and ending positions
+            for (int square = minPos; square < maxPos; square++) {
+                if (board.isSqaureAttacked(board.currentPlayer, square)) {
+                    // Square is attacked, so it is not safe to castle
+                    goto skipPlay;
+                }
+            }
         }
 
         if (stop) {
@@ -174,7 +189,7 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
         int score = -quiescence(newboard, -beta, -alpha); // Recursively evaluate the capture move with the opposite maximizingPlayer flag
         ply--;
 
-     //   *bestMoveP = bestMove;
+
 
         movesSearched++;
 
@@ -185,6 +200,8 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
         if (score >= beta) {
             return beta; // Perform a cutoff if alpha is greater than or equal to beta
         }
+
+    skipPlay:;
     }
 
 
@@ -202,6 +219,11 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
     }
 
 
+    if (ply && IsRepetition(board.hashKey))
+    {
+        return 0;
+    }
+
     int score;
 
     HashFlags hashFlag = HASH_ALPHA;
@@ -211,7 +233,7 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
     
     int pv_node = (beta - alpha > 1);
 
-    score = Trasposition.ReadHash(board.hashKey, alpha, beta, &bestMove , depth,ply);
+    score = Trasposition.ReadHash(board.hashKey, alpha, beta, &bestMove , depth, ply);
     if (score != NO_HASH_ENTRY && !pv_node)
     {
         return score;
@@ -230,14 +252,7 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
     if (depth >= 2 + 1 && !in_check && ply) {
         Board nullBoard = board;
 
-        nullBoard.currentPlayer = nullBoard.currentPlayer == WHITE ? BLACK : WHITE;
-
-        if (nullBoard.enPassantSquare != -1) {
-            nullBoard.hashKey ^= Masks::enPeasentKeys[nullBoard.enPassantSquare];
-        }
-        nullBoard.enPassantSquare = -1;
-
-        nullBoard.hashKey ^= Masks::SideKey;
+        nullBoard.MakeNullMove();
 
         ply += 2 + 1;
         int score = -NegMax(depth - 1 - 2, nullBoard, -beta, -beta + 1);
@@ -253,34 +268,34 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
 
     sortMoves(moves,bestMove);
 
-
     for (int i = 0; i < moves.count; i++) {
         Board newboard = board;
-        newboard.movePiece(moves.moves[i]);
+        newboard.MakeMove(moves.moves[i]);
 
         if ((newboard.isKingAttacked(board.currentPlayer))) {
             // Move doesn't result in own king being in check
-            continue;
+            goto skipPlay;
         }
 
         if (moves.moves[i].getFlags() == QUEEN_CASTLE || moves.moves[i].getFlags() == KING_CASTLE) {
+
             if (board.isKingAttacked(board.currentPlayer)) {
-                continue;
+                goto skipPlay;
             }
 
             // Get the starting and ending positions for the castle move
-            int startPos = moves.moves[i].getFrom();
-            int endPos = moves.moves[i].getTo();
+            const int startPos = moves.moves[i].getFrom();
+            const int endPos = moves.moves[i].getTo();
 
             // Check the squares between the starting and ending positions
-            int minPos = min(startPos, endPos);
-            int maxPos = max(startPos, endPos);
+            const int minPos = min(startPos, endPos);
+            const int maxPos = max(startPos, endPos);
 
             // Iterate over the squares between the starting and ending positions
-            for (int square = minPos + 1; square < maxPos; square++) {
-                if (board.isSqaureAttacked(board.currentPlayer, square)) {
+            for (int square = minPos; square < maxPos; square++) {
+                if (newboard.isSqaureAttacked(board.currentPlayer, square)) {
                     // Square is attacked, so it is not safe to castle
-                    continue;
+                    goto skipPlay;
                 }
             }
         }
@@ -293,31 +308,33 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
 
         if (movesSearched == 0) {
             ply++;
+            repetitionIndex++;
+            repetitionTable[repetitionIndex] = newboard.hashKey;
             score = -NegMax(depth - 1, newboard, -beta, -alpha);
             ply--;
-           // *bestMoveP = bestMove;
+            repetitionIndex--;
         }
         else {
             if (movesSearched >= fullDepthMoves && depth >= reductionLimits && !in_check && moves.moves[i].getFlags() < 4) {
                 ply += 2;
+                repetitionIndex += 2;
+                repetitionTable[repetitionIndex] = newboard.hashKey;
                 score = -NegMax(depth - 2, newboard, -alpha - 1, -alpha);
                 ply -= 2;
+                repetitionIndex -= 2;
+
 
             }
             else
                 score = alpha + 1;
 
             if (score > alpha) {
-                ply++;
-                score = -NegMax(depth - 1, newboard, -alpha - 1, -alpha);
-                ply--;
-
-
-                if (score > alpha && score < beta) {
                     ply++;
+                    repetitionIndex++;
+                    repetitionTable[repetitionIndex] = newboard.hashKey;
                     score = -NegMax(depth - 1, newboard, -beta, -alpha);
                     ply--;
-                }
+                    repetitionIndex--;
             }
         }
 
@@ -352,11 +369,12 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
             return beta;
         }
 
+    skipPlay:;
     }
 
     if (movesSearched == 0) {
         // Handle the case where no legal moves are available
-        score = in_check * (board.currentPlayer * 2 - 1) * (MATE_VALUE + depth);
+        score = in_check * -(MATE_VALUE + depth);
         return score;
     }
 
@@ -368,7 +386,7 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
 
 #define valWINDOW 50
 
-Move ChessEngine::BestMove(int maxDdepth, const Board& board) {
+Move ChessEngine::BestMove(int maxDepth, const Board& board) {
     auto moves = board.GenerateLegalMoves(board.currentPlayer);
     if (moves.count == 0) {
         // Handle the case where no legal moves are available
@@ -386,7 +404,7 @@ Move ChessEngine::BestMove(int maxDdepth, const Board& board) {
 
     Move BestLine[max_ply];
     int length;
-    for (int i = 1; currentScore < MATE_SCORE && currentScore > -MATE_SCORE ; i++) {
+    for (int i = 1; currentScore < MATE_SCORE && currentScore > -MATE_SCORE && i <= maxDepth; i++) {
         ply = 0;
 
         currentScore = NegMax(i, board, alpha, beta);
@@ -449,7 +467,7 @@ int ChessEngine::Perft(int depth, const Board& board) {
 
     for (int i = 0; i < moves.count; i++) {
         Board newboard = board;
-        newboard.movePiece(moves.moves[i]);
+        newboard.MakeMove(moves.moves[i]);
 
         if ((newboard.isKingAttacked(board.currentPlayer))) {
             // Move doesn't result in own king being in check
@@ -479,8 +497,8 @@ void ChessEngine::RunPerftTest(int depth, const Board& board) {
     double totaltime = (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start)).count();
     std::cout << "Perft Test Results:\n";
     std::cout << "time: " << totaltime << std::endl;
-    std::cout << "Nodes: " << nodes << "\n";
-    std::cout << "NPS: " << nodes / totaltime << "\n";
+    std::cout << "Nodes: " << (nodes ) << "\n";
+    std::cout << "NPS: " << (nodes)/ totaltime << "\n";
 }
 
 

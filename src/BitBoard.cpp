@@ -96,24 +96,24 @@ Board::Board(const std::string& fen) :
 
 void Board::ParseFen(const std::string& fen) {
     whitePawns = 0,
-    whiteKnights = 0,
-    whiteBishops = 0,
-    whiteRooks = 0,
-    whiteQueens = 0,
-    whiteKing = 0,
-    blackPawns = 0,
-    blackKnights = 0,
-    blackBishops = 0,
-    blackRooks = 0,
-    blackQueens = 0,
-    blackKing = 0,
-    whitePieces = 0,
-    blackPieces = 0,
-    halfMoveClock = 0,
-    fullMoveNumber = 0,
-    enPassantSquare = -1,
-    currentPlayer = WHITE,
-    castleFlags = 0;
+        whiteKnights = 0,
+        whiteBishops = 0,
+        whiteRooks = 0,
+        whiteQueens = 0,
+        whiteKing = 0,
+        blackPawns = 0,
+        blackKnights = 0,
+        blackBishops = 0,
+        blackRooks = 0,
+        blackQueens = 0,
+        blackKing = 0,
+        whitePieces = 0,
+        blackPieces = 0,
+        halfMoveClock = 0,
+        fullMoveNumber = 0,
+        enPassantSquare = -1,
+        currentPlayer = WHITE,
+        castleFlags = 0;
 
     std::istringstream iss(fen);
     std::string token;
@@ -190,7 +190,7 @@ void Board::ParseFen(const std::string& fen) {
 
     hashKey = generateHashKey();
 
-
+    eval = SlowEval();
 }
 
 void Board::getBoard(int board[64]) {
@@ -312,11 +312,24 @@ std::uint64_t Board::getColorPieces(Color color) const {
     return colorPieces;
 }
 
-void Board::movePiece(const Move& move) {
+void Board::MakeNullMove() {
+    currentPlayer = currentPlayer == WHITE ? BLACK : WHITE;
+    eval *= -1;
+
+    if (enPassantSquare != -1) {
+        hashKey ^= Masks::enPeasentKeys[enPassantSquare];
+    }
+    enPassantSquare = -1;
+
+    hashKey ^= Masks::SideKey;
+}
+
+void Board::MakeMove(const Move& move) {
     const unsigned int to = move.getTo();
     const unsigned int from = move.getFrom();
     const Color color = move.getColor();
     const Piece piece = move.getPiece();
+    const Piece capture = move.getCapturedPiece();
     const unsigned int flags = move.getFlags();
 
     clearSquare(to);
@@ -324,18 +337,91 @@ void Board::movePiece(const Move& move) {
     clearSquare(from);
 
 
-    if (move.getCapturedPiece() != EMPTY) {
-        hashKey ^= Masks::pieceKeys[6 * color + move.getCapturedPiece() - 1][to];
+    if (capture != EMPTY) {
+        hashKey ^= Masks::pieceKeys[6 * color + capture - 1][to];
     }
 
     hashKey ^= Masks::pieceKeys[6 * !color + piece - 1][to];
 
     if (flags == PROMOTE) {
         hashKey ^= Masks::pieceKeys[6 * !color + PAWN - 1][from];
+
+        eval -= pawn_score[from ^ (56 * color)];
+        eval -= 100;
+
+        switch (piece) {
+        case KNIGHT:
+            eval += 300;
+            eval += knight_score[to ^ (56 * color)];
+            break;
+        case BISHOP:
+            eval += 325;
+            eval += bishop_score[to ^ (56 * color)];
+            break;
+        case ROOK:
+            eval += 500;
+            eval += rook_score[to ^ (56 * color)];
+            break;
+        case QUEEN:
+            eval += 900;
+            break;
+        }
     }
     else {
         hashKey ^= Masks::pieceKeys[6 * !color + piece - 1][from];
+
+        switch (piece) {
+        case PAWN:
+            eval -= pawn_score[from ^ (56 * color)];
+            eval += pawn_score[to ^ (56 * color)];
+            break;
+        case KNIGHT:
+            eval -= knight_score[from ^ (56 * color)];
+            eval += knight_score[to ^ (56 * color)];
+            break;
+        case BISHOP:
+            eval -= bishop_score[from ^ (56 * color)];
+            eval += bishop_score[to ^ (56 * color)];
+            break;
+        case ROOK:
+            eval -= rook_score[from ^ (56 * color)];
+            eval += rook_score[to ^ (56 * color)];
+            break;
+        case KING:
+            eval -= king_score[from ^ (56 * color)];
+            eval += king_score[to ^ (56 * color)];
+            break;
+        }   
     }
+
+
+
+    switch (capture) {
+    case PAWN:
+        eval += pawn_score[(to ^ (56 * !color))];
+        eval += 100;
+        break;
+    case KNIGHT:
+        eval += knight_score[to ^ (56 * !color)];
+        eval += 300;
+        break;
+    case BISHOP:
+        eval += bishop_score[to ^ (56 * !color)];
+        eval += 325;
+        break;
+    case ROOK:
+        eval += rook_score[to ^ (56 * !color)];
+        eval += 500;
+        break;
+    case QUEEN:
+        eval += 900;
+        break;
+    }
+
+
+
+
+
 
 
 
@@ -350,6 +436,9 @@ void Board::movePiece(const Move& move) {
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
 
+            eval -= rook_score[rookFrom ^ (56 * color)];
+            eval += rook_score[rookTo ^ (56 * color)];
+
             hashKey ^= Masks::pieceKeys[ROOK - 1][rookFrom];
 
             hashKey ^= Masks::pieceKeys[ROOK - 1][rookTo];
@@ -362,7 +451,11 @@ void Board::movePiece(const Move& move) {
             castleFlags &= ~(BLACK_KINGSIDE_CASTLING | BLACK_QUEENSIDE_CASTLING);
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
-            hashKey ^= Masks::pieceKeys[6  + ROOK - 1][rookFrom];
+
+            eval -= rook_score[rookFrom ^ (56 * color)];
+            eval += rook_score[rookTo ^ (56 * color)];
+
+            hashKey ^= Masks::pieceKeys[6 + ROOK - 1][rookFrom];
 
             hashKey ^= Masks::pieceKeys[6 + ROOK - 1][rookTo];
         }
@@ -375,6 +468,10 @@ void Board::movePiece(const Move& move) {
             castleFlags &= ~(WHITE_KINGSIDE_CASTLING | WHITE_QUEENSIDE_CASTLING);
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
+
+            eval -= rook_score[rookFrom ^ (56 * color)];
+            eval += rook_score[rookTo ^ (56 * color)];
+
             hashKey ^= Masks::pieceKeys[ROOK - 1][rookFrom];
 
             hashKey ^= Masks::pieceKeys[ROOK - 1][rookTo];
@@ -387,6 +484,10 @@ void Board::movePiece(const Move& move) {
 
             setSquare(rookTo, color, ROOK);
             clearSquare(rookFrom);
+
+            eval -= rook_score[rookFrom ^ (56 * color)];
+            eval += rook_score[rookTo ^ (56 * color)];
+
             hashKey ^= Masks::pieceKeys[6 + ROOK - 1][rookFrom];
 
             hashKey ^= Masks::pieceKeys[6 + ROOK - 1][rookTo];
@@ -421,20 +522,15 @@ void Board::movePiece(const Move& move) {
         }
     }
 
-    // Check for capture of a rook
-    if (flags == CAPTURE) {
-        const unsigned int captureSquare = to;
-        const Piece capturedPiece = getPiece(captureSquare);
-        if (capturedPiece == ROOK) {
-            if (captureSquare == 0)
-                castleFlags &= ~WHITE_QUEENSIDE_CASTLING;
-            else if (captureSquare == 7)
-                castleFlags &= ~WHITE_QUEENSIDE_CASTLING;
-            else if (captureSquare == 56)
-                castleFlags &= ~BLACK_QUEENSIDE_CASTLING;
-            else if (captureSquare == 63)
-                castleFlags &= ~BLACK_KINGSIDE_CASTLING;
-        }
+    if (capture == ROOK) {
+        if (to == 0)
+            castleFlags &= ~WHITE_QUEENSIDE_CASTLING;
+        else if (to == 7)
+            castleFlags &= ~WHITE_KINGSIDE_CASTLING;
+        else if (to == 56)
+            castleFlags &= ~BLACK_QUEENSIDE_CASTLING;
+        else if (to == 63)
+            castleFlags &= ~BLACK_KINGSIDE_CASTLING;
     }
 
     // Handle en passant capture
@@ -443,11 +539,14 @@ void Board::movePiece(const Move& move) {
 
         clearSquare(capturedPawnSquare);
 
+        eval += pawn_score[capturedPawnSquare ^ ( 56 * !color)];
+        eval -= pawn_score[to ^ ( 56 * !currentPlayer)];
+
         hashKey ^= Masks::pieceKeys[6 * currentPlayer + PAWN - 1][capturedPawnSquare];
     }
 
     // Update the halfMoveClock
-    if (piece == PAWN || isSquareOccupied(to)) {
+    if (piece == PAWN || flags == EMPTY || flags == PROMOTE) {
         halfMoveClock = 0;
     }
     else {
@@ -474,12 +573,16 @@ void Board::movePiece(const Move& move) {
     }
 
 
+
     hashKey ^= Masks::CastleKeys[castleFlags];
 
     // Update current player
     currentPlayer = (currentPlayer == WHITE) ? BLACK : WHITE;
 
     hashKey ^= Masks::SideKey;
+
+    
+    eval *= -1;
 
 }
 
@@ -725,14 +828,14 @@ inline void Board::generatePawnMoves(const Color color, LegalMoves& legalMoves) 
         if (enPassantFile > 0 && leftCaptureSquare >= 0 && leftCaptureSquare < 64) {
             const std::uint64_t enPassantLeftCaptureMask = 1ULL << leftCaptureSquare;
             if (pawns & enPassantLeftCaptureMask) {
-                legalMoves.emplace_back(leftCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN);
+                legalMoves.emplace_back(leftCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN, PAWN);
             }
         }
 
         if (enPassantFile < 7 && rightCaptureSquare >= 0 && rightCaptureSquare < 64) {
             const std::uint64_t enPassantRightCaptureMask = 1ULL << rightCaptureSquare;
             if (pawns & enPassantRightCaptureMask) {
-                legalMoves.emplace_back(rightCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN);
+                legalMoves.emplace_back(rightCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN, PAWN);
             }
         }
     }
@@ -789,7 +892,7 @@ inline void Board::generateSlidingMoves(std::int32_t square, LegalMoves& legalMo
     }
 }
 
-LegalMoves Board::GenerateCaptureMoves(Color color) const{
+LegalMoves Board::GenerateCaptureMoves(Color color) const {
     LegalMoves legalMoves;
 
     generatePawnAttacks(color, legalMoves);
@@ -927,14 +1030,14 @@ inline void Board::generatePawnAttacks(const Color color, LegalMoves& legalMoves
         if (enPassantFile > 0 && leftCaptureSquare >= 0 && leftCaptureSquare < 64) {
             const std::uint64_t enPassantLeftCaptureMask = 1ULL << leftCaptureSquare;
             if (pawns & enPassantLeftCaptureMask) {
-                legalMoves.emplace_back(leftCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN, getPiece(enPassantSquare));
+                legalMoves.emplace_back(leftCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN, PAWN);
             }
         }
 
         if (enPassantFile < 7 && rightCaptureSquare >= 0 && rightCaptureSquare < 64) {
             const std::uint64_t enPassantRightCaptureMask = 1ULL << rightCaptureSquare;
             if (pawns & enPassantRightCaptureMask) {
-                legalMoves.emplace_back(rightCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN, getPiece(enPassantSquare));
+                legalMoves.emplace_back(rightCaptureSquare, enPassantSquare, EN_PASSANT_CAPTURE, color, PAWN, PAWN);
             }
         }
     }
@@ -981,7 +1084,7 @@ std::uint64_t Board::generateSlidingMovesAsBits(std::int32_t square, std::uint64
 
 
 
-bool Board::isSqaureAttacked(Color color, int square) const{
+bool Board::isSqaureAttacked(Color color, int square) const {
     std::uint64_t pawns = color == WHITE ? blackPawns : whitePawns;
 
     std::uint64_t knights = color == WHITE ? blackKnights : whiteKnights;
@@ -1043,12 +1146,12 @@ bool Board::isKingAttacked(Color color) const {
     int square = getLSB(color == WHITE ? whiteKing : blackKing);
 
 
-    return isSqaureAttacked(color,square);
+    return isSqaureAttacked(color, square);
 }
 
 
 
-int Board::eval() const {
+int Board::SlowEval() const {
     int result = 0;
 
     std::uint64_t pieces = whiteKnights;
@@ -1138,9 +1241,10 @@ int Board::eval() const {
     if (blackKing) {
         const int square = getLSB(blackKing);
         result -= 10000; // Assuming a fixed value for the black king
-        result -= king_score[square];
+        result -= king_score[square]; 
     }
-    return result;
+
+    return currentPlayer == WHITE ? result : -result;
 }
 
 std::uint64_t Board::generateHashKey() {
@@ -1151,7 +1255,7 @@ std::uint64_t Board::generateHashKey() {
     while (pieces) {
         int square = getLSB(pieces);
         Piece piece = getPiece(square);
-        key ^= Masks::pieceKeys[piece-1][square];
+        key ^= Masks::pieceKeys[piece - 1][square];
         pieces &= pieces - 1;
     }
 
@@ -1159,7 +1263,7 @@ std::uint64_t Board::generateHashKey() {
     while (pieces) {
         int square = getLSB(pieces);
         Piece piece = getPiece(square);
-        key ^= Masks::pieceKeys[6+piece - 1][square];
+        key ^= Masks::pieceKeys[6 + piece - 1][square];
         pieces &= pieces - 1;
     }
 
