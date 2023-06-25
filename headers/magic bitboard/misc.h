@@ -28,6 +28,7 @@
 #ifdef _MSC_VER
 #  include <intrin.h>
 #  define __builtin_popcountll _mm_popcnt_u64
+#  define __builtin_ia32_tzcnt_u64 _tzcnt_u64
 #endif
 
 int GetTimeMs();

@@ -14,10 +14,10 @@ unsigned int sqaure_indcies[6] = {
 };
 
 ChessApp::ChessApp(int xSize, int ySize) : 
-    _window(1000, 1000, "CHESS GAME OK?", WindowMode::WINDOWED),
-	_backroundShader("../Shaders/Simple.vert", "../Shaders/Backround.frag"),
-	_piecesShader("../Shaders/Simple.vert", "../Shaders/Pieces.frag"),
-    _pieces("../Textures/ChessPiecesArray.png")    
+    _window(1000, 1000, "GrandChess", WindowMode::WINDOWED),
+	_backroundShader("./Shaders/Simple.vert", "./Shaders/Backround.frag"),
+	_piecesShader("./Shaders/Simple.vert", "./Shaders/Pieces.frag"),
+    _pieces("./Textures/ChessPiecesArray.png")    
 {
 
     glEnable(GL_BLEND);
