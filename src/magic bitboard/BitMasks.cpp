@@ -1,51 +1,7 @@
 #include "magic bitboard/BitMasks.h"
-#include <immintrin.h>
-#include <cstring>
-#include <stdlib.h>
-
-#ifdef _MSC_VER
-#  include <intrin.h>
-#  define __builtin_popcountll _mm_popcnt_u64
-#endif
 
 
-/*
-Help functions
-*/
-static unsigned long x = 47321, y = 36344069, z = 5241859;
 
-unsigned long xorshf96(void) {          //period 2^96-1
-    unsigned long t;
-    x ^= x << 16;
-    x ^= x >> 5;
-    x ^= x << 1;
-
-    t = x;
-    x = y;
-    y = z;
-    z = t ^ x ^ y;
-
-    return z;
-}
-
-uint64_t random_uint64() {
-    uint64_t u1, u2, u3, u4;
-    u1 = (uint64_t)((xorshf96())) & 0xFFFF; u2 = (uint64_t)((xorshf96())) & 0xFFFF;
-    u3 = (uint64_t)((xorshf96())) & 0xFFFF; u4 = (uint64_t)((xorshf96())) & 0xFFFF;
-    return u1 | (u2 << 16) | (u3 << 32) | (u4 << 48);
-}
-
-int getLSB(uint64_t value) {
-    if (value == 0) {
-        return -1;  // No bits are set
-    }
-
-    return (int)_tzcnt_u64(value);
-}
-
-int countBits(uint64_t value){
-    return (int)__builtin_popcountll(value);
-}
 /*
 bitmask generators
 */

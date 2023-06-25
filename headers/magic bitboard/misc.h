@@ -22,5 +22,20 @@
 #include <cstdint>
 #include <iostream>
 #include <algorithm>
+#include <cstring>
+#include <immintrin.h>
+
+#ifdef _MSC_VER
+#  include <intrin.h>
+#  define __builtin_popcountll _mm_popcnt_u64
+#endif
 
 int GetTimeMs();
+
+unsigned long xorshf96(void);
+
+uint64_t random_uint64();
+
+int getLSB(uint64_t value);
+
+int countBits(uint64_t value);

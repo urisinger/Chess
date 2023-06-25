@@ -112,7 +112,9 @@ struct LegalMoves {
     int count;
     Move moves[256];
 
-    LegalMoves() : count(0) {}
+    LegalMoves() : count(0) {
+
+    }
 
     void emplace_back(unsigned int from, unsigned int to, unsigned int flags, Color color, Piece piece, Piece captured = EMPTY) {
         moves[count] = Move(from, to, flags, color, piece,captured);
@@ -133,7 +135,7 @@ class Board {
 public:
     Board(const std::string& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
-    void Board::ParseFen(const std::string& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    void ParseFen(const std::string& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
     void getBoard(int board[64]);
 

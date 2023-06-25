@@ -1,6 +1,6 @@
 ﻿
-#if 0         
-#include "Application.h"
+#if 1
+#include "gui/Application.h"
 
 int main()
 {

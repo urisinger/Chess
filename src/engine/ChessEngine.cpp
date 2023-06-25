@@ -78,7 +78,7 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
         return beta;
 
 
-
+    int score;
 
     alpha = std::max(alpha, standPat); // Update alpha with the maximum value between alpha and standPat for the maximizing player
 
@@ -130,7 +130,7 @@ int ChessEngine::quiescence(const Board& board, int alpha, int beta) {
         }
 
         ply++;
-        int score = -quiescence(newboard, -beta, -alpha); // Recursively evaluate the capture move with the opposite maximizingPlayer flag
+        score = -quiescence(newboard, -beta, -alpha); // Recursively evaluate the capture move with the opposite maximizingPlayer flag
         ply--;
 
 

@@ -76,7 +76,7 @@ void UCIconnection::Loop() {
 
     int MB = 64;
 
-    while (TRUE) {
+    while (true) {
         memset(&line[0], 0, sizeof(line));
         fflush(stdout);
         if (!fgets(line, INPUTBUFFER, stdin))
