@@ -358,8 +358,10 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
 
         if (score >= beta) {
             Table.WriteHash(board.hashKey, score, depth, bestMove, HASH_BETA, ply);
-            killer_moves[1][ply] = killer_moves[0][ply];
-            killer_moves[0][ply] = moves.moves[i];
+            if (moves.moves[i].getCapturedPiece() == EMPTY) {
+                killer_moves[1][ply] = killer_moves[0][ply];
+                killer_moves[0][ply] = moves.moves[i];
+            }
             return beta;
         }
 

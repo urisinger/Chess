@@ -5,7 +5,7 @@
 
 class ChessEngine {
 public:
-	ChessEngine() : quit(false), Table(HASH_SIZE), count(0), ply(0), repetitionIndex(0){ }
+	ChessEngine() : quit(false), Table(HASH_SIZE), count(0), ply(0), repetitionIndex(0),offset(0){ }
 
 	Move BestMove(int maxDdepth, const Board& board);
 
@@ -18,6 +18,7 @@ public:
 
 	Move BestLine[max_ply];
 
+	int offset;
 
 	bool quit;
 	bool stop;

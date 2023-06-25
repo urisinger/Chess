@@ -1,5 +1,5 @@
 ﻿
-#if 1
+#if 0
 #include "gui/Application.h"
 
 int main()

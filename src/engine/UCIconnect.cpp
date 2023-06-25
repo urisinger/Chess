@@ -98,6 +98,7 @@ void UCIconnection::Loop() {
             ParsePos(line);
         }
         else if (!strncmp(line, "ucinewgame", 10)) {
+            _engine.offset = 0;
             _engine.Table.clear();
             ParsePos("position startpos\n");
         }
@@ -149,6 +150,7 @@ void UCIconnection::ParsePos(char* lineIn) {
     ptrChar = strstr(lineIn, "moves");
     Move move;
 
+    _engine.offset = 0;
     if (ptrChar != NULL) {
         ptrChar += 6;
         while (*ptrChar) {
@@ -217,6 +219,7 @@ void UCIconnection::ParseGo(char* line) {
     printf("time:%d start:%d stop:%d depth:%d timeset:%d\n",
         time, _engine.startTime, _engine.maxTime, depth, (_engine.maxTime != 1000000));
     _engine.BestMove(depth,_board);
+    _engine.offset++;
 }
 
 Move UCIconnection::ParseMove(const std::string& moveString) {

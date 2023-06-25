@@ -74,6 +74,7 @@ void ChessApp::Run() {
         if (glfwGetKey(_window.GetWindowInstance(), GLFW_KEY_SPACE) == GLFW_PRESS) {
             if (bestmove != Move()) {
                 _board.MakeMove(bestmove);
+                _engine.offset++;
             }
             std::fill(highlights, highlights + 64, 0);
 
