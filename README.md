@@ -1,3 +1,3 @@
 # GrandChess
 
-2100 elo chess engine kinda sucks
+2100 Chess engine and a chess gui
