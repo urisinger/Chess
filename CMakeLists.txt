@@ -22,7 +22,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
         set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -Ofast ")
     else(UNIX)
         set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} /Ox ")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Ox ")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Ox ")  
     endif(UNIX)
 endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 
