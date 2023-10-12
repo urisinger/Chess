@@ -167,7 +167,7 @@ int ChessEngine::NegMax(int depth, const Board& board, int alpha, int beta) {
         return 0;
     }
 
-    int score;
+    int score = MIN_SCORE;
 
     bool in_check = board.isKingAttacked(board.currentPlayer);
 

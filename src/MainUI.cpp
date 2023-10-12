@@ -1,5 +1,3 @@
-﻿
-#if 0
 #include "gui/Application.h"
 
 int main()
@@ -20,23 +18,3 @@ int main()
     app.Run();
     return 0;
 }
-#else
-
-#include "engine/UCIconnect.h"
-
-
-
-int main()
-{
-
-
-    Masks::initBitmasks();
-
-    UCIconnection connection;
-
-    connection.Loop();
-    return 1;
-}
-
-
-#endif

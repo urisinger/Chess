@@ -12,7 +12,6 @@ else(UNIX)
 
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/x64-Release)
 
-
 endif(UNIX)
 
 
@@ -26,15 +25,20 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     endif(UNIX)
 endif(CMAKE_BUILD_TYPE STREQUAL "Release")
 
-add_executable (GrandChess "src/Main.cpp"  "libs/glad/glad.c" "src/gui/Shaders.cpp" "src/gui/Window.cpp" "src/gui/Shaders.cpp" 
+add_executable (GrandChessUI "src/MainUI.cpp"  "libs/glad/glad.c" "src/gui/Shaders.cpp" "src/gui/Window.cpp" "src/gui/Shaders.cpp" 
 "src/gui/Buffers.cpp" "src/magic bitboard/Board.cpp" "src/magic bitboard/BitMasks.cpp" "src/engine/ChessEngine.cpp"
 "src/gui/Application.cpp" "src/engine/UCIconnect.cpp" "src/magic bitboard/misc.cpp" "src/engine/TT.cpp")
-
-target_include_directories(GrandChess PRIVATE "libs/include" "headers")
-
 if(UNIX)
-    target_link_libraries(GrandChess glfw)
+    target_link_libraries(GrandChessUI glfw)
 else(UNIX)
-    target_link_libraries(GrandChess PRIVATE "../../libs/glfw/glfw3")
+    target_link_libraries(GrandChessUI "../../libs/glfw/glfw3")
 endif(UNIX)
+
+
+add_executable (GrandChessUCI "src/MainUCI.cpp" 
+ "src/magic bitboard/Board.cpp" "src/magic bitboard/BitMasks.cpp" "src/engine/ChessEngine.cpp"
+ "src/engine/UCIconnect.cpp" "src/magic bitboard/misc.cpp" "src/engine/TT.cpp")
+include_directories(GrandChessUI GrandC PRIVATE "libs/include" "headers")
+
+
 

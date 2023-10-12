@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/משתמש/Desktop/Chess.com
+# Install script for directory: C:/Users/mobh303/source/repos/urisinger/GrandChess
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/משתמש/Desktop/Chess.com/build/x64-release")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/mobh303/Source/Repos/urisinger/GrandChess/build/x64-release")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/משתמש/Desktop/Chess.com/build/x64-release/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/mobh303/source/repos/urisinger/GrandChess/build/x64-release/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

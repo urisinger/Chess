@@ -39,138 +39,223 @@ include CMakeFiles\rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = C$:\Users\משתמש\Desktop\Chess.com\build\x64-release\
+cmake_ninja_workdir = C$:\Users\mobh303\source\repos\urisinger\GrandChess\build\x64-release\
 # =============================================================================
-# Object build statements for EXECUTABLE target GrandChess
+# Object build statements for EXECUTABLE target GrandChessUI
 
 
 #############################################
-# Order-only phony target for GrandChess
+# Order-only phony target for GrandChessUI
 
-build cmake_object_order_depends_target_GrandChess: phony || CMakeFiles\GrandChess.dir
+build cmake_object_order_depends_target_GrandChessUI: phony || CMakeFiles\GrandChessUI.dir
 
-build CMakeFiles\GrandChess.dir\src\Main.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\Main.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\MainUI.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\MainUI.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\libs\glad\glad.c.obj: C_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\libs\glad\glad.c || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\libs\glad\glad.c.obj: C_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\libs\glad\glad.c || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\libs\glad
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\libs\glad
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\gui\Shaders.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\gui\Shaders.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\gui\Shaders.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\gui\Shaders.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\gui
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\gui
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\gui\Window.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\gui\Window.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\gui\Window.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\gui\Window.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\gui
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\gui
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\gui\Buffers.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\gui\Buffers.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\gui\Buffers.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\gui\Buffers.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\gui
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\gui
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\magic_bitboard\Board.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\magic$ bitboard\Board.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\magic_bitboard\Board.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\magic$ bitboard\Board.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\magic_bitboard
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\magic_bitboard
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\magic_bitboard\BitMasks.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\magic$ bitboard\BitMasks.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\magic_bitboard\BitMasks.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\magic$ bitboard\BitMasks.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\magic_bitboard
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\magic_bitboard
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\engine\ChessEngine.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\engine\ChessEngine.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\engine\ChessEngine.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\engine\ChessEngine.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\engine
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\engine
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\gui\Application.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\gui\Application.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\gui\Application.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\gui\Application.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\gui
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\gui
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\engine\UCIconnect.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\engine\UCIconnect.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\engine\UCIconnect.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\engine\UCIconnect.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\engine
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\engine
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\magic_bitboard\misc.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\magic$ bitboard\misc.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\magic_bitboard\misc.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\magic$ bitboard\misc.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\magic_bitboard
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\magic_bitboard
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
-build CMakeFiles\GrandChess.dir\src\engine\TT.cpp.obj: CXX_COMPILER__GrandChess_unscanned_Release C$:\Users\משתמש\Desktop\Chess.com\src\engine\TT.cpp || cmake_object_order_depends_target_GrandChess
+build CMakeFiles\GrandChessUI.dir\src\engine\TT.cpp.obj: CXX_COMPILER__GrandChessUI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\engine\TT.cpp || cmake_object_order_depends_target_GrandChessUI
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
-  INCLUDES = -IC:\Users\משתמש\Desktop\Chess.com\libs\include -IC:\Users\משתמש\Desktop\Chess.com\headers
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
-  OBJECT_FILE_DIR = CMakeFiles\GrandChess.dir\src\engine
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUI.dir\src\engine
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target GrandChess
+# Link build statements for EXECUTABLE target GrandChessUI
 
 
 #############################################
-# Link the executable C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.exe
+# Link the executable C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.exe
 
-build C$:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.exe: CXX_EXECUTABLE_LINKER__GrandChess_Release CMakeFiles\GrandChess.dir\src\Main.cpp.obj CMakeFiles\GrandChess.dir\libs\glad\glad.c.obj CMakeFiles\GrandChess.dir\src\gui\Shaders.cpp.obj CMakeFiles\GrandChess.dir\src\gui\Window.cpp.obj CMakeFiles\GrandChess.dir\src\gui\Buffers.cpp.obj CMakeFiles\GrandChess.dir\src\magic_bitboard\Board.cpp.obj CMakeFiles\GrandChess.dir\src\magic_bitboard\BitMasks.cpp.obj CMakeFiles\GrandChess.dir\src\engine\ChessEngine.cpp.obj CMakeFiles\GrandChess.dir\src\gui\Application.cpp.obj CMakeFiles\GrandChess.dir\src\engine\UCIconnect.cpp.obj CMakeFiles\GrandChess.dir\src\magic_bitboard\misc.cpp.obj CMakeFiles\GrandChess.dir\src\engine\TT.cpp.obj
+build C$:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.exe: CXX_EXECUTABLE_LINKER__GrandChessUI_Release CMakeFiles\GrandChessUI.dir\src\MainUI.cpp.obj CMakeFiles\GrandChessUI.dir\libs\glad\glad.c.obj CMakeFiles\GrandChessUI.dir\src\gui\Shaders.cpp.obj CMakeFiles\GrandChessUI.dir\src\gui\Window.cpp.obj CMakeFiles\GrandChessUI.dir\src\gui\Buffers.cpp.obj CMakeFiles\GrandChessUI.dir\src\magic_bitboard\Board.cpp.obj CMakeFiles\GrandChessUI.dir\src\magic_bitboard\BitMasks.cpp.obj CMakeFiles\GrandChessUI.dir\src\engine\ChessEngine.cpp.obj CMakeFiles\GrandChessUI.dir\src\gui\Application.cpp.obj CMakeFiles\GrandChessUI.dir\src\engine\UCIconnect.cpp.obj CMakeFiles\GrandChessUI.dir\src\magic_bitboard\misc.cpp.obj CMakeFiles\GrandChessUI.dir\src\engine\TT.cpp.obj
   FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
   LINK_FLAGS = /machine:x64 /INCREMENTAL:NO /subsystem:console
   LINK_LIBRARIES = ../../libs/glfw/glfw3.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-  OBJECT_DIR = CMakeFiles\GrandChess.dir
+  OBJECT_DIR = CMakeFiles\GrandChessUI.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = CMakeFiles\GrandChess.dir\
-  TARGET_FILE = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.exe
-  TARGET_IMPLIB = GrandChess.lib
-  TARGET_PDB = C:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.pdb
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUI.dir\
+  TARGET_FILE = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.exe
+  TARGET_IMPLIB = GrandChessUI.lib
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.pdb
+
+# =============================================================================
+# Object build statements for EXECUTABLE target GrandChessUCI
+
+
+#############################################
+# Order-only phony target for GrandChessUCI
+
+build cmake_object_order_depends_target_GrandChessUCI: phony || CMakeFiles\GrandChessUCI.dir
+
+build CMakeFiles\GrandChessUCI.dir\src\MainUCI.cpp.obj: CXX_COMPILER__GrandChessUCI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\MainUCI.cpp || cmake_object_order_depends_target_GrandChessUCI
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUCI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUCI.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUCI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.pdb
+
+build CMakeFiles\GrandChessUCI.dir\src\magic_bitboard\Board.cpp.obj: CXX_COMPILER__GrandChessUCI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\magic$ bitboard\Board.cpp || cmake_object_order_depends_target_GrandChessUCI
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUCI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUCI.dir\src\magic_bitboard
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUCI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.pdb
+
+build CMakeFiles\GrandChessUCI.dir\src\magic_bitboard\BitMasks.cpp.obj: CXX_COMPILER__GrandChessUCI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\magic$ bitboard\BitMasks.cpp || cmake_object_order_depends_target_GrandChessUCI
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUCI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUCI.dir\src\magic_bitboard
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUCI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.pdb
+
+build CMakeFiles\GrandChessUCI.dir\src\engine\ChessEngine.cpp.obj: CXX_COMPILER__GrandChessUCI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\engine\ChessEngine.cpp || cmake_object_order_depends_target_GrandChessUCI
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUCI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUCI.dir\src\engine
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUCI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.pdb
+
+build CMakeFiles\GrandChessUCI.dir\src\engine\UCIconnect.cpp.obj: CXX_COMPILER__GrandChessUCI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\engine\UCIconnect.cpp || cmake_object_order_depends_target_GrandChessUCI
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUCI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUCI.dir\src\engine
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUCI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.pdb
+
+build CMakeFiles\GrandChessUCI.dir\src\magic_bitboard\misc.cpp.obj: CXX_COMPILER__GrandChessUCI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\magic$ bitboard\misc.cpp || cmake_object_order_depends_target_GrandChessUCI
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUCI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUCI.dir\src\magic_bitboard
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUCI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.pdb
+
+build CMakeFiles\GrandChessUCI.dir\src\engine\TT.cpp.obj: CXX_COMPILER__GrandChessUCI_unscanned_Release C$:\Users\mobh303\source\repos\urisinger\GrandChess\src\engine\TT.cpp || cmake_object_order_depends_target_GrandChessUCI
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
+  INCLUDES = -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandChessUI -IC:\Users\mobh303\source\repos\urisinger\GrandChess\GrandC -IC:\Users\mobh303\source\repos\urisinger\GrandChess\PRIVATE -IC:\Users\mobh303\source\repos\urisinger\GrandChess\libs\include -IC:\Users\mobh303\source\repos\urisinger\GrandChess\headers
+  OBJECT_DIR = CMakeFiles\GrandChessUCI.dir
+  OBJECT_FILE_DIR = CMakeFiles\GrandChessUCI.dir\src\engine
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUCI.dir\
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.pdb
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target GrandChessUCI
+
+
+#############################################
+# Link the executable C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.exe
+
+build C$:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.exe: CXX_EXECUTABLE_LINKER__GrandChessUCI_Release CMakeFiles\GrandChessUCI.dir\src\MainUCI.cpp.obj CMakeFiles\GrandChessUCI.dir\src\magic_bitboard\Board.cpp.obj CMakeFiles\GrandChessUCI.dir\src\magic_bitboard\BitMasks.cpp.obj CMakeFiles\GrandChessUCI.dir\src\engine\ChessEngine.cpp.obj CMakeFiles\GrandChessUCI.dir\src\engine\UCIconnect.cpp.obj CMakeFiles\GrandChessUCI.dir\src\magic_bitboard\misc.cpp.obj CMakeFiles\GrandChessUCI.dir\src\engine\TT.cpp.obj
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /Ox  /Ox  /MD /O2 /Ob2 /DNDEBUG
+  LINK_FLAGS = /machine:x64 /INCREMENTAL:NO /subsystem:console
+  LINK_LIBRARIES = kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
+  OBJECT_DIR = CMakeFiles\GrandChessUCI.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_COMPILE_PDB = CMakeFiles\GrandChessUCI.dir\
+  TARGET_FILE = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.exe
+  TARGET_IMPLIB = GrandChessUCI.lib
+  TARGET_PDB = C:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\משתמש\Desktop\Chess.com\build\x64-release && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  COMMAND = cmd.exe /C "cd /D C:\Users\mobh303\source\repos\urisinger\GrandChess\build\x64-release && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -181,7 +266,7 @@ build edit_cache: phony CMakeFiles\edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\משתמש\Desktop\Chess.com\build\x64-release && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\משתמש\Desktop\Chess.com -BC:\Users\משתמש\Desktop\Chess.com\build\x64-release"
+  COMMAND = cmd.exe /C "cd /D C:\Users\mobh303\source\repos\urisinger\GrandChess\build\x64-release && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\mobh303\source\repos\urisinger\GrandChess -BC:\Users\mobh303\source\repos\urisinger\GrandChess\build\x64-release"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -191,9 +276,13 @@ build rebuild_cache: phony CMakeFiles\rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build GrandChess: phony C$:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.exe
+build GrandChessUCI: phony C$:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.exe
 
-build GrandChess.exe: phony C$:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.exe
+build GrandChessUCI.exe: phony C$:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.exe
+
+build GrandChessUI: phony C$:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.exe
+
+build GrandChessUI.exe: phony C$:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.exe
 
 # =============================================================================
 # Folder targets.
@@ -201,9 +290,9 @@ build GrandChess.exe: phony C$:\Users\משתמש\Desktop\Chess.com\bin\x64-Relea
 # =============================================================================
 
 #############################################
-# Folder: C:/Users/משתמש/Desktop/Chess.com/build/x64-release
+# Folder: C:/Users/mobh303/source/repos/urisinger/GrandChess/build/x64-release
 
-build all: phony C$:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChess.exe
+build all: phony C$:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUI.exe C$:\Users\mobh303\source\repos\urisinger\GrandChess\bin\x64-Release\GrandChessUCI.exe
 
 # =============================================================================
 # Built-in targets
@@ -212,14 +301,14 @@ build all: phony C$:\Users\משתמש\Desktop\Chess.com\bin\x64-Release\GrandChe
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCCompiler.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCCompilerABI.c C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCXXCompiler.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCXXCompilerABI.cpp C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCompilerIdDetection.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCXXCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCompileFeatures.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCompilerABI.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCompilerId.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineRCCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeFindBinUtils.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeParseImplicitIncludeInfo.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeParseImplicitLinkInfo.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeParseLibraryArchitecture.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeRCCompiler.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystem.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeTestCCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeTestCXXCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeTestCompilerCommon.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeTestRCCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\ADSP-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\ARMCC-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\ARMClang-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\AppleClang-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Borland-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Bruce-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Clang-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Clang-DetermineCompilerInternal.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Compaq-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Cray-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Embarcadero-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Fujitsu-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\GHS-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\GNU-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\HP-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\HP-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IAR-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Intel-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\LCC-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\NVHPC-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\NVIDIA-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\PGI-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\PathScale-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\SCO-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\SDCC-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\SunPro-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\TI-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Tasking-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Watcom-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\XL-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\XL-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\XLClang-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\zOS-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Internal\FeatureTesting.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-Determine-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\WindowsPaths.cmake C$:\Users\משתמש\Desktop\Chess.com\CMakeLists.txt CMakeCache.txt CMakeFiles\3.26.0-msvc3\CMakeCCompiler.cmake CMakeFiles\3.26.0-msvc3\CMakeCXXCompiler.cmake CMakeFiles\3.26.0-msvc3\CMakeRCCompiler.cmake CMakeFiles\3.26.0-msvc3\CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\WindowsPaths.cmake C$:\Users\mobh303\source\repos\urisinger\GrandChess\CMakeLists.txt CMakeCache.txt CMakeFiles\3.26.4-msvc4\CMakeCCompiler.cmake CMakeFiles\3.26.4-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.26.4-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.26.4-msvc4\CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCCompiler.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCCompilerABI.c C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCXXCompiler.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCXXCompilerABI.cpp C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCompilerIdDetection.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCXXCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCompileFeatures.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCompilerABI.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineCompilerId.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineRCCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeDetermineSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeFindBinUtils.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeParseImplicitIncludeInfo.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeParseImplicitLinkInfo.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeParseLibraryArchitecture.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeRCCompiler.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystem.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeTestCCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeTestCXXCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeTestCompilerCommon.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeTestRCCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\ADSP-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\ARMCC-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\ARMClang-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\AppleClang-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Borland-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Bruce-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Clang-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Clang-DetermineCompilerInternal.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Compaq-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Cray-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Embarcadero-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Fujitsu-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\GHS-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\GNU-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\HP-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\HP-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IAR-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Intel-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\LCC-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\NVHPC-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\NVIDIA-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\PGI-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\PathScale-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\SCO-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\SDCC-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\SunPro-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\TI-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Tasking-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\Watcom-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\XL-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\XL-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\XLClang-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\zOS-C-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Internal\FeatureTesting.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-Determine-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\WindowsPaths.cmake C$:\Users\משתמש\Desktop\Chess.com\CMakeLists.txt CMakeCache.txt CMakeFiles\3.26.0-msvc3\CMakeCCompiler.cmake CMakeFiles\3.26.0-msvc3\CMakeCXXCompiler.cmake CMakeFiles\3.26.0-msvc3\CMakeRCCompiler.cmake CMakeFiles\3.26.0-msvc3\CMakeSystem.cmake: phony
+build C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.26\Modules\Platform\WindowsPaths.cmake C$:\Users\mobh303\source\repos\urisinger\GrandChess\CMakeLists.txt CMakeCache.txt CMakeFiles\3.26.4-msvc4\CMakeCCompiler.cmake CMakeFiles\3.26.4-msvc4\CMakeCXXCompiler.cmake CMakeFiles\3.26.4-msvc4\CMakeRCCompiler.cmake CMakeFiles\3.26.4-msvc4\CMakeSystem.cmake: phony
 
 
 #############################################
