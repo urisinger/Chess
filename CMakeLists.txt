@@ -1,6 +1,8 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 project ("GrandChess")	
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -m64 -mbmi")
 if(UNIX)
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -m64 -mbmi")
 
